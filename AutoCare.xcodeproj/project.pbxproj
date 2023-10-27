@@ -13,6 +13,8 @@
 		A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E333902AEBE4900089DD81 /* Preview Assets.xcassets */; };
 		A5E333992AEBE5040089DD81 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = A5E333982AEBE5040089DD81 /* Realm */; };
 		A5E3339B2AEBE5040089DD81 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5E3339A2AEBE5040089DD81 /* RealmSwift */; };
+		A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3339F2AEBEAA20089DD81 /* Config.swift */; };
+		A5E333A12AEBEB940089DD81 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,9 @@
 		A5E3338C2AEBE4900089DD81 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A5E3338E2AEBE4900089DD81 /* AutoCare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AutoCare.entitlements; sourceTree = "<group>"; };
 		A5E333902AEBE4900089DD81 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A5E3339D2AEBEA300089DD81 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		A5E3339E2AEBEA5F0089DD81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A5E3339F2AEBEAA20089DD81 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +61,8 @@
 		A5E333872AEBE48F0089DD81 /* AutoCare */ = {
 			isa = PBXGroup;
 			children = (
+				A5E3339E2AEBEA5F0089DD81 /* Info.plist */,
+				A5E3339C2AEBEA220089DD81 /* Config */,
 				A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */,
 				A5E3338A2AEBE48F0089DD81 /* ContentView.swift */,
 				A5E3338C2AEBE4900089DD81 /* Assets.xcassets */,
@@ -71,6 +78,15 @@
 				A5E333902AEBE4900089DD81 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A5E3339C2AEBEA220089DD81 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A5E3339D2AEBEA300089DD81 /* Config.xcconfig */,
+				A5E3339F2AEBEAA20089DD81 /* Config.swift */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,6 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */,
+				A5E333A12AEBEB940089DD81 /* Config.xcconfig in Resources */,
 				A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,6 +169,7 @@
 			files = (
 				A5E3338B2AEBE48F0089DD81 /* ContentView.swift in Sources */,
 				A5E333892AEBE48F0089DD81 /* AutoCareApp.swift in Sources */,
+				A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +178,7 @@
 /* Begin XCBuildConfiguration section */
 		A5E333922AEBE4900089DD81 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -221,6 +240,7 @@
 		};
 		A5E333932AEBE4900089DD81 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -274,6 +294,7 @@
 		};
 		A5E333952AEBE4900089DD81 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -285,6 +306,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoCare/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -312,6 +334,7 @@
 		};
 		A5E333962AEBE4900089DD81 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -323,6 +346,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoCare/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
