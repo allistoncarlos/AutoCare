@@ -55,6 +55,14 @@ struct VehicleEditView: View {
                 }
             }
             .navigationTitle(viewModel.vehicle.name.isEmpty ? "Novo Veículo" : viewModel.vehicle.name)
+            .toolbar {
+                Button("Salvar") {
+                    Task {
+                        await viewModel.save()
+                    }
+                }
+                .disabled(!viewModel.isFormValid)
+            }
         }
         .disabled(isLoading)
         .overlay(

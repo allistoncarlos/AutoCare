@@ -16,6 +16,7 @@ extension VehicleEditView {
         @Published var state: VehicleEditState = .idle
         @Published var selectedVehicleType = ""
         @Published var vehicle: Vehicle
+        @Published var isFormValid = false
         
         private var cancellable = Set<AnyCancellable>()
         
@@ -39,6 +40,14 @@ extension VehicleEditView {
                         break
                     }
                 }.store(in: &cancellable)
+            
+            $vehicle
+                .receive(on: RunLoop.main)
+                .sink { [weak self] vehicle in
+                    guard let self else { return }
+                    
+                    self.isFormValid = self.handleForm()
+                }.store(in: &cancellable)
         }
         
         func fetchVehicleTypes() async {
@@ -61,6 +70,30 @@ extension VehicleEditView {
         
         func save() async {
             let vehicleType = vehicleTypes?.first { $0.name == selectedVehicleType }
+        }
+        
+        private func handleForm() -> Bool {
+            if vehicle.vehicleType == nil {
+                return false
+            }
+            
+            if vehicle.name.isEmpty {
+                return false
+            }
+            
+            if vehicle.brand.isEmpty {
+                return false
+            }
+            
+            if vehicle.model.isEmpty {
+                return false
+            }
+            
+            if vehicle.licensePlate.isEmpty {
+                return false
+            }
+            
+            return true
         }
     }
 }
