@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-core.git",
       "state" : {
-        "revision" : "c569bec4d04da84030d94f376437bc4efda3686b",
-        "version" : "13.23.1"
+        "revision" : "a5e87a39cffdcc591f3203c11cfca68100d0b9a6",
+        "version" : "13.26.0"
       }
     },
     {
@@ -15,7 +15,16 @@
       "location" : "https://github.com/realm/realm-swift.git",
       "state" : {
         "branch" : "master",
-        "revision" : "6b992e508b1fab07d47775f2fd7485fd5f110893"
+        "revision" : "bf892749c7dcc6d1714e7d47d217390a49ba1238"
+      }
+    },
+    {
+      "identity" : "swiftuiformvalidator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Open-Bytes/SwiftUIFormValidator",
+      "state" : {
+        "revision" : "b1cbab3515f65ca998164acbe1057e136d147960",
+        "version" : "1.0.3"
       }
     }
   ],

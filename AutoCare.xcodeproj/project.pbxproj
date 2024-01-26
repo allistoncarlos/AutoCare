@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */ = {isa = PBXBuildFile; productRef = A53B23E82B6443450025AFB1 /* FormValidator */; };
 		A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DD63E52AF032B9009254C2 /* VehicleEditViewModel.swift */; };
 		A5DD63E82AF035BB009254C2 /* VehicleEditState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DD63E72AF035BB009254C2 /* VehicleEditState.swift */; };
 		A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DF4BDB2AEEE5DB007D41B2 /* MileageListState.swift */; };
@@ -52,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */,
 				A5E3339B2AEBE5040089DD81 /* RealmSwift in Frameworks */,
 				A5E333992AEBE5040089DD81 /* Realm in Frameworks */,
 			);
@@ -231,6 +233,7 @@
 			packageProductDependencies = (
 				A5E333982AEBE5040089DD81 /* Realm */,
 				A5E3339A2AEBE5040089DD81 /* RealmSwift */,
+				A53B23E82B6443450025AFB1 /* FormValidator */,
 			);
 			productName = AutoCare;
 			productReference = A5E333852AEBE48F0089DD81 /* AutoCare.app */;
@@ -262,6 +265,7 @@
 			mainGroup = A5E3337C2AEBE48F0089DD81;
 			packageReferences = (
 				A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */,
 			);
 			productRefGroup = A5E333862AEBE48F0089DD81 /* Products */;
 			projectDirPath = "";
@@ -528,6 +532,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Open-Bytes/SwiftUIFormValidator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -539,6 +551,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A53B23E82B6443450025AFB1 /* FormValidator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */;
+			productName = FormValidator;
+		};
 		A5E333982AEBE5040089DD81 /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */;

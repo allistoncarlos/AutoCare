@@ -12,11 +12,21 @@ struct VehicleEditView: View {
     @ObservedObject var viewModel: ViewModel
     
     @State private var isLoading = true
-    @State private var selectedVehicleType = ""
-    @State private var odometerString = ""
-    @State private var yearInt = Calendar(identifier: .gregorian).dateComponents([.year], from: .now).year!
+    @State private var selectedYear = ""
     
     var currentYear: Int = Calendar(identifier: .gregorian).dateComponents([.year], from: .now).year!
+    
+    var selectableYears: [String] {
+        var years: [String] = []
+        
+        for year in 1960...currentYear {
+            years.append(String(year))
+        }
+        
+        years.append("")
+        
+        return years.reversed()
+    }
     
     var body: some View {
         NavigationStack {
@@ -28,29 +38,32 @@ struct VehicleEditView: View {
                                 Text(vehicleType.localizedName())
                                     .tag(vehicleType.name)
                             }
-                        }.pickerStyle(.segmented)
+                        }
+                        .pickerStyle(.segmented)
+                        .validation(viewModel.selectedVehicleTypeValidation)
                         
-                        TextField("Nome", text: $viewModel.vehicle.name)
+                        TextField("Nome", text: $viewModel.name)
+                            .validation(viewModel.nameValidation)
                         
-                        TextField("Marca", text: $viewModel.vehicle.brand)
+                        TextField("Marca", text: $viewModel.brand)
+                            .validation(viewModel.brandValidation)
                         
-                        TextField("Modelo", text: $viewModel.vehicle.model)
+                        TextField("Modelo", text: $viewModel.model)
+                            .validation(viewModel.modelValidation)
                         
-                        Picker("Ano", selection: $yearInt) {
-                            ForEach(
-                                (
-                                    1960...currentYear
-                                ).reversed(),
-                                id: \.self
-                            ) {
-                                Text(String($0))
+                        Picker("Ano", selection: $selectedYear) {
+                            ForEach(selectableYears, id: \.self) {
+                                Text($0)
                             }
                         }
+                        .validation(viewModel.yearValidation)
                         
-                        TextField("Placa", text: $viewModel.vehicle.licensePlate)
+                        TextField("Placa", text: $viewModel.licensePlate)
+                            .validation(viewModel.licensePlateValidation)
                         
-                        TextField("Odômetro", text: $odometerString)
+                        TextField("Odômetro", text: $viewModel.odometer)
                             .keyboardType(.numberPad)
+                            .validation(viewModel.odometerValidation)
                     }
                 }
             }
@@ -61,7 +74,6 @@ struct VehicleEditView: View {
                         await viewModel.save()
                     }
                 }
-                .disabled(!viewModel.isFormValid)
             }
         }
         .disabled(isLoading)
@@ -73,16 +85,11 @@ struct VehicleEditView: View {
                 }
             }
         )
-        .onChange(of: viewModel.state, { oldState, newState in
+        .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
         })
-        .onChange(of: odometerString, { oldValue, newValue in
-            if let odometer = Int(newValue) {
-                viewModel.vehicle.odometer = odometer
-            }
-        })
-        .onChange(of: yearInt, { oldValue, newValue in
-            viewModel.vehicle.year = String(newValue)
+        .onChange(of: selectedYear, { _, newYear in
+            viewModel.year = newYear
         })
         .task {
             await viewModel.fetchVehicleTypes()

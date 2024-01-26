@@ -12,10 +12,10 @@ import Realm
 extension MileageListView {
     @MainActor
     class ViewModel: ObservableObject {
-        var app: App?
-        var realm: Realm? = nil
-
         @Published var state: MileageListState = .idle
+        
+        private var app: App?
+        var realm: Realm? = nil
         
         func setup(app: App) async {
             self.app = app
