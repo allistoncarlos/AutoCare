@@ -13,49 +13,60 @@ extension MileageListView {
     @MainActor
     class ViewModel: ObservableObject {
         var app: App?
-        var configuration: Realm.Configuration?
-        
+        var realm: Realm? = nil
+
         @Published var state: MileageListState = .idle
         
         func setup(app: App) async {
             self.app = app
             
-            await anonymousLogin()
+            await login()
         }
         
-        private func anonymousLogin() async {
+        private func login() async {
             state = .loading
             
-            do {
-                if let app {
-                    let user = try await app.login(
-                        credentials: .anonymous
-                    )
-                    
-                    configuration = user.flexibleSyncConfiguration(
+            let credentials = Credentials.emailPassword(email: "", password: "")
+            _ = try? await app?.login(credentials: credentials)
+            
+            try? await fetchVehicles()
+        }
+        
+        private func fetchVehicles() async throws {
+            if realm == nil {
+                self.realm = try await self.openRealm()
+            }
+            
+            if let realm {
+                let vehicles = realm.objects(Vehicle.self)
+                
+                state = vehicles.isEmpty ? .newVehicle : .success
+            }
+        }
+        
+        private func openRealm() async throws -> Realm {
+            if let app {
+                if let user = app.currentUser {
+                    let config = user.flexibleSyncConfiguration(
                         clientResetMode: .recoverUnsyncedChanges(),
                         initialSubscriptions: { subs in
-                            subs.append(QuerySubscription<VehicleType>(name: "enabled-vehicle-types") {
-                                $0.enabled
-                            })
-                        }
+                            if let _ = subs.first(named: "enabled-vehicle-types"),
+                               let _ = subs.first(named: "vehicles") {
+                                return
+                            } else {
+                                subs.append(QuerySubscription<VehicleType>(name: "enabled-vehicle-types"))
+                                subs.append(QuerySubscription<Vehicle>(name: "vehicles"))
+                            }
+                        },
+                        rerunOnOpen: true
                     )
-                        
-                    if let configuration {
-                        let realm = try await Realm(
-                            configuration: configuration,
-                            downloadBeforeOpen: .always
-                        )
-                        
-                        let vehicles = realm.objects(Vehicle.self)
-                        
-                        state = vehicles.isEmpty ? .newVehicle : .success
-                    }
+                    
+                    let realm = try await Realm(configuration: config, downloadBeforeOpen: .always)
+                    return realm
                 }
-            } catch {
-                print(error)
-                state = .error
             }
+            
+            throw AppError(_nsError: NSError())
         }
     }
 }

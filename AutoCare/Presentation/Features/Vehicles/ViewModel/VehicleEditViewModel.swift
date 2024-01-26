@@ -20,15 +20,15 @@ extension VehicleEditView {
         
         private var cancellable = Set<AnyCancellable>()
         
-        var configuration: Realm.Configuration
         var vehicleTypes: [VehicleType]?
+        var realm: Realm
         
         init(
-            configuration: Realm.Configuration,
-            vehicle: Vehicle = Vehicle()
+            vehicle: Vehicle = Vehicle(),
+            realm: Realm
         ) {
-            self.configuration = configuration
             self.vehicle = vehicle
+            self.realm = realm
             
             $state
                 .receive(on: RunLoop.main)
@@ -52,20 +52,10 @@ extension VehicleEditView {
         
         func fetchVehicleTypes() async {
             state = .loading
-            
-            do {
-                let realm = try await Realm(
-                    configuration: configuration,
-                    downloadBeforeOpen: .always
-                )
-                
-                let vehicleTypes = Array(realm.objects(VehicleType.self)).sorted(by: { $0.name < $1.name })
-                
-                state = .successVehicleTypes(vehicleTypes)
-            } catch {
-                print(error)
-                state = .error
-            }
+
+            let vehicleTypes = Array(realm.objects(VehicleType.self)).sorted(by: { $0.name < $1.name })
+
+            state = .successVehicleTypes(vehicleTypes)
         }
         
         func save() async {

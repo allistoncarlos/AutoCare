@@ -90,6 +90,7 @@ struct VehicleEditView: View {
     }
 }
 
-#Preview {
-    VehicleEditView(viewModel: VehicleEditView.ViewModel(configuration: Realm.Configuration()))
-}
+// TODO: VER COMO MOCKAR USER
+//#Preview {
+//    VehicleEditView(viewModel: VehicleEditView.ViewModel(configuration: Realm.Configuration()))
+//}

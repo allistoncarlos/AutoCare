@@ -37,11 +37,10 @@ struct MileageListView: View {
             isNewVehiclePresented = newState == .newVehicle
         })
         .sheet(isPresented: $isNewVehiclePresented) {
-            if let configuration = viewModel.configuration {
+            if let user = app.currentUser, 
+                let realm = viewModel.realm {
                 VehicleEditView(
-                    viewModel: VehicleEditView.ViewModel(
-                        configuration: configuration
-                    )
+                    viewModel: VehicleEditView.ViewModel(realm: realm)
                 )
                 .interactiveDismissDisabled()
             }
