@@ -26,8 +26,10 @@ extension MileageListView {
         private func login() async {
             state = .loading
             
-            let credentials = Credentials.emailPassword(email: "", password: "")
-            _ = try? await app?.login(credentials: credentials)
+            if app?.currentUser == nil {
+                let credentials = Credentials.emailPassword(email: "", password: "")
+                _ = try? await app?.login(credentials: credentials)
+            }
             
             try? await fetchVehicles()
         }
@@ -35,6 +37,8 @@ extension MileageListView {
         private func fetchVehicles() async throws {
             if realm == nil {
                 self.realm = try await self.openRealm()
+                
+                updateSubscriptions()
             }
             
             if let realm {
@@ -45,28 +49,51 @@ extension MileageListView {
         }
         
         private func openRealm() async throws -> Realm {
-            if let app {
-                if let user = app.currentUser {
-                    let config = user.flexibleSyncConfiguration(
-                        clientResetMode: .recoverUnsyncedChanges(),
-                        initialSubscriptions: { subs in
-                            if let _ = subs.first(named: "enabled-vehicle-types"),
-                               let _ = subs.first(named: "vehicles") {
-                                return
-                            } else {
-                                subs.append(QuerySubscription<VehicleType>(name: "enabled-vehicle-types"))
-                                subs.append(QuerySubscription<Vehicle>(name: "vehicles"))
-                            }
-                        },
-                        rerunOnOpen: true
-                    )
-                    
-                    let realm = try await Realm(configuration: config, downloadBeforeOpen: .always)
-                    return realm
-                }
+            guard let app = app, let user = app.currentUser else {
+                throw AppError(_nsError: NSError())
             }
             
-            throw AppError(_nsError: NSError())
+            let config = user.flexibleSyncConfiguration()
+            let realm = try await Realm(configuration: config)
+            
+            return realm
+        }
+        
+        private func updateSubscriptions() {
+            if let subscriptions = realm?.subscriptions {
+                
+                updateSubscription(
+                    subscriptions: subscriptions,
+                    name: "enabled-vehicle-types",
+                    type: VehicleType.self
+                )
+                
+                updateSubscription(
+                    subscriptions: subscriptions,
+                    name: "vehicle",
+                    type: Vehicle.self
+                )
+            }
+        }
+        
+        private func updateSubscription<T: RealmSwiftObject>(
+            subscriptions: SyncSubscriptionSet,
+            name: String,
+            type: T.Type,
+            queryBlock: ((Query<T>) -> Query<Bool>)? = nil
+        ) {
+            subscriptions.update {
+                if let existingSubscription = subscriptions.first(named: name) {
+                    existingSubscription.updateQuery(toType: type, where: queryBlock)
+                } else {
+                    let newSubscription = QuerySubscription<T>(name: name, query: queryBlock)
+                    subscriptions.append(newSubscription)
+                }
+            } onComplete: { error in
+                if let error {
+                    dump(error)
+                }
+            }
         }
     }
 }
