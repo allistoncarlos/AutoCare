@@ -101,6 +101,12 @@ extension VehicleEditView {
                     vehicle.licensePlate = self.licensePlate
                     vehicle.odometer = odometer
                     
+                    guard let userId = AutoCareApp.app.currentUser?.id else {
+                        throw RLMError(.fail)
+                    }
+                    
+                    vehicle.owner_id = userId
+                    
                     try await realm.asyncWrite {
                         realm.add(vehicle)
                     }

@@ -10,12 +10,12 @@ import RealmSwift
 
 @main
 struct AutoCareApp: SwiftUI.App {
-    private var app = App(id: Config.appId)
+    static var app = App(id: Config.appId)
     
     var body: some Scene {
         WindowGroup {
             MileageListView(viewModel: MileageListView.ViewModel())
-                .environmentObject(app)
+                .environmentObject(AutoCareApp.app)
         }
     }
 }

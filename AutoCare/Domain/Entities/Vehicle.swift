@@ -17,6 +17,7 @@ class Vehicle: Object, Identifiable {
     @Persisted var licensePlate: String = ""
     @Persisted var odometer: Int = 0
     @Persisted var enabled: Bool = true
+    @Persisted var owner_id: String
     
     @Persisted var vehicleType: VehicleType?
     
@@ -27,6 +28,7 @@ class Vehicle: Object, Identifiable {
         year: String,
         licensePlate: String,
         odometer: Int,
+        owner_id: String,
         vehicleType: VehicleType,
         enabled: Bool = true) {
         self.init()
@@ -36,6 +38,7 @@ class Vehicle: Object, Identifiable {
         self.year = year
         self.licensePlate = licensePlate
         self.odometer = odometer
+        self.owner_id = owner_id
         self.vehicleType = vehicleType
         self.enabled = enabled
     }
