@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */ = {isa = PBXBuildFile; productRef = A53B23E82B6443450025AFB1 /* FormValidator */; };
+		A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DD63E52AF032B9009254C2 /* VehicleEditViewModel.swift */; };
+		A5DD63E82AF035BB009254C2 /* VehicleEditState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DD63E72AF035BB009254C2 /* VehicleEditState.swift */; };
+		A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5DF4BDB2AEEE5DB007D41B2 /* MileageListState.swift */; };
 		A5E333892AEBE48F0089DD81 /* AutoCareApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */; };
 		A5E3338B2AEBE48F0089DD81 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3338A2AEBE48F0089DD81 /* ContentView.swift */; };
 		A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E3338C2AEBE4900089DD81 /* Assets.xcassets */; };
@@ -15,9 +19,18 @@
 		A5E3339B2AEBE5040089DD81 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5E3339A2AEBE5040089DD81 /* RealmSwift */; };
 		A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3339F2AEBEAA20089DD81 /* Config.swift */; };
 		A5E333A12AEBEB940089DD81 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */; };
+		A5E333A52AEBEE2F0089DD81 /* VehicleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */; };
+		A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77B2AED43620038A546 /* VehicleListView.swift */; };
+		A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */; };
+		A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB7842AED43A10038A546 /* MileageListView.swift */; };
+		A5FCB7872AED45AE0038A546 /* Vehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB7862AED45AE0038A546 /* Vehicle.swift */; };
+		A5FCB78D2AED49380038A546 /* MileageListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A5DD63E52AF032B9009254C2 /* VehicleEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditViewModel.swift; sourceTree = "<group>"; };
+		A5DD63E72AF035BB009254C2 /* VehicleEditState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditState.swift; sourceTree = "<group>"; };
+		A5DF4BDB2AEEE5DB007D41B2 /* MileageListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListState.swift; sourceTree = "<group>"; };
 		A5E333852AEBE48F0089DD81 /* AutoCare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoCare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCareApp.swift; sourceTree = "<group>"; };
 		A5E3338A2AEBE48F0089DD81 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -27,6 +40,12 @@
 		A5E3339D2AEBEA300089DD81 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A5E3339E2AEBEA5F0089DD81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A5E3339F2AEBEAA20089DD81 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleType.swift; sourceTree = "<group>"; };
+		A5FCB77B2AED43620038A546 /* VehicleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
+		A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditView.swift; sourceTree = "<group>"; };
+		A5FCB7842AED43A10038A546 /* MileageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListView.swift; sourceTree = "<group>"; };
+		A5FCB7862AED45AE0038A546 /* Vehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vehicle.swift; sourceTree = "<group>"; };
+		A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */,
 				A5E3339B2AEBE5040089DD81 /* RealmSwift in Frameworks */,
 				A5E333992AEBE5040089DD81 /* Realm in Frameworks */,
 			);
@@ -61,6 +81,8 @@
 		A5E333872AEBE48F0089DD81 /* AutoCare */ = {
 			isa = PBXGroup;
 			children = (
+				A5FCB7752AED431C0038A546 /* Presentation */,
+				A5E333A22AEBEE180089DD81 /* Domain */,
 				A5E3339E2AEBEA5F0089DD81 /* Info.plist */,
 				A5E3339C2AEBEA220089DD81 /* Config */,
 				A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */,
@@ -89,6 +111,109 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		A5E333A22AEBEE180089DD81 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				A5E333A32AEBEE1E0089DD81 /* Entities */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		A5E333A32AEBEE1E0089DD81 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB7862AED45AE0038A546 /* Vehicle.swift */,
+				A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		A5FCB7752AED431C0038A546 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB7762AED43200038A546 /* Features */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		A5FCB7762AED43200038A546 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB7772AED43250038A546 /* Vehicles */,
+				A5FCB77F2AED43780038A546 /* Mileages */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A5FCB7772AED43250038A546 /* Vehicles */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB77A2AED43460038A546 /* View */,
+				A5FCB7792AED43420038A546 /* ViewModel */,
+				A5FCB7782AED433D0038A546 /* Model */,
+			);
+			path = Vehicles;
+			sourceTree = "<group>";
+		};
+		A5FCB7782AED433D0038A546 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A5DD63E72AF035BB009254C2 /* VehicleEditState.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A5FCB7792AED43420038A546 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A5DD63E52AF032B9009254C2 /* VehicleEditViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		A5FCB77A2AED43460038A546 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB77B2AED43620038A546 /* VehicleListView.swift */,
+				A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A5FCB77F2AED43780038A546 /* Mileages */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB7822AED438A0038A546 /* View */,
+				A5FCB7812AED43840038A546 /* ViewModel */,
+				A5FCB7802AED43810038A546 /* Model */,
+			);
+			path = Mileages;
+			sourceTree = "<group>";
+		};
+		A5FCB7802AED43810038A546 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A5DF4BDB2AEEE5DB007D41B2 /* MileageListState.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A5FCB7812AED43840038A546 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		A5FCB7822AED438A0038A546 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A5FCB7842AED43A10038A546 /* MileageListView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -108,6 +233,7 @@
 			packageProductDependencies = (
 				A5E333982AEBE5040089DD81 /* Realm */,
 				A5E3339A2AEBE5040089DD81 /* RealmSwift */,
+				A53B23E82B6443450025AFB1 /* FormValidator */,
 			);
 			productName = AutoCare;
 			productReference = A5E333852AEBE48F0089DD81 /* AutoCare.app */;
@@ -139,6 +265,7 @@
 			mainGroup = A5E3337C2AEBE48F0089DD81;
 			packageReferences = (
 				A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */,
 			);
 			productRefGroup = A5E333862AEBE48F0089DD81 /* Products */;
 			projectDirPath = "";
@@ -167,9 +294,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5FCB7872AED45AE0038A546 /* Vehicle.swift in Sources */,
+				A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */,
 				A5E3338B2AEBE48F0089DD81 /* ContentView.swift in Sources */,
+				A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */,
+				A5DD63E82AF035BB009254C2 /* VehicleEditState.swift in Sources */,
 				A5E333892AEBE48F0089DD81 /* AutoCareApp.swift in Sources */,
+				A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */,
+				A5E333A52AEBEE2F0089DD81 /* VehicleType.swift in Sources */,
+				A5FCB78D2AED49380038A546 /* MileageListViewModel.swift in Sources */,
+				A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */,
 				A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */,
+				A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +532,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Open-Bytes/SwiftUIFormValidator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -407,6 +551,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A53B23E82B6443450025AFB1 /* FormValidator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */;
+			productName = FormValidator;
+		};
 		A5E333982AEBE5040089DD81 /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */;
