@@ -19,19 +19,6 @@ extension MileageListView {
         
         func setup(app: App) async {
             self.app = app
-            
-            await login()
-        }
-        
-        private func login() async {
-            state = .loading
-            
-            if app?.currentUser == nil {
-                let credentials = Credentials.emailPassword(email: "", password: "")
-                _ = try? await app?.login(credentials: credentials)
-            }
-            
-            try? await fetchVehicles()
         }
         
         private func fetchVehicles() async throws {
