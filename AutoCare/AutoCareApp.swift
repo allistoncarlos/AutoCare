@@ -7,15 +7,32 @@
 
 import SwiftUI
 import RealmSwift
+import TTProgressHUD
 
 @main
 struct AutoCareApp: SwiftUI.App {
     static var app = App(id: Config.appId)
     
+    static let hudConfig = TTProgressHUDConfig(
+        title: "Carregando",
+        caption: "Por favor aguarde..."
+    )
+    
     var body: some Scene {
         WindowGroup {
-            MileageListView(viewModel: MileageListView.ViewModel())
+            resultView()
                 .environmentObject(AutoCareApp.app)
         }
+    }
+    
+    @MainActor
+    private func resultView() -> AnyView {
+        guard let currentUser = AutoCareApp.app.currentUser else {
+            return AnyView(LoginRouter.makeLoginView())
+        }
+        
+        return currentUser.isLoggedIn ?
+            AnyView(LoginRouter.makeHomeView()) :
+            AnyView(LoginRouter.makeLoginView())
     }
 }
