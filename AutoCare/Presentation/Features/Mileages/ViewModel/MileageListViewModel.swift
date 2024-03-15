@@ -19,17 +19,35 @@ extension MileageListView {
         
         func setup(app: App) async {
             self.app = app
+            
+            await fetchVehicles()
         }
         
-        private func fetchVehicles() async throws {
+        private func fetchVehicles() async {
+            state = .loading
+            
             if realm == nil {
-                self.realm = try await self.openRealm()
-                
-                updateSubscriptions()
+                do {
+                    self.realm = try await self.openRealm()
+                } catch {
+                    state = .error
+                }
             }
             
-            if let realm {
-                let vehicles = realm.objects(Vehicle.self)
+            if let realm, let app, let user = app.currentUser {
+                let vehicles = try! await realm.objects(Vehicle.self)
+                    .where { $0.owner_id == user.id }
+                    .subscribe(
+                        name: "vehicle",
+                        waitForSync: .onCreation
+                    )
+                
+                _ = try! await realm.objects(VehicleType.self)
+                    .where { $0.enabled }
+                    .subscribe(
+                        name: "enabled-vehicle-types",
+                        waitForSync: .onCreation
+                    )
                 
                 state = vehicles.isEmpty ? .newVehicle : .success
             }
@@ -44,43 +62,6 @@ extension MileageListView {
             let realm = try await Realm(configuration: config)
             
             return realm
-        }
-        
-        private func updateSubscriptions() {
-            if let subscriptions = realm?.subscriptions {
-                
-                updateSubscription(
-                    subscriptions: subscriptions,
-                    name: "enabled-vehicle-types",
-                    type: VehicleType.self
-                )
-                
-                updateSubscription(
-                    subscriptions: subscriptions,
-                    name: "vehicle",
-                    type: Vehicle.self
-                )
-            }
-        }
-        
-        private func updateSubscription<T: RealmSwiftObject>(
-            subscriptions: SyncSubscriptionSet,
-            name: String,
-            type: T.Type,
-            queryBlock: ((Query<T>) -> Query<Bool>)? = nil
-        ) {
-            subscriptions.update {
-                if let existingSubscription = subscriptions.first(named: name) {
-                    existingSubscription.updateQuery(toType: type, where: queryBlock)
-                } else {
-                    let newSubscription = QuerySubscription<T>(name: name, query: queryBlock)
-                    subscriptions.append(newSubscription)
-                }
-            } onComplete: { error in
-                if let error {
-                    dump(error)
-                }
-            }
         }
     }
 }

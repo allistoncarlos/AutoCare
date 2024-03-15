@@ -17,7 +17,7 @@ extension VehicleEditView {
         // MARK: - Published properties
         @Published var state: VehicleEditState = .idle
         @Published var vehicle: Vehicle
-        @Published var vehicleTypes: [VehicleType]?
+        @Published var vehicleTypes = [VehicleType]()
         @Published var isFormValid = false
         
         @Published var manager = FormManager(validationType: .immediate)
@@ -80,10 +80,10 @@ extension VehicleEditView {
         // MARK: - Func
         func fetchVehicleTypes() async {
             state = .loading
+            
+            let vehicleTypes = Array(realm.objects(VehicleType.self))
 
-            let vehicleTypes = Array(realm.objects(VehicleType.self)).sorted(by: { $0.name < $1.name })
-
-            state = .successVehicleTypes(vehicleTypes)
+            state = .successVehicleTypes(Array(vehicleTypes))
         }
         
         func save() async {
@@ -93,7 +93,12 @@ extension VehicleEditView {
                 guard let odometer = Int(self.odometer) else { return }
                 
                 do {
-                    vehicle.vehicleType = vehicleTypes?.first { $0.name == selectedVehicleType }
+                    guard let userId = AutoCareApp.app.currentUser?.id else {
+                        throw RLMError(.fail)
+                    }
+                    
+                    vehicle.vehicleType = vehicleTypes.first { $0.name == selectedVehicleType }
+                    vehicle.owner_id = userId
                     vehicle.name = self.name
                     vehicle.brand = self.brand
                     vehicle.model = self.model
@@ -101,11 +106,7 @@ extension VehicleEditView {
                     vehicle.licensePlate = self.licensePlate
                     vehicle.odometer = odometer
                     
-                    guard let userId = AutoCareApp.app.currentUser?.id else {
-                        throw RLMError(.fail)
-                    }
                     
-                    vehicle.owner_id = userId
                     
                     try await realm.asyncWrite {
                         realm.add(vehicle)

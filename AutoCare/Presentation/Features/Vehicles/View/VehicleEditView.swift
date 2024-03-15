@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RealmSwift
+import TTProgressHUD
 
 struct VehicleEditView: View {
     @ObservedObject var viewModel: ViewModel
@@ -31,40 +32,38 @@ struct VehicleEditView: View {
     var body: some View {
         NavigationStack {
             Form {
-                if let vehicleTypes = viewModel.vehicleTypes {
-                    Section(header: Text("Veículo")) {
-                        Picker("Vehicle Types", selection: $viewModel.selectedVehicleType) {
-                            ForEach(vehicleTypes, id: \.name) { vehicleType in
-                                Text(vehicleType.localizedName())
-                                    .tag(vehicleType.name)
-                            }
+                Section(header: Text("Veículo")) {
+                    Picker("Vehicle Types", selection: $viewModel.selectedVehicleType) {
+                        ForEach(viewModel.vehicleTypes, id: \.name) { vehicleType in
+                            Text(vehicleType.localizedName())
+                                .tag(vehicleType.name)
                         }
-                        .pickerStyle(.segmented)
-                        .validation(viewModel.selectedVehicleTypeValidation)
-                        
-                        TextField("Nome", text: $viewModel.name)
-                            .validation(viewModel.nameValidation)
-                        
-                        TextField("Marca", text: $viewModel.brand)
-                            .validation(viewModel.brandValidation)
-                        
-                        TextField("Modelo", text: $viewModel.model)
-                            .validation(viewModel.modelValidation)
-                        
-                        Picker("Ano", selection: $selectedYear) {
-                            ForEach(selectableYears, id: \.self) {
-                                Text($0)
-                            }
-                        }
-                        .validation(viewModel.yearValidation)
-                        
-                        TextField("Placa", text: $viewModel.licensePlate)
-                            .validation(viewModel.licensePlateValidation)
-                        
-                        TextField("Odômetro", text: $viewModel.odometer)
-                            .keyboardType(.numberPad)
-                            .validation(viewModel.odometerValidation)
                     }
+                    .pickerStyle(.segmented)
+                    .validation(viewModel.selectedVehicleTypeValidation)
+                    
+                    TextField("Nome", text: $viewModel.name)
+                        .validation(viewModel.nameValidation)
+                    
+                    TextField("Marca", text: $viewModel.brand)
+                        .validation(viewModel.brandValidation)
+                    
+                    TextField("Modelo", text: $viewModel.model)
+                        .validation(viewModel.modelValidation)
+                    
+                    Picker("Ano", selection: $selectedYear) {
+                        ForEach(selectableYears, id: \.self) {
+                            Text($0)
+                        }
+                    }
+                    .validation(viewModel.yearValidation)
+                    
+                    TextField("Placa", text: $viewModel.licensePlate)
+                        .validation(viewModel.licensePlateValidation)
+                    
+                    TextField("Odômetro", text: $viewModel.odometer)
+                        .keyboardType(.numberPad)
+                        .validation(viewModel.odometerValidation)
                 }
             }
             .navigationTitle(viewModel.vehicle.name.isEmpty ? "Novo Veículo" : viewModel.vehicle.name)
@@ -75,16 +74,11 @@ struct VehicleEditView: View {
                     }
                 }
             }
+            .disabled(isLoading)
+            .overlay(
+                TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
+            )
         }
-        .disabled(isLoading)
-        .overlay(
-            Group {
-                if isLoading {
-                    ProgressView("Carregando")
-                        .controlSize(.large)
-                }
-            }
-        )
         .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
         })

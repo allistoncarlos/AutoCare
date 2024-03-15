@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Realm
+import TTProgressHUD
 
 struct MileageListView: View {
     @EnvironmentObject var app: RLMApp
@@ -16,28 +17,25 @@ struct MileageListView: View {
     @State private var isNewVehiclePresented = false
     
     var body: some View {
-        Group {
-            Text("Hello, World!")
-        }
-        .task {
-            await viewModel.setup(app: app)
+        NavigationStack {
+            VStack {
+                Text("Hello, World!")
+            }
         }
         .disabled(isLoading)
         .overlay(
-            Group {
-                if isLoading {
-                    ProgressView("Carregando")
-                        .controlSize(.large)
-                }
-            }
+            TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
+        .task {
+            await viewModel.setup(app: app)
+        }
         .onChange(of: viewModel.state, { oldState, newState in
             isLoading = newState == .loading
             
             isNewVehiclePresented = newState == .newVehicle
         })
         .sheet(isPresented: $isNewVehiclePresented) {
-            if let user = app.currentUser, 
+            if app.currentUser != nil,
                 let realm = viewModel.realm {
                 VehicleEditView(
                     viewModel: VehicleEditView.ViewModel(realm: realm)
