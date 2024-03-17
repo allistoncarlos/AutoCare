@@ -63,9 +63,41 @@ extension MileageListView {
                         waitForSync: .onCreation
                     )
                 
-                state = vehicles.isEmpty ? .newVehicle : .success
+                if vehicles.isEmpty {
+                    state = .newVehicle
+                } else {
+                    // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
+                    
+                    if let vehicle = vehicles.first {
+                        let vehicleMileages = try! await realm.objects(VehicleMileage.self)
+                            .where {
+                                $0.owner_id == user.id &&
+                                $0.vehicle_id == vehicle._id
+                            }
+                            .subscribe(
+                                name: "vehicle-mileages",
+                                waitForSync: .onCreation
+                            )
+                        
+                        print(Array(vehicleMileages))
+                        print(vehicleMileages.count)
+                        
+                        state = .successVehicleMileages(Array(vehicleMileages))
+                    }
+                }
             }
         }
+        
+        private func fetchVehicleMileages() {
+            if let realm {
+                state = .loading
+                
+                let vehicleMileages = Array(realm.objects(VehicleMileage.self))
+                
+                state = .successVehicleMileages(Array(vehicleMileages))
+            }
+        }
+        
         
         private func openRealm() async throws -> Realm {
             guard let app = app, let user = app.currentUser else {

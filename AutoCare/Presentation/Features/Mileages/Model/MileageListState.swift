@@ -12,5 +12,5 @@ enum MileageListState: Equatable {
     case loading
     case error
     case newVehicle
-    case success
+    case successVehicleMileages([VehicleMileage])
 }

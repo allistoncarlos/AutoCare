@@ -14,6 +14,7 @@
 		A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */ = {isa = PBXBuildFile; productRef = A53B23E82B6443450025AFB1 /* FormValidator */; };
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
 		A58ED06E2B83FBBA0023295E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58ED06D2B83FBBA0023295E /* LoginView.swift */; };
+		A5B8898C2BA77488007CB002 /* VehicleMileage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B8898B2BA77488007CB002 /* VehicleMileage.swift */; };
 		A5C3A94B2BA716D800A0CC21 /* MileagesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */; };
 		A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */; };
 		A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */; };
@@ -41,6 +42,7 @@
 		A52C71E72B850CCD007BAFEE /* LoginState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginState.swift; sourceTree = "<group>"; };
 		A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		A58ED06D2B83FBBA0023295E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		A5B8898B2BA77488007CB002 /* VehicleMileage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileage.swift; sourceTree = "<group>"; };
 		A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileagesRouter.swift; sourceTree = "<group>"; };
 		A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListViewModel.swift; sourceTree = "<group>"; };
 		A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListState.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 			children = (
 				A5FCB7862AED45AE0038A546 /* Vehicle.swift */,
 				A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */,
+				A5B8898B2BA77488007CB002 /* VehicleMileage.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				A5C3A94B2BA716D800A0CC21 /* MileagesRouter.swift in Sources */,
 				A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */,
 				A58ED06E2B83FBBA0023295E /* LoginView.swift in Sources */,
+				A5B8898C2BA77488007CB002 /* VehicleMileage.swift in Sources */,
 				A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */,
 				A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */,
 				A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */,
