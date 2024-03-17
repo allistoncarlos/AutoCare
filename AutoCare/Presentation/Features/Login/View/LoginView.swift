@@ -48,7 +48,7 @@ struct LoginView: View {
                     .overlay(
                         TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
                     )
-                    .onChange(of: viewModel.state, { oldState, newState in
+                    .onChange(of: viewModel.state, { _, newState in
                         isLoading = newState == .loading
                     })
                     .navigationTitle("Login")

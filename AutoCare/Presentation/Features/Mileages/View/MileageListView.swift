@@ -30,7 +30,7 @@ struct MileageListView: View {
         .task {
             await viewModel.setup(app: app)
         }
-        .onChange(of: viewModel.state, { oldState, newState in
+        .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
             
             isNewVehiclePresented = newState == .newVehicle
