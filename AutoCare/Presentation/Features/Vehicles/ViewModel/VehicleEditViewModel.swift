@@ -16,7 +16,8 @@ extension VehicleEditView {
     class ViewModel: ObservableObject {
         // MARK: - Published properties
         @Published var state: VehicleEditState = .idle
-        @Published var vehicle: Vehicle
+        @Published var vehicle: Vehicle = Vehicle()
+        @Published var vehicleId: String? = nil
         @Published var vehicleTypes = [VehicleType]()
         @Published var isFormValid = false
         
@@ -59,11 +60,11 @@ extension VehicleEditView {
         
         // MARK: - Init
         init(
-            vehicle: Vehicle = Vehicle(),
+            vehicleId: String?,
             realm: Realm
         ) {
-            self.vehicle = vehicle
             self.realm = realm
+            self.vehicleId = vehicleId
             
             $state
                 .receive(on: RunLoop.main)
@@ -85,7 +86,7 @@ extension VehicleEditView {
 
             state = .successVehicleTypes(Array(vehicleTypes))
         }
-        
+
         func save() async {
             state = .loading
             
@@ -105,8 +106,6 @@ extension VehicleEditView {
                     vehicle.year = self.year
                     vehicle.licensePlate = self.licensePlate
                     vehicle.odometer = odometer
-                    
-                    
                     
                     try await realm.asyncWrite {
                         realm.add(vehicle)
