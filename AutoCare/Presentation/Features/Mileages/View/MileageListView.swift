@@ -15,6 +15,7 @@ struct MileageListView: View {
     @ObservedObject var viewModel: ViewModel
     @State private var isLoading = true
     @State private var isNewVehiclePresented = false
+    @State private var selectedVehicleId: String? = nil
     
     var body: some View {
         NavigationStack {
@@ -36,11 +37,12 @@ struct MileageListView: View {
         })
         .sheet(isPresented: $isNewVehiclePresented) {
             if app.currentUser != nil,
-                let realm = viewModel.realm {
-                VehicleEditView(
-                    viewModel: VehicleEditView.ViewModel(realm: realm)
+               let realm = viewModel.realm {
+                viewModel.showEditVehicleView(
+                    realm: realm,
+                    vehicleId: $selectedVehicleId.wrappedValue,
+                    isPresented: $isNewVehiclePresented
                 )
-                .interactiveDismissDisabled()
             }
         }
     }

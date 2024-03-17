@@ -8,19 +8,33 @@
 import Foundation
 import RealmSwift
 import Realm
+import SwiftUI
 
 extension MileageListView {
     @MainActor
     class ViewModel: ObservableObject {
         @Published var state: MileageListState = .idle
         
-        private var app: App?
+        private var app: RealmSwift.App?
         var realm: Realm? = nil
         
-        func setup(app: App) async {
+        func setup(app: RealmSwift.App) async {
             self.app = app
             
             await fetchVehicles()
+        }
+        
+        // MARK: - Router
+        func showEditVehicleView(
+            realm: Realm,
+            vehicleId: String?,
+            isPresented: Binding<Bool>
+        ) -> some View {
+            return MileagesRouter.makeEditVehicleView(
+                realm: realm,
+                vehicleId: vehicleId,
+                isPresented: isPresented
+            )
         }
         
         private func fetchVehicles() async {

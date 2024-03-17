@@ -15,6 +15,8 @@ struct VehicleEditView: View {
     @State private var isLoading = true
     @State private var selectedYear = ""
     
+    @Binding var isPresented: Bool
+    
     var currentYear: Int = Calendar(identifier: .gregorian).dateComponents([.year], from: .now).year!
     
     var selectableYears: [String] {
@@ -81,6 +83,10 @@ struct VehicleEditView: View {
         }
         .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
+            
+            if newState == .successSavedVehicle {
+                isPresented = false
+            }
         })
         .onChange(of: selectedYear, { _, newYear in
             viewModel.year = newYear
