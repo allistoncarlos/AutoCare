@@ -19,8 +19,23 @@ struct MileageListView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Hello, World!")
+            ScrollView {
+                ForEach(viewModel.vehicleMileages, id: \.id) { vehicleMileage in
+                    NavigationLink(value: vehicleMileage.id) {
+                        MileageListItem(vehicleMileage: vehicleMileage)
+                    }
+                }
+            }
+            .toolbar {
+                Button(action: {}) {
+                    NavigationLink {
+//                        viewModel.showMileageEditView(
+//                            navigationPath: $presentedMileages
+//                        )
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
             }
         }
         .disabled(isLoading)

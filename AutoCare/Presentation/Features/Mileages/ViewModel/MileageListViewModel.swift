@@ -9,17 +9,33 @@ import Foundation
 import RealmSwift
 import Realm
 import SwiftUI
+import Combine
 
 extension MileageListView {
     @MainActor
     class ViewModel: ObservableObject {
         @Published var state: MileageListState = .idle
+        @Published var vehicleMileages = [VehicleMileage]()
+        
+        // MARK: - Properties
+        var realm: Realm? = nil
         
         private var app: RealmSwift.App?
-        var realm: Realm? = nil
+        private var cancellable = Set<AnyCancellable>()
         
         func setup(app: RealmSwift.App) async {
             self.app = app
+            
+            $state
+                .receive(on: RunLoop.main)
+                .sink { [weak self] state in
+                    switch state {
+                    case let .successVehicleMileages(vehicleMileages):
+                        self?.vehicleMileages = vehicleMileages
+                    default:
+                        break
+                    }
+                }.store(in: &cancellable)
             
             await fetchVehicles()
         }
@@ -79,25 +95,16 @@ extension MileageListView {
                                 waitForSync: .onCreation
                             )
                         
-                        print(Array(vehicleMileages))
-                        print(vehicleMileages.count)
+                        var vehicleMileagesArray = Array(vehicleMileages)
+                        vehicleMileagesArray = vehicleMileagesArray.sorted(by: {
+                            $0.date.compare($1.date) == .orderedDescending
+                        })
                         
-                        state = .successVehicleMileages(Array(vehicleMileages))
+                        state = .successVehicleMileages(vehicleMileagesArray)
                     }
                 }
             }
         }
-        
-        private func fetchVehicleMileages() {
-            if let realm {
-                state = .loading
-                
-                let vehicleMileages = Array(realm.objects(VehicleMileage.self))
-                
-                state = .successVehicleMileages(Array(vehicleMileages))
-            }
-        }
-        
         
         private func openRealm() async throws -> Realm {
             guard let app = app, let user = app.currentUser else {
