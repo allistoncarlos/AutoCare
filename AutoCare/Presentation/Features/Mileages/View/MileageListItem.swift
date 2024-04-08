@@ -46,7 +46,7 @@ struct MileageListItem: View {
             calculatedMileage: 10.35,
             complete: true,
             owner_id: "1",
-            vehicle_id: try! ObjectId(string: "12345")
+            vehicle_id: try! ObjectId(string: "65f7489acdac2f577161d7f7")
         )
     )
 }
