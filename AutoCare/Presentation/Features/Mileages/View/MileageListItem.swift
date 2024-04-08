@@ -13,23 +13,42 @@ struct MileageListItem: View {
     
     var body: some View {
         VStack {
-            Text("\(vehicleMileage.date.toFormattedString(dateFormat: AutoCareApp.dateFormat))")
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .topLeading)
-            
             HStack {
                 VStack(alignment: .leading) {
-                    Text("\(vehicleMileage.liters) litros")
-                    Text("\(vehicleMileage.calculatedMileage) km/L")
+                    Text("\(vehicleMileage.date.toFormattedString(dateFormat: AutoCareApp.dateFormat))")
+                        .font(.headline)
+
+                    if let liters = vehicleMileage.liters
+                        .toLeadingZerosString(decimalPlaces: 3) {
+                        Text("\(liters) Litros")
+                            .font(.title)
+                    }
+                    
+                    if let calculatedMileage = vehicleMileage.calculatedMileage.toLeadingZerosString(decimalPlaces: 3) {
+                        Text("\(calculatedMileage) km/L")
+                            .font(.callout)
+                    }
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .topLeading)
                 
                 VStack(alignment: .trailing) {
-                    Text("\(vehicleMileage.totalCost)")
-                    Text("\(vehicleMileage.fuelCost)")
+                    Text("\(vehicleMileage.odometerDifference) km")
+                        .font(.subheadline)
+                    
+                    if let totalCost = vehicleMileage.totalCost.toCurrencyString() {
+                        Text(totalCost)
+                            .font(.title)
+                    }
+                    
+                    if let fuelCost = vehicleMileage.fuelCost.toCurrencyString() {
+                        Text(fuelCost)
+                            .font(.callout)
+                    }
                 }
                 
             }
             .frame(minWidth: 0, maxWidth: .infinity)
+            .foregroundStyle(.foreground)
         }
         .padding()
     }
@@ -39,11 +58,12 @@ struct MileageListItem: View {
     MileageListItem(
         vehicleMileage: VehicleMileage(
             date: Date(),
-            totalCost: 205.36,
-            odometer: 12450,
-            liters: 37.123,
+            totalCost: 131.55,
+            odometer: 685,
+            odometerDifference: 250,
+            liters: 22.720,
             fuelCost: 5.97,
-            calculatedMileage: 10.35,
+            calculatedMileage: 11.0,
             complete: true,
             owner_id: "1",
             vehicle_id: try! ObjectId(string: "65f7489acdac2f577161d7f7")

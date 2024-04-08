@@ -13,6 +13,7 @@ class VehicleMileage: Object, Identifiable {
     @Persisted var date: Date = Date()
     @Persisted var totalCost: Decimal128 = 0
     @Persisted var odometer: Int = 0
+    @Persisted var odometerDifference: Int = 0
     @Persisted var liters: Decimal128 = 0
     @Persisted var fuelCost: Decimal128 = 0
     @Persisted var calculatedMileage: Decimal128 = 0
@@ -24,6 +25,7 @@ class VehicleMileage: Object, Identifiable {
         date: Date,
         totalCost: Decimal128,
         odometer: Int,
+        odometerDifference: Int,
         liters: Decimal128,
         fuelCost: Decimal128,
         calculatedMileage: Decimal128,
@@ -36,6 +38,7 @@ class VehicleMileage: Object, Identifiable {
         self.date = date
         self.totalCost = totalCost
         self.odometer = odometer
+        self.odometerDifference = odometerDifference
         self.liters = liters
         self.fuelCost = fuelCost
         self.calculatedMileage = calculatedMileage
