@@ -8,6 +8,7 @@
 import SwiftUI
 import Realm
 import TTProgressHUD
+import RealmSwift
 
 struct MileageListView: View {
     @EnvironmentObject var app: RLMApp
@@ -15,26 +16,36 @@ struct MileageListView: View {
     @ObservedObject var viewModel: ViewModel
     @State private var isLoading = true
     @State private var isNewVehiclePresented = false
-    @State private var selectedVehicleId: String? = nil
+    @State private var selectedVehicleMileage: VehicleMileage? = nil
+    
+    @State private var presentedMileages = NavigationPath()
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 ForEach(viewModel.vehicleMileages, id: \.id) { vehicleMileage in
-                    NavigationLink(value: vehicleMileage.id) {
+                    NavigationLink(value: vehicleMileage) {
                         MileageListItem(vehicleMileage: vehicleMileage)
                     }
                 }
             }
             .toolbar {
                 Button(action: {}) {
-                    NavigationLink {
-//                        viewModel.showMileageEditView(
-//                            navigationPath: $presentedMileages
-//                        )
-                    } label: {
+                    NavigationLink(value: VehicleMileage()) {
                         Image(systemName: "plus")
                     }
+                }
+            }
+            .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
+                if let user = app.currentUser,
+                   let realm = viewModel.realm,
+                   let vehicleId = viewModel.selectedVehicle?._id {
+                    navigateToEditMileageView(
+                        realm: realm,
+                        user: user,
+                        vehicleId: vehicleId,
+                        vehicleMileage: vehicleMileage
+                    )
                 }
             }
         }
@@ -52,14 +63,31 @@ struct MileageListView: View {
         })
         .sheet(isPresented: $isNewVehiclePresented) {
             if app.currentUser != nil,
-               let realm = viewModel.realm {
+               let realm = viewModel.realm,
+               let vehicleId = viewModel.selectedVehicle?._id
+            {
                 viewModel.showEditVehicleView(
                     realm: realm,
-                    vehicleId: $selectedVehicleId.wrappedValue,
+                    vehicleId: vehicleId,
                     isPresented: $isNewVehiclePresented
                 )
             }
         }
+    }
+    
+    func navigateToEditMileageView(
+        realm: Realm,
+        user: User,
+        vehicleId: ObjectId,
+        vehicleMileage: VehicleMileage? = nil
+    ) -> some View {
+        return viewModel.editMileageView(
+            navigationPath: $presentedMileages,
+            realm: realm,
+            userId: user.id,
+            vehicleId: vehicleId,
+            vehicleMileage: vehicleMileage
+        )
     }
 }
 

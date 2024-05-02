@@ -16,6 +16,7 @@ extension MileageListView {
     class ViewModel: ObservableObject {
         @Published var state: MileageListState = .idle
         @Published var vehicleMileages = [VehicleMileage]()
+        @Published var selectedVehicle: Vehicle?
         
         // MARK: - Properties
         var realm: Realm? = nil
@@ -43,7 +44,7 @@ extension MileageListView {
         // MARK: - Router
         func showEditVehicleView(
             realm: Realm,
-            vehicleId: String?,
+            vehicleId: ObjectId?,
             isPresented: Binding<Bool>
         ) -> some View {
             return MileagesRouter.makeEditVehicleView(
@@ -53,6 +54,23 @@ extension MileageListView {
             )
         }
         
+        func editMileageView(
+            navigationPath: Binding<NavigationPath>,
+            realm: Realm,
+            userId: String,
+            vehicleId: ObjectId,
+            vehicleMileage: VehicleMileage?
+        ) -> some View {
+            return MileagesRouter.makeEditMileageView(
+                navigationPath: navigationPath,
+                realm: realm,
+                userId: userId,
+                vehicleId: vehicleId,
+                vehicleMileage: vehicleMileage
+            )
+        }
+        
+        // TODO: Criar tela de novo abastecimento, lembrando de calcular a diferença (odometerDifference) para o último abastecimento. A tela não existe, e nem o save, se não me engano
         private func fetchVehicles() async {
             state = .loading
             
@@ -85,6 +103,8 @@ extension MileageListView {
                     // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
                     
                     if let vehicle = vehicles.first {
+                        self.selectedVehicle = vehicle
+                        
                         let vehicleMileages = try! await realm.objects(VehicleMileage.self)
                             .where {
                                 $0.owner_id == user.id &&
