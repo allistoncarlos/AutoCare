@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		A50014B52B86626000040E3C /* MainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50014B42B86626000040E3C /* MainButtonStyle.swift */; };
 		A50014BB2B86726A00040E3C /* TTProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = A50014BA2B86726A00040E3C /* TTProgressHUD */; };
+		A50FC8982BE6C12B0044E126 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50FC8972BE6C12B0044E126 /* View+Extensions.swift */; };
+		A50FC89B2BE6C1550044E126 /* NavigationViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50FC89A2BE6C1550044E126 /* NavigationViewModifier.swift */; };
 		A529BB942BC85596003DCCBC /* MileageEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A529BB932BC85596003DCCBC /* MileageEditView.swift */; };
 		A529BB962BC855A6003DCCBC /* MileageEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A529BB952BC855A6003DCCBC /* MileageEditViewModel.swift */; };
 		A52C71E52B850CAA007BAFEE /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52C71E42B850CAA007BAFEE /* LoginViewModel.swift */; };
@@ -43,6 +45,8 @@
 
 /* Begin PBXFileReference section */
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
+		A50FC8972BE6C12B0044E126 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
+		A50FC89A2BE6C1550044E126 /* NavigationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewModifier.swift; sourceTree = "<group>"; };
 		A529BB932BC85596003DCCBC /* MileageEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageEditView.swift; sourceTree = "<group>"; };
 		A529BB952BC855A6003DCCBC /* MileageEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageEditViewModel.swift; sourceTree = "<group>"; };
 		A52C71E42B850CAA007BAFEE /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -106,6 +110,14 @@
 			path = Button;
 			sourceTree = "<group>";
 		};
+		A50FC8992BE6C1440044E126 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				A50FC89A2BE6C1550044E126 /* NavigationViewModifier.swift */,
+			);
+			path = Modifiers;
+			sourceTree = "<group>";
+		};
 		A52C71E62B850CC5007BAFEE /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -125,8 +137,10 @@
 		A55918DF2BA9C52D00EB3ED3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				A50FC8992BE6C1440044E126 /* Modifiers */,
 				A55918E02BA9C53D00EB3ED3 /* Date+Extensions.swift */,
 				A581939B2BC4296200887056 /* Number+Extensions.swift */,
+				A50FC8972BE6C12B0044E126 /* View+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -431,6 +445,8 @@
 				A5B8898C2BA77488007CB002 /* VehicleMileage.swift in Sources */,
 				A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */,
 				A55918DE2BA9BE8300EB3ED3 /* MileageListItem.swift in Sources */,
+				A50FC8982BE6C12B0044E126 /* View+Extensions.swift in Sources */,
+				A50FC89B2BE6C1550044E126 /* NavigationViewModifier.swift in Sources */,
 				A529BB942BC85596003DCCBC /* MileageEditView.swift in Sources */,
 				A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */,
 				A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */,

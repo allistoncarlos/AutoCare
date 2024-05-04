@@ -29,6 +29,7 @@ struct MileageListView: View {
                     }
                 }
             }
+            .navigationView(title: viewModel.selectedVehicle?.name ?? "")
             .toolbar {
                 Button(action: {}) {
                     NavigationLink(value: VehicleMileage()) {
