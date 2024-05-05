@@ -59,7 +59,7 @@ extension MileageListView {
             realm: Realm,
             userId: String,
             vehicleId: ObjectId,
-            vehicleMileage: VehicleMileage?
+            vehicleMileage: VehicleMileage? = nil
         ) -> some View {
             return MileagesRouter.makeEditMileageView(
                 navigationPath: navigationPath,

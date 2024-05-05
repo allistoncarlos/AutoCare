@@ -11,6 +11,7 @@
 		A50014BB2B86726A00040E3C /* TTProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = A50014BA2B86726A00040E3C /* TTProgressHUD */; };
 		A50FC8982BE6C12B0044E126 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50FC8972BE6C12B0044E126 /* View+Extensions.swift */; };
 		A50FC89B2BE6C1550044E126 /* NavigationViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50FC89A2BE6C1550044E126 /* NavigationViewModifier.swift */; };
+		A50FC89D2BE6C4270044E126 /* MileageEditState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50FC89C2BE6C4270044E126 /* MileageEditState.swift */; };
 		A529BB942BC85596003DCCBC /* MileageEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A529BB932BC85596003DCCBC /* MileageEditView.swift */; };
 		A529BB962BC855A6003DCCBC /* MileageEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A529BB952BC855A6003DCCBC /* MileageEditViewModel.swift */; };
 		A52C71E52B850CAA007BAFEE /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52C71E42B850CAA007BAFEE /* LoginViewModel.swift */; };
@@ -47,6 +48,7 @@
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
 		A50FC8972BE6C12B0044E126 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		A50FC89A2BE6C1550044E126 /* NavigationViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewModifier.swift; sourceTree = "<group>"; };
+		A50FC89C2BE6C4270044E126 /* MileageEditState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageEditState.swift; sourceTree = "<group>"; };
 		A529BB932BC85596003DCCBC /* MileageEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageEditView.swift; sourceTree = "<group>"; };
 		A529BB952BC855A6003DCCBC /* MileageEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageEditViewModel.swift; sourceTree = "<group>"; };
 		A52C71E42B850CAA007BAFEE /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				A5DF4BDB2AEEE5DB007D41B2 /* MileageListState.swift */,
+				A50FC89C2BE6C4270044E126 /* MileageEditState.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				A529BB962BC855A6003DCCBC /* MileageEditViewModel.swift in Sources */,
 				A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */,
 				A5DD63E82AF035BB009254C2 /* VehicleEditState.swift in Sources */,
+				A50FC89D2BE6C4270044E126 /* MileageEditState.swift in Sources */,
 				A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */,
 				A5E333892AEBE48F0089DD81 /* AutoCareApp.swift in Sources */,
 				A581939C2BC4296200887056 /* Number+Extensions.swift in Sources */,

@@ -31,10 +31,14 @@ struct MileageListView: View {
             }
             .navigationView(title: viewModel.selectedVehicle?.name ?? "")
             .toolbar {
-                Button(action: {}) {
-                    NavigationLink(value: VehicleMileage()) {
-                        Image(systemName: "plus")
+                NavigationLink {
+                    if let user = app.currentUser,
+                       let realm = viewModel.realm,
+                       let vehicleId = viewModel.selectedVehicle?._id {
+                        navigateToEditMileageView(realm: realm, user: user, vehicleId: vehicleId )
                     }
+                } label: {
+                    Image(systemName: "plus")
                 }
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
