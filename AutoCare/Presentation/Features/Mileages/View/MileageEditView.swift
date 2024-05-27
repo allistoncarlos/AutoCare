@@ -17,6 +17,7 @@ struct MileageEditView: View {
     
     @State private var isSubtitleHidden = false
     @State private var totalCostValue = 0
+    @State private var fuelCost = 0
     @State private var odometer = 0
     
     private var currencyFormatter: NumberFormatterProtocol
@@ -55,6 +56,11 @@ struct MileageEditView: View {
                     }
                     
                     HStack {
+                        Text("Custo Por Litro")
+                        CurrencyTextField(numberFormatter: currencyFormatter, value: $fuelCost)
+                    }
+                    
+                    HStack {
                         Text("Odômetro")
                         CurrencyTextField(numberFormatter: decimalFormatter, value: $odometer)
                     }
@@ -77,6 +83,9 @@ struct MileageEditView: View {
             })
             .onChange(of: totalCostValue, { _, newState in
                 viewModel.totalCost = "\(Decimal(newState) / 100.0)"
+            })
+            .onChange(of: fuelCost, { _, newState in
+                viewModel.fuelCost = "\(Decimal(newState) / 100.0)"
             })
             .onChange(of: odometer, { _, newState in
                 viewModel.odometer = "\(Decimal(newState) / 100.0)"
