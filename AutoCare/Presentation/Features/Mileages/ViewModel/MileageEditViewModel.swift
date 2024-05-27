@@ -33,8 +33,8 @@ extension MileageEditView {
         @FormField(validator: DateValidator(message: "Informe uma data válida"))
         var date: Date = Date()
         
-//        @FormField(validator: NonEmptyValidator(message: "Informe o custo total"))
-        var totalCost: Decimal? = nil
+        @FormField(validator: NonEmptyValidator(message: "Informe o custo total"))
+        var totalCost: String = ""
         
         var odometer: String?
         var liters: String?
@@ -43,7 +43,7 @@ extension MileageEditView {
         
         // MARK: - Validations
         lazy var dateValidation = _date.validation(manager: manager)
-//        lazy var totalCostValidation = _totalCost.validation(manager: manager)
+        lazy var totalCostValidation = _totalCost.validation(manager: manager)
         
         init(
             realm: Realm,

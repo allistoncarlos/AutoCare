@@ -17,20 +17,27 @@ struct MileageEditView: View {
     
     @State private var isSubtitleHidden = false
     @State private var totalCostValue = 0
+    @State private var odometer = 0
     
-    private var numberFormatter: NumberFormatterProtocol
+    private var currencyFormatter: NumberFormatterProtocol
+    private var decimalFormatter: NumberFormatterProtocol
     
     init(
         viewModel: MileageEditView.ViewModel,
         navigationPath: Binding<NavigationPath>,
-        numberFormatter: NumberFormatterProtocol = NumberFormatter()
+        currencyFormatter: NumberFormatterProtocol = NumberFormatter(),
+        decimalFormatter: NumberFormatterProtocol = NumberFormatter()
     ) {
         self.viewModel = viewModel
         self.navigationPath = navigationPath
         
-        self.numberFormatter = numberFormatter
-        self.numberFormatter.numberStyle = .currency
-        self.numberFormatter.maximumFractionDigits = 2
+        self.currencyFormatter = currencyFormatter
+        self.currencyFormatter.numberStyle = .currency
+        self.currencyFormatter.maximumFractionDigits = 2
+        
+        self.decimalFormatter = decimalFormatter
+        self.decimalFormatter.numberStyle = .decimal
+        self.decimalFormatter.maximumFractionDigits = 3
     }
     
     var body: some View {
@@ -42,35 +49,18 @@ struct MileageEditView: View {
                     }
                     .validation(viewModel.dateValidation)
 
-//                    TextField("Custo total", value: $viewModel.totalCost, format: .number.precision(.fractionLength(2)))
-//                        .keyboardType(.decimalPad)
+                    HStack {
+                        Text("Custo total")
+                        CurrencyTextField(numberFormatter: currencyFormatter, value: $totalCostValue)
+                    }
                     
-                    CurrencyTextField(numberFormatter: numberFormatter, value: $totalCostValue)
-//                        .padding(20)
-//                        .overlay(RoundedRectangle(cornerRadius: 16)
-//                                    .stroke(Color.gray.opacity(0.3), lineWidth: 2))
-//                        .frame(height: 100)
-                    
-//                    CurrencyField(
-//                        "Enter meal cost",
-//                        value: Binding(get: {
-//                            viewModel.totalCost.map { NSDecimalNumber(decimal: $0) }
-//                        }, set: { number in
-//                            viewModel.totalCost = number?.decimalValue
-//                        })
-//                    ).keyboardType(.decimalPad)
-                    
-                    
-//                        .validation(viewModel.totalCostValidation)
-                    
-//                    TextField("Custo total", text: $viewModel.totalCost)
-//                        .keyboardType(.decimalPad)
-//                    TextField("Amount", value: $amount, format: .number.precision(.fractionLength(2)))
-//                                .keyboardType(.decimalPad)
-//                        .validation(viewModel.totalCostValidation)
+                    HStack {
+                        Text("Odômetro")
+                        CurrencyTextField(numberFormatter: decimalFormatter, value: $odometer)
+                    }
                 }
             }
-//            .navigationTitle(viewModel.vehicleMileage ? "Novo abastecimento" : "\(viewModel.vehicleMileage?.liters)")
+            .navigationTitle(viewModel.vehicleMileage == nil ? "Novo abastecimento" : "\(viewModel.vehicleMileage!.liters)")
             .toolbar {
                 Button("Salvar") {
                     Task {
@@ -86,7 +76,10 @@ struct MileageEditView: View {
                 isLoading = newState == .loading
             })
             .onChange(of: totalCostValue, { _, newState in
-                viewModel.totalCost = Decimal(newState) / 100.0
+                viewModel.totalCost = "\(Decimal(newState) / 100.0)"
+            })
+            .onChange(of: odometer, { _, newState in
+                viewModel.odometer = "\(Decimal(newState) / 100.0)"
             })
         }
         .task {
@@ -105,7 +98,7 @@ struct MileageEditView: View {
         navigationPath: .constant(
             NavigationPath()
         ),
-        numberFormatter:
+        currencyFormatter:
             PreviewNumberFormatter(locale: Locale(identifier: "pt_BR"))
     )
 }
