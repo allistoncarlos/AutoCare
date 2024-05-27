@@ -20,6 +20,9 @@
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
 		A55918DE2BA9BE8300EB3ED3 /* MileageListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55918DD2BA9BE8300EB3ED3 /* MileageListItem.swift */; };
 		A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55918E02BA9C53D00EB3ED3 /* Date+Extensions.swift */; };
+		A5804B302BEBB6D600BE9602 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5804B2F2BEBB6D600BE9602 /* CurrencyTextField.swift */; };
+		A5804B322BEBB6EC00BE9602 /* CurrencyUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5804B312BEBB6EC00BE9602 /* CurrencyUITextField.swift */; };
+		A5804B352BEBB70A00BE9602 /* PreviewNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */; };
 		A581939C2BC4296200887056 /* Number+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A581939B2BC4296200887056 /* Number+Extensions.swift */; };
 		A58ED06E2B83FBBA0023295E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58ED06D2B83FBBA0023295E /* LoginView.swift */; };
 		A5B8898C2BA77488007CB002 /* VehicleMileage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B8898B2BA77488007CB002 /* VehicleMileage.swift */; };
@@ -56,6 +59,9 @@
 		A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		A55918DD2BA9BE8300EB3ED3 /* MileageListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListItem.swift; sourceTree = "<group>"; };
 		A55918E02BA9C53D00EB3ED3 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		A5804B2F2BEBB6D600BE9602 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
+		A5804B312BEBB6EC00BE9602 /* CurrencyUITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyUITextField.swift; sourceTree = "<group>"; };
+		A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewNumberFormatter.swift; sourceTree = "<group>"; };
 		A581939B2BC4296200887056 /* Number+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Number+Extensions.swift"; sourceTree = "<group>"; };
 		A58ED06D2B83FBBA0023295E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A5B8898B2BA77488007CB002 /* VehicleMileage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileage.swift; sourceTree = "<group>"; };
@@ -145,6 +151,16 @@
 				A50FC8972BE6C12B0044E126 /* View+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A5804B2E2BEBB6C600BE9602 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A5804B2F2BEBB6D600BE9602 /* CurrencyTextField.swift */,
+				A5804B312BEBB6EC00BE9602 /* CurrencyUITextField.swift */,
+				A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		A58ED06A2B83FB9B0023295E /* Login */ = {
@@ -251,6 +267,7 @@
 		A5FCB7752AED431C0038A546 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				A5804B2E2BEBB6C600BE9602 /* Components */,
 				A5FCB7762AED43200038A546 /* Features */,
 				A50014B22B86625100040E3C /* Styles */,
 				A55918DF2BA9C52D00EB3ED3 /* Extensions */,
@@ -428,10 +445,12 @@
 			files = (
 				A5FCB7872AED45AE0038A546 /* Vehicle.swift in Sources */,
 				A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */,
+				A5804B322BEBB6EC00BE9602 /* CurrencyUITextField.swift in Sources */,
 				A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */,
 				A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */,
 				A50014B52B86626000040E3C /* MainButtonStyle.swift in Sources */,
 				A529BB962BC855A6003DCCBC /* MileageEditViewModel.swift in Sources */,
+				A5804B352BEBB70A00BE9602 /* PreviewNumberFormatter.swift in Sources */,
 				A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */,
 				A5DD63E82AF035BB009254C2 /* VehicleEditState.swift in Sources */,
 				A50FC89D2BE6C4270044E126 /* MileageEditState.swift in Sources */,
@@ -454,6 +473,7 @@
 				A529BB942BC85596003DCCBC /* MileageEditView.swift in Sources */,
 				A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */,
 				A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */,
+				A5804B302BEBB6D600BE9602 /* CurrencyTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
