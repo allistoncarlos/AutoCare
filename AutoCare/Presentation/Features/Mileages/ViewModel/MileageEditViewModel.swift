@@ -39,7 +39,7 @@ extension MileageEditView {
         var odometer: String?
         var liters: String?
         var fuelCost: String?
-        var complete: String?
+        var complete: Bool = true
         
         // MARK: - Validations
         lazy var dateValidation = _date.validation(manager: manager)

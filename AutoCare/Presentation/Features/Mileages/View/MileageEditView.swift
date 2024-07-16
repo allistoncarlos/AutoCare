@@ -66,6 +66,8 @@ struct MileageEditView: View {
                         Text("Odômetro")
                         CurrencyTextField(numberFormatter: decimalFormatter, value: $odometer)
                     }
+                    
+                    Toggle("Completo", isOn: $viewModel.complete)
                 }
             }
             .navigationTitle(viewModel.vehicleMileage == nil ? "Novo abastecimento" : "\(viewModel.vehicleMileage!.liters)")
