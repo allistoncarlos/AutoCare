@@ -12,7 +12,9 @@ protocol NumberFormatterProtocol: AnyObject {
     func string(from number: NSNumber) -> String?
     func string(for obj: Any?) -> String?
     var numberStyle: NumberFormatter.Style { get set }
+    var minimumFractionDigits: Int { get set }
     var maximumFractionDigits: Int { get set }
+    var currencySymbol: String! { get set }
 }
 
 extension NumberFormatter: NumberFormatterProtocol { }
@@ -32,6 +34,24 @@ class PreviewNumberFormatter: NumberFormatterProtocol {
         }
         set {
             numberFormatter.numberStyle = newValue
+        }
+    }
+    
+    var currencySymbol: String! {
+        get {
+            return numberFormatter.currencySymbol
+        }
+        set {
+            numberFormatter.currencySymbol = newValue
+        }
+    }
+    
+    var minimumFractionDigits: Int {
+        get {
+            return numberFormatter.minimumFractionDigits
+        }
+        set {
+            numberFormatter.minimumFractionDigits = newValue
         }
     }
     

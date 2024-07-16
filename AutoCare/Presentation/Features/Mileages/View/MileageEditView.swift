@@ -39,6 +39,8 @@ struct MileageEditView: View {
         self.decimalFormatter = decimalFormatter
         self.decimalFormatter.numberStyle = .decimal
         self.decimalFormatter.maximumFractionDigits = 3
+        self.decimalFormatter.minimumFractionDigits = 3
+        self.decimalFormatter.currencySymbol = ""
     }
     
     var body: some View {
