@@ -11,6 +11,6 @@ enum MileageEditState: Equatable {
     case idle
     case loading
     case error
-    case successLastVehicleMileage(VehicleMileage?)
+    case successPreviousMileage(VehicleMileage?)
     case successSave
 }

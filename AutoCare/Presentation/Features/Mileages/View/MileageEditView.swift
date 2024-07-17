@@ -19,6 +19,7 @@ struct MileageEditView: View {
     @State private var totalCostValue = 0
     @State private var fuelCost = 0
     @State private var odometer = 0
+    @State private var liters = 0
     
     private var currencyFormatter: NumberFormatterProtocol
     private var decimalFormatter: NumberFormatterProtocol
@@ -55,6 +56,7 @@ struct MileageEditView: View {
                     HStack {
                         Text("Custo total")
                         CurrencyTextField(numberFormatter: currencyFormatter, value: $totalCostValue)
+                            .validation(viewModel.totalCostValidation)
                     }
                     
                     HStack {
@@ -63,11 +65,84 @@ struct MileageEditView: View {
                     }
                     
                     HStack {
+                        Text("Litros")
+                        CurrencyTextField(numberFormatter: decimalFormatter, value: $liters)
+                    }
+                    
+                    HStack {
                         Text("Odômetro")
                         CurrencyTextField(numberFormatter: decimalFormatter, value: $odometer)
                     }
                     
                     Toggle("Completo", isOn: $viewModel.complete)
+                }
+                
+                if let odometerDifference = viewModel.odometer {
+                    Section(header: Text("Diferença de abastecimento")) {
+                        VStack(alignment: .leading) {
+                            Text("\(odometerDifference) km").font(.subheadline)
+                        }
+                        .padding([.leading, .trailing], 20)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        .listRowInsets(EdgeInsets())
+                        .background(Color(UIColor.systemGroupedBackground))
+                    }
+                }
+                
+                if let previousMileage = viewModel.previousMileage {
+                    Section(header: Text("Abastecimento anterior")) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("Data").font(.headline)
+                                Spacer()
+                                Text(previousMileage.date.toFormattedString(dateFormat: AutoCareApp.dateTimeFormat)).font(.headline)
+                            }
+                            
+                            HStack {
+                                Text("Odômetro").font(.subheadline)
+                                Spacer()
+                                Text("\(previousMileage.odometer) km").font(.subheadline)
+                            }
+                            
+                            HStack {
+                                Text("Diferença").font(.subheadline)
+                                Spacer()
+                                Text("\(previousMileage.odometerDifference) km").font(.subheadline)
+                            }
+                            
+                            HStack {
+                                if let totalCost = previousMileage.totalCost.toCurrencyString() {
+                                    Text("Custo Total").font(.subheadline)
+                                    Spacer()
+                                    Text(totalCost).font(.subheadline)
+                                }
+                            }
+                                
+                            HStack {
+                                if let fuelCost = previousMileage.fuelCost.toCurrencyString() {
+                                    Text("Preço Litro").font(.subheadline)
+                                    Spacer()
+                                    Text(fuelCost).font(.subheadline)
+                                }
+                            }
+                            
+                            HStack {
+                                Text("Litros").font(.subheadline)
+                                Spacer()
+                                Text("\(previousMileage.liters) L").font(.subheadline)
+                            }
+                            
+                            HStack {
+                                Text("Consumo").font(.subheadline)
+                                Spacer()
+                                Text("\(previousMileage.calculatedMileage) km/L").font(.subheadline)
+                            }
+                        }
+                        .padding([.leading, .trailing], 20)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        .listRowInsets(EdgeInsets())
+                        .background(Color(UIColor.systemGroupedBackground))
+                    }
                 }
             }
             .navigationTitle(viewModel.vehicleMileage == nil ? "Novo abastecimento" : "\(viewModel.vehicleMileage!.liters)")
@@ -93,6 +168,11 @@ struct MileageEditView: View {
             })
             .onChange(of: odometer, { _, newState in
                 viewModel.odometer = "\(Decimal(newState) / 100.0)"
+                
+                viewModel.odometerDifference = viewModel.odometer
+            })
+            .onChange(of: liters, { _, newState in
+                viewModel.liters = "\(Decimal(newState) / 100.0)"
             })
         }
         .task {

@@ -18,7 +18,7 @@ extension MileageEditView {
         @Published var state: MileageEditState = .idle
         @Published var vehicleMileage: VehicleMileage?
         
-        var lastVehicleMileage: VehicleMileage?
+        var previousMileage: VehicleMileage?
         
         private var cancellable = Set<AnyCancellable>()
         private var realm: Realm
@@ -28,7 +28,6 @@ extension MileageEditView {
         
         @Published var manager = FormManager(validationType: .immediate)
         
-        
         // MARK: - Form Fields
         @FormField(validator: DateValidator(message: "Informe uma data válida"))
         var date: Date = Date()
@@ -37,6 +36,7 @@ extension MileageEditView {
         var totalCost: String = ""
         
         var odometer: String?
+        var odometerDifference: String?
         var liters: String?
         var fuelCost: String?
         var complete: Bool = true
@@ -58,8 +58,8 @@ extension MileageEditView {
                 .receive(on: RunLoop.main)
                 .sink { [weak self] state in
                     switch state {
-                    case let .successLastVehicleMileage(lastVehicleMileage):
-                        self?.lastVehicleMileage = lastVehicleMileage
+                    case let .successPreviousMileage(previousMileage):
+                        self?.previousMileage = previousMileage
                     default:
                         break
                     }
@@ -92,7 +92,7 @@ extension MileageEditView {
                         }.first
                 }
                 
-                state = .successLastVehicleMileage(lastVehicleMileage)
+                state = .successPreviousMileage(lastVehicleMileage)
             } catch {
                 print(error)
                 state = .error
