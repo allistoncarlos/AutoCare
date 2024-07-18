@@ -70,7 +70,6 @@ extension MileageListView {
             )
         }
         
-        // TODO: Criar tela de novo abastecimento, lembrando de calcular a diferença (odometerDifference) para o último abastecimento. A tela não existe, e nem o save, se não me engano
         private func fetchVehicles() async {
             state = .loading
             

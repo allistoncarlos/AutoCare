@@ -23,12 +23,14 @@ struct MileageEditView: View {
     
     private var currencyFormatter: NumberFormatterProtocol
     private var decimalFormatter: NumberFormatterProtocol
+    private var integerFormatter: NumberFormatterProtocol
     
     init(
         viewModel: MileageEditView.ViewModel,
         navigationPath: Binding<NavigationPath>,
         currencyFormatter: NumberFormatterProtocol = NumberFormatter(),
-        decimalFormatter: NumberFormatterProtocol = NumberFormatter()
+        decimalFormatter: NumberFormatterProtocol = NumberFormatter(),
+        integerFormatter: NumberFormatterProtocol = NumberFormatter()
     ) {
         self.viewModel = viewModel
         self.navigationPath = navigationPath
@@ -42,6 +44,10 @@ struct MileageEditView: View {
         self.decimalFormatter.maximumFractionDigits = 3
         self.decimalFormatter.minimumFractionDigits = 3
         self.decimalFormatter.currencySymbol = ""
+        
+        self.integerFormatter = integerFormatter
+        self.integerFormatter.numberStyle = .none
+        self.integerFormatter.maximumFractionDigits = 0
     }
     
     var body: some View {
@@ -67,17 +73,18 @@ struct MileageEditView: View {
                     HStack {
                         Text("Litros")
                         CurrencyTextField(numberFormatter: decimalFormatter, value: $liters)
+                        
                     }
                     
                     HStack {
                         Text("Odômetro")
-                        CurrencyTextField(numberFormatter: decimalFormatter, value: $odometer)
+                        CurrencyTextField(numberFormatter: integerFormatter, value: $odometer)
                     }
                     
                     Toggle("Completo", isOn: $viewModel.complete)
                 }
                 
-                if let odometerDifference = viewModel.odometer {
+                if let odometerDifference = viewModel.odometerDifference, odometerDifference > 0 {
                     Section(header: Text("Diferença de abastecimento")) {
                         VStack(alignment: .leading) {
                             Text("\(odometerDifference) km").font(.subheadline)
@@ -168,8 +175,7 @@ struct MileageEditView: View {
             })
             .onChange(of: odometer, { _, newState in
                 viewModel.odometer = "\(Decimal(newState) / 100.0)"
-                
-                viewModel.odometerDifference = viewModel.odometer
+                viewModel.updateOdometerDifference()
             })
             .onChange(of: liters, { _, newState in
                 viewModel.liters = "\(Decimal(newState) / 100.0)"

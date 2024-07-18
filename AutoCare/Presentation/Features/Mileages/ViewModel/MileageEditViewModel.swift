@@ -36,7 +36,7 @@ extension MileageEditView {
         var totalCost: String = ""
         
         var odometer: String?
-        var odometerDifference: String?
+        @Published var odometerDifference: Int?
         var liters: String?
         var fuelCost: String?
         var complete: Bool = true
@@ -66,6 +66,12 @@ extension MileageEditView {
                 }.store(in: &cancellable)
         }
         
+        func updateOdometerDifference() {
+            if let odometer, let intOdometer = Int(odometer), let previousMileage {
+                self.odometerDifference = intOdometer - previousMileage.odometer
+            }
+        }
+        
         func fetchLastVehicleMileage() async {
             do {
                 guard let userId = AutoCareApp.app.currentUser?.id else {
@@ -89,7 +95,7 @@ extension MileageEditView {
                         .where {
                             $0.owner_id == userId &&
                             $0.vehicle_id == vehicleId
-                        }.first
+                        }.last
                 }
                 
                 state = .successPreviousMileage(lastVehicleMileage)
