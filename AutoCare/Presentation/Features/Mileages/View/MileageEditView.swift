@@ -73,7 +73,6 @@ struct MileageEditView: View {
                     HStack {
                         Text("Litros")
                         CurrencyTextField(numberFormatter: decimalFormatter, value: $liters)
-                        
                     }
                     
                     HStack {
@@ -178,7 +177,7 @@ struct MileageEditView: View {
                 viewModel.updateOdometerDifference()
             })
             .onChange(of: liters, { _, newState in
-                viewModel.liters = "\(Decimal(newState) / 100.0)"
+                viewModel.liters = (Decimal(newState) / 100.0)
             })
         }
         .task {

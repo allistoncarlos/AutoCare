@@ -36,10 +36,11 @@ extension MileageEditView {
         var totalCost: String = ""
         
         var odometer: String?
-        @Published var odometerDifference: Int?
-        var liters: String?
+        var liters: Decimal?
         var fuelCost: String?
         var complete: Bool = true
+        
+        @Published var odometerDifference: Int?
         
         // MARK: - Validations
         lazy var dateValidation = _date.validation(manager: manager)
@@ -70,6 +71,16 @@ extension MileageEditView {
             if let odometer, let intOdometer = Int(odometer), let previousMileage {
                 self.odometerDifference = intOdometer - previousMileage.odometer
             }
+        }
+        
+        func calculateMileage() -> Decimal? {
+            // Diferença de quilometragem, pela litragem
+            if let odometerDifference = odometerDifference, let liters = liters {
+                let calculatedMileage = Decimal(odometerDifference) / liters
+                return calculatedMileage
+            }
+            
+            return nil
         }
         
         func fetchLastVehicleMileage() async {
@@ -114,20 +125,39 @@ extension MileageEditView {
                         throw RLMError(.fail)
                     }
                     
-//                    vehicle.vehicleType = vehicleTypes.first { $0.name == selectedVehicleType }
-//                    vehicle.owner_id = userId
-//                    vehicle.name = self.name
-//                    vehicle.brand = self.brand
-//                    vehicle.model = self.model
-//                    vehicle.year = self.year
-//                    vehicle.licensePlate = self.licensePlate
-//                    vehicle.odometer = odometer
-//                    
-//                    try await realm.asyncWrite {
-//                        realm.add(vehicle)
-//                    }
-                    
-                    state = .successSave
+                    if let calculatedMileage = calculateMileage() {
+                        let resultVehicleMileage = vehicleMileage ?? VehicleMileage()
+                        
+                        resultVehicleMileage.owner_id = userId
+                        resultVehicleMileage.vehicle_id = vehicleId
+                        
+                        if let odometer, let odometer = Int(odometer) {
+                            resultVehicleMileage.odometer = odometer
+                        }
+                        
+                        if let odometerDifference {
+                            resultVehicleMileage.odometerDifference = odometerDifference
+                        }
+                        
+                        if let liters {
+                            resultVehicleMileage.liters = Decimal128(value: liters)
+                        }
+                        
+                        if let fuelCost {
+                            resultVehicleMileage.fuelCost = Decimal128(value: fuelCost)
+                        }
+                        
+                        resultVehicleMileage.totalCost = Decimal128(value: totalCost)
+                        resultVehicleMileage.calculatedMileage = Decimal128(value: calculatedMileage)
+    
+                        try await realm.asyncWrite {
+                            realm.add(resultVehicleMileage)
+                        }
+                        
+                        state = .successSave
+                    } else {
+                        state = .error
+                    }
                 } catch {
                     print(error)
                     state = .error
