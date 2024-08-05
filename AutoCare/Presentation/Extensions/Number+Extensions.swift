@@ -23,6 +23,25 @@ extension Int {
     }
 }
 
+extension Decimal {
+    public func roundedDecimal128(places: Int16) -> Decimal128 {
+        let roundingBehavior = NSDecimalNumberHandler(
+            roundingMode: .bankers,
+            scale: places,
+            raiseOnExactness: true,
+            raiseOnOverflow: true,
+            raiseOnUnderflow: true,
+            raiseOnDivideByZero: true
+        )
+
+        let decimalNumber = NSDecimalNumber(decimal: self)
+        let roundedNumber = decimalNumber.rounding(accordingToBehavior: roundingBehavior)
+        
+        let roundedDecimal = roundedNumber as Decimal
+        return Decimal128(value: roundedDecimal)
+    }
+}
+
 extension Decimal128 {
     func toLeadingZerosString(decimalPlaces: Int) -> String? {
         let numberFormatter = NumberFormatter()

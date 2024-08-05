@@ -181,7 +181,7 @@ struct MileageEditView: View {
             })
         }
         .task {
-            await viewModel.fetchLastVehicleMileage()
+            await viewModel.fetchPreviousVehicleMileage()
         }
     }
 }

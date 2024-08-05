@@ -73,17 +73,18 @@ extension MileageEditView {
             }
         }
         
-        func calculateMileage() -> Decimal? {
+        func calculateMileage() -> Decimal128? {
             // Diferença de quilometragem, pela litragem
             if let odometerDifference = odometerDifference, let liters = liters {
                 let calculatedMileage = Decimal(odometerDifference) / liters
-                return calculatedMileage
+                let roundedMileage = calculatedMileage.roundedDecimal128(places: 2)
+                return roundedMileage
             }
             
             return nil
         }
         
-        func fetchLastVehicleMileage() async {
+        func fetchPreviousVehicleMileage() async {
             do {
                 guard let userId = AutoCareApp.app.currentUser?.id else {
                     throw RLMError(.fail)
@@ -106,7 +107,9 @@ extension MileageEditView {
                         .where {
                             $0.owner_id == userId &&
                             $0.vehicle_id == vehicleId
-                        }.last
+                        }
+                        .sorted { $0.date > $1.date }
+                        .first
                 }
                 
                 state = .successPreviousMileage(lastVehicleMileage)
@@ -130,6 +133,7 @@ extension MileageEditView {
                         
                         resultVehicleMileage.owner_id = userId
                         resultVehicleMileage.vehicle_id = vehicleId
+                        resultVehicleMileage.date = date
                         
                         if let odometer, let odometer = Int(odometer) {
                             resultVehicleMileage.odometer = odometer
@@ -148,7 +152,7 @@ extension MileageEditView {
                         }
                         
                         resultVehicleMileage.totalCost = Decimal128(value: totalCost)
-                        resultVehicleMileage.calculatedMileage = Decimal128(value: calculatedMileage)
+                        resultVehicleMileage.calculatedMileage = calculatedMileage
     
                         try await realm.asyncWrite {
                             realm.add(resultVehicleMileage)
