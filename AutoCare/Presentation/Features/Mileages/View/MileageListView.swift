@@ -31,14 +31,17 @@ struct MileageListView: View {
             }
             .navigationView(title: viewModel.selectedVehicle?.name ?? "")
             .toolbar {
-                NavigationLink {
-                    if let user = app.currentUser,
-                       let realm = viewModel.realm,
-                       let vehicleId = viewModel.selectedVehicle?._id {
-                        navigateToEditMileageView(realm: realm, user: user, vehicleId: vehicleId )
+                Button(action: {}) {
+                    NavigationLink(value: String()) {
+                        Image(systemName: "plus")
                     }
-                } label: {
-                    Image(systemName: "plus")
+                }
+            }
+            .navigationDestination(for: String.self) { _ in
+                if let user = app.currentUser,
+                   let realm = viewModel.realm,
+                   let vehicleId = viewModel.selectedVehicle?._id {
+                    navigateToEditMileageView(realm: realm, user: user, vehicleId: vehicleId)
                 }
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
@@ -66,6 +69,13 @@ struct MileageListView: View {
             
             isNewVehiclePresented = newState == .newVehicle
         })
+        .onChange(of: presentedMileages) { oldValue, newValue in
+            if newValue.isEmpty {
+                Task {
+                    // TODO: Refatorar o método de fetchVehicleMileages, pra poder chamar no setup e aqui também
+                }
+            }
+        }
         .sheet(isPresented: $isNewVehiclePresented) {
             if app.currentUser != nil,
                let realm = viewModel.realm,
