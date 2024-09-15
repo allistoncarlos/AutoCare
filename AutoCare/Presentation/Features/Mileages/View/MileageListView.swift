@@ -69,10 +69,20 @@ struct MileageListView: View {
             
             isNewVehiclePresented = newState == .newVehicle
         })
-        .onChange(of: presentedMileages) { oldValue, newValue in
+        .onChange(of: presentedMileages) {
+            oldValue,
+            newValue in
             if newValue.isEmpty {
                 Task {
-                    // TODO: Refatorar o método de fetchVehicleMileages, pra poder chamar no setup e aqui também
+                    if let user = app.currentUser,
+                       let realm = viewModel.realm,
+                       let vehicleId = viewModel.selectedVehicle?._id {
+                        await viewModel.fetchVehicleMileages(
+                            realm:realm,
+                            userId:user.id,
+                            vehicleId:vehicleId
+                        )
+                    }
                 }
             }
         }

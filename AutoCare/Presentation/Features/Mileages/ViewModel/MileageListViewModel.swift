@@ -70,6 +70,29 @@ extension MileageListView {
             )
         }
         
+        func fetchVehicleMileages(
+            realm: Realm,
+            userId: String,
+            vehicleId: ObjectId
+        ) async {
+            let vehicleMileages = try! await realm.objects(VehicleMileage.self)
+                .where {
+                    $0.owner_id == userId &&
+                    $0.vehicle_id == vehicleId
+                }
+                .subscribe(
+                    name: "vehicle-mileages",
+                    waitForSync: .onCreation
+                )
+            
+            var vehicleMileagesArray = Array(vehicleMileages)
+            vehicleMileagesArray = vehicleMileagesArray.sorted(by: {
+                $0.date.compare($1.date) == .orderedDescending
+            })
+            
+            state = .successVehicleMileages(vehicleMileagesArray)
+        }
+        
         private func fetchVehicles() async {
             state = .loading
             
@@ -104,22 +127,11 @@ extension MileageListView {
                     if let vehicle = vehicles.first {
                         self.selectedVehicle = vehicle
                         
-                        let vehicleMileages = try! await realm.objects(VehicleMileage.self)
-                            .where {
-                                $0.owner_id == user.id &&
-                                $0.vehicle_id == vehicle._id
-                            }
-                            .subscribe(
-                                name: "vehicle-mileages",
-                                waitForSync: .onCreation
-                            )
-                        
-                        var vehicleMileagesArray = Array(vehicleMileages)
-                        vehicleMileagesArray = vehicleMileagesArray.sorted(by: {
-                            $0.date.compare($1.date) == .orderedDescending
-                        })
-                        
-                        state = .successVehicleMileages(vehicleMileagesArray)
+                        await fetchVehicleMileages(
+                            realm: realm,
+                            userId: user.id,
+                            vehicleId: vehicle._id
+                        )
                     }
                 }
             }
