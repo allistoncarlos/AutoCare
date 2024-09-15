@@ -120,9 +120,9 @@ extension MileageEditView {
         }
         
         func save() async {
-            state = .loading
-            
             if manager.triggerValidation() {
+                state = .loading
+                
                 do {
                     guard let userId = AutoCareApp.app.currentUser?.id else {
                         throw RLMError(.fail)
@@ -170,3 +170,11 @@ extension MileageEditView {
         }
     }
 }
+
+#if os(iOS)
+extension MileageEditView.ViewModel {
+    func goBackToMileages(navigationPath: Binding<NavigationPath>) {
+        MileagesRouter.goBackToMileages(navigationPath: navigationPath)
+    }
+}
+#endif

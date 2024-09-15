@@ -38,10 +38,27 @@ enum MileagesRouter {
             vehicleMileage: vehicleMileage,
             vehicleId: vehicleId
         )
+        
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.maximumFractionDigits = 2
+
+        let decimalFormatter = NumberFormatter()
+        decimalFormatter.numberStyle = .decimal
+        decimalFormatter.maximumFractionDigits = 3
+        decimalFormatter.minimumFractionDigits = 3
+        decimalFormatter.currencySymbol = ""
+
+        let integerFormatter = NumberFormatter()
+        integerFormatter.numberStyle = .none
+        integerFormatter.maximumFractionDigits = 0
 
         return MileageEditView(
             viewModel: viewModel,
-            navigationPath: navigationPath
+            navigationPath: navigationPath,
+            currencyFormatter: currencyFormatter,
+            decimalFormatter: decimalFormatter,
+            integerFormatter: integerFormatter
         )
     }
 

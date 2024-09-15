@@ -11,7 +11,7 @@ import TTProgressHUD
 
 struct MileageEditView: View {
     @ObservedObject var viewModel: ViewModel
-    var navigationPath: Binding<NavigationPath>
+    @Binding var navigationPath: NavigationPath
     
     @State private var isLoading = true
     
@@ -21,34 +21,9 @@ struct MileageEditView: View {
     @State private var odometer = 0
     @State private var liters = 0
     
-    private var currencyFormatter: NumberFormatterProtocol
-    private var decimalFormatter: NumberFormatterProtocol
-    private var integerFormatter: NumberFormatterProtocol
-    
-    init(
-        viewModel: MileageEditView.ViewModel,
-        navigationPath: Binding<NavigationPath>,
-        currencyFormatter: NumberFormatterProtocol = NumberFormatter(),
-        decimalFormatter: NumberFormatterProtocol = NumberFormatter(),
-        integerFormatter: NumberFormatterProtocol = NumberFormatter()
-    ) {
-        self.viewModel = viewModel
-        self.navigationPath = navigationPath
-        
-        self.currencyFormatter = currencyFormatter
-        self.currencyFormatter.numberStyle = .currency
-        self.currencyFormatter.maximumFractionDigits = 2
-        
-        self.decimalFormatter = decimalFormatter
-        self.decimalFormatter.numberStyle = .decimal
-        self.decimalFormatter.maximumFractionDigits = 3
-        self.decimalFormatter.minimumFractionDigits = 3
-        self.decimalFormatter.currencySymbol = ""
-        
-        self.integerFormatter = integerFormatter
-        self.integerFormatter.numberStyle = .none
-        self.integerFormatter.maximumFractionDigits = 0
-    }
+    var currencyFormatter: NumberFormatterProtocol
+    var decimalFormatter: NumberFormatterProtocol
+    var integerFormatter: NumberFormatterProtocol
     
     var body: some View {
         NavigationStack {
@@ -180,6 +155,11 @@ struct MileageEditView: View {
                 viewModel.liters = (Decimal(newState) / 100.0)
             })
         }
+        .onReceive(viewModel.$state) { state in
+            if case .successSave = state {
+                viewModel.goBackToMileages(navigationPath: $navigationPath)
+            }
+        }
         .task {
             await viewModel.fetchPreviousVehicleMileage()
         }
@@ -197,6 +177,10 @@ struct MileageEditView: View {
             NavigationPath()
         ),
         currencyFormatter:
+            PreviewNumberFormatter(locale: Locale(identifier: "pt_BR")),
+        decimalFormatter:
+            PreviewNumberFormatter(locale: Locale(identifier: "pt_BR")),
+        integerFormatter:
             PreviewNumberFormatter(locale: Locale(identifier: "pt_BR"))
     )
 }

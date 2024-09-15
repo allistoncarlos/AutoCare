@@ -21,7 +21,7 @@ struct MileageListView: View {
     @State private var presentedMileages = NavigationPath()
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $presentedMileages) {
             ScrollView {
                 ForEach(viewModel.vehicleMileages, id: \.id) { vehicleMileage in
                     NavigationLink(value: vehicleMileage) {
