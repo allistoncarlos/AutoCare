@@ -17,7 +17,7 @@ extension VehicleEditView {
         // MARK: - Published properties
         @Published var state: VehicleEditState = .idle
         @Published var vehicle: Vehicle = Vehicle()
-        @Published var vehicleId: String? = nil
+        @Published var vehicleId: ObjectId? = nil
         @Published var vehicleTypes = [VehicleType]()
         @Published var isFormValid = false
         
@@ -60,7 +60,7 @@ extension VehicleEditView {
         
         // MARK: - Init
         init(
-            vehicleId: String?,
+            vehicleId: ObjectId?,
             realm: Realm
         ) {
             self.realm = realm

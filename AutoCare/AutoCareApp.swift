@@ -13,6 +13,11 @@ import TTProgressHUD
 struct AutoCareApp: SwiftUI.App {
     static var app = App(id: Config.appId)
     
+    static let dateTimeFormat = "dd/MM/yyyy HH:mm"
+    static let dateFormat = "dd/MM/yyyy"
+    static let shortDateFormat = "dd/MM"
+    static let timeFormat = "HH:mm"
+    
     static let hudConfig = TTProgressHUDConfig(
         title: "Carregando",
         caption: "Por favor aguarde..."

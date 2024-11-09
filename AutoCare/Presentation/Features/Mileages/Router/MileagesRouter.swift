@@ -13,7 +13,7 @@ import RealmSwift
 enum MileagesRouter {
     static func makeEditVehicleView(
         realm: Realm,
-        vehicleId: String?,
+        vehicleId: ObjectId?,
         isPresented: Binding<Bool>
     ) -> some View {
         return VehicleEditView(
@@ -25,8 +25,44 @@ enum MileagesRouter {
         )
         .interactiveDismissDisabled()
     }
+    
+    static func makeEditMileageView(
+        navigationPath: Binding<NavigationPath>,
+        realm: Realm,
+        userId: String,
+        vehicleId: ObjectId,
+        vehicleMileage: VehicleMileage?
+    ) -> some View {
+        let viewModel = MileageEditView.ViewModel(
+            realm: realm,
+            vehicleMileage: vehicleMileage,
+            vehicleId: vehicleId
+        )
+        
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.maximumFractionDigits = 2
 
-    static func goBackToGames(navigationPath: Binding<NavigationPath>) {
+        let decimalFormatter = NumberFormatter()
+        decimalFormatter.numberStyle = .decimal
+        decimalFormatter.maximumFractionDigits = 3
+        decimalFormatter.minimumFractionDigits = 3
+        decimalFormatter.currencySymbol = ""
+
+        let integerFormatter = NumberFormatter()
+        integerFormatter.numberStyle = .none
+        integerFormatter.maximumFractionDigits = 0
+
+        return MileageEditView(
+            viewModel: viewModel,
+            navigationPath: navigationPath,
+            currencyFormatter: currencyFormatter,
+            decimalFormatter: decimalFormatter,
+            integerFormatter: integerFormatter
+        )
+    }
+
+    static func goBackToMileages(navigationPath: Binding<NavigationPath>) {
         navigationPath.wrappedValue.removeLast()
     }
 }
