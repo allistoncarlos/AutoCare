@@ -40,7 +40,6 @@
 		A5E333992AEBE5040089DD81 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = A5E333982AEBE5040089DD81 /* Realm */; };
 		A5E3339B2AEBE5040089DD81 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5E3339A2AEBE5040089DD81 /* RealmSwift */; };
 		A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3339F2AEBEAA20089DD81 /* Config.swift */; };
-		A5E333A12AEBEB940089DD81 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */; };
 		A5E333A52AEBEE2F0089DD81 /* VehicleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */; };
 		A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77B2AED43620038A546 /* VehicleListView.swift */; };
 		A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */; };
@@ -425,7 +424,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					A5E333842AEBE48F0089DD81 = {
 						CreatedOnToolsVersion = 15.0;
@@ -461,7 +460,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */,
-				A5E333A12AEBEB940089DD81 /* Config.xcconfig in Resources */,
 				A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -547,6 +545,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -609,6 +608,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -637,6 +637,7 @@
 				CODE_SIGN_ENTITLEMENTS = AutoCare/AutoCare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"AutoCare/Preview Content\"";
 				DEVELOPMENT_TEAM = KB2R5P3BHU;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -677,6 +678,7 @@
 				CODE_SIGN_ENTITLEMENTS = AutoCare/AutoCare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"AutoCare/Preview Content\"";
 				DEVELOPMENT_TEAM = KB2R5P3BHU;
 				ENABLE_HARDENED_RUNTIME = YES;
