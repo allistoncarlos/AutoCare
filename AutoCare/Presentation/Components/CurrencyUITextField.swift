@@ -5,18 +5,18 @@
 //  Created by Alliston Aleixo on 08/05/24.
 //
 
-import Foundation
 import UIKit
-import SwiftUI
 
 class CurrencyUITextField: UITextField {
-    @Binding private var value: Int
     private let formatter: NumberFormatterProtocol
+    private var onValueChanged: (Int) -> Void
+    private var currentValue: Int = 0
 
-    init(formatter: NumberFormatterProtocol, value: Binding<Int>) {
+    init(formatter: NumberFormatterProtocol, value: Int, onValueChanged: @escaping (Int) -> Void) {
         self.formatter = formatter
-        self._value = value
+        self.onValueChanged = onValueChanged
         super.init(frame: .zero)
+        self.currentValue = value
         setupViews()
     }
 
@@ -25,7 +25,7 @@ class CurrencyUITextField: UITextField {
     }
 
     override func willMove(toSuperview newSuperview: UIView?) {
-        super.willMove(toSuperview: superview)
+        super.willMove(toSuperview: newSuperview)
         addTarget(self, action: #selector(editingChanged), for: .editingChanged)
         addTarget(self, action: #selector(resetSelection), for: .allTouchEvents)
         keyboardType = .numberPad
@@ -33,28 +33,18 @@ class CurrencyUITextField: UITextField {
         sendActions(for: .editingChanged)
     }
 
-    override func removeFromSuperview() {
-        print(#function)
-    }
-
     override func deleteBackward() {
         text = textValue.digits.dropLast().string
         sendActions(for: .editingChanged)
-    }
-    
-    override func closestPosition(to point: CGPoint) -> UITextPosition? {
-        let beginning = self.beginningOfDocument
-        let end = self.position(from: beginning, offset: self.text?.count ?? 0)
-        return end
     }
 
     private func setupViews() {
         setInitialValue()
     }
-    
+
     private func setInitialValue() {
-        if value > 0 {
-            let val = Double(value)
+        if currentValue > 0 {
+            let val = Double(currentValue)
             let decimalValue = Decimal(val / 100.0)
             text = currency(from: decimalValue)
         }
@@ -71,9 +61,8 @@ class CurrencyUITextField: UITextField {
     }
 
     private func updateValue() {
-        DispatchQueue.main.async { [weak self] in
-            self?.value = self?.intValue ?? 0
-        }
+        currentValue = intValue
+        onValueChanged(currentValue)
     }
 
     private var textValue: String {
@@ -81,7 +70,7 @@ class CurrencyUITextField: UITextField {
     }
 
     private var decimal: Decimal {
-      return textValue.decimal / pow(10, formatter.maximumFractionDigits)
+        return textValue.decimal / pow(10, formatter.maximumFractionDigits)
     }
 
     private var intValue: Int {
@@ -94,7 +83,7 @@ class CurrencyUITextField: UITextField {
 }
 
 extension StringProtocol where Self: RangeReplaceableCollection {
-    var digits: Self { filter (\.isWholeNumber) }
+    var digits: Self { filter(\.isWholeNumber) }
 }
 
 extension String {
