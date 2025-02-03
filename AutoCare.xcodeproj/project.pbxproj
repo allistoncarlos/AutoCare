@@ -17,6 +17,7 @@
 		A52C71E52B850CAA007BAFEE /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52C71E42B850CAA007BAFEE /* LoginViewModel.swift */; };
 		A52C71E82B850CCD007BAFEE /* LoginState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52C71E72B850CCD007BAFEE /* LoginState.swift */; };
 		A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */ = {isa = PBXBuildFile; productRef = A53B23E82B6443450025AFB1 /* FormValidator */; };
+		A546DBE52D50E84700B220A4 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A546DBE42D50E84700B220A4 /* RealmSwift */; };
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
 		A55918DE2BA9BE8300EB3ED3 /* MileageListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55918DD2BA9BE8300EB3ED3 /* MileageListItem.swift */; };
 		A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55918E02BA9C53D00EB3ED3 /* Date+Extensions.swift */; };
@@ -37,8 +38,6 @@
 		A5E333892AEBE48F0089DD81 /* AutoCareApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */; };
 		A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E3338C2AEBE4900089DD81 /* Assets.xcassets */; };
 		A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E333902AEBE4900089DD81 /* Preview Assets.xcassets */; };
-		A5E333992AEBE5040089DD81 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = A5E333982AEBE5040089DD81 /* Realm */; };
-		A5E3339B2AEBE5040089DD81 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5E3339A2AEBE5040089DD81 /* RealmSwift */; };
 		A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3339F2AEBEAA20089DD81 /* Config.swift */; };
 		A5E333A52AEBEE2F0089DD81 /* VehicleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */; };
 		A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77B2AED43620038A546 /* VehicleListView.swift */; };
@@ -95,9 +94,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A546DBE52D50E84700B220A4 /* RealmSwift in Frameworks */,
 				A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */,
-				A5E3339B2AEBE5040089DD81 /* RealmSwift in Frameworks */,
-				A5E333992AEBE5040089DD81 /* Realm in Frameworks */,
 				A50014BB2B86726A00040E3C /* TTProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,10 +405,9 @@
 			);
 			name = AutoCare;
 			packageProductDependencies = (
-				A5E333982AEBE5040089DD81 /* Realm */,
-				A5E3339A2AEBE5040089DD81 /* RealmSwift */,
 				A53B23E82B6443450025AFB1 /* FormValidator */,
 				A50014BA2B86726A00040E3C /* TTProgressHUD */,
+				A546DBE42D50E84700B220A4 /* RealmSwift */,
 			);
 			productName = AutoCare;
 			productReference = A5E333852AEBE48F0089DD81 /* AutoCare.app */;
@@ -441,9 +438,9 @@
 			);
 			mainGroup = A5E3337C2AEBE48F0089DD81;
 			packageReferences = (
-				A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */,
 				A50014B92B86726A00040E3C /* XCRemoteSwiftPackageReference "TTProgressHUD" */,
+				A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = A5E333862AEBE48F0089DD81 /* Products */;
 			projectDirPath = "";
@@ -750,7 +747,7 @@
 				minimumVersion = 1.0.3;
 			};
 		};
-		A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+		A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
 			requirement = {
@@ -771,14 +768,9 @@
 			package = A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */;
 			productName = FormValidator;
 		};
-		A5E333982AEBE5040089DD81 /* Realm */ = {
+		A546DBE42D50E84700B220A4 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = Realm;
-		};
-		A5E3339A2AEBE5040089DD81 /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A5E333972AEBE5040089DD81 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			package = A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
