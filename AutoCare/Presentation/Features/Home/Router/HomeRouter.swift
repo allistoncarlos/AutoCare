@@ -1,0 +1,15 @@
+//
+//  HomeRouter.swift
+//  AutoCare
+//
+//  Created by Alliston Aleixo on 09/11/24.
+//
+
+import SwiftUI
+
+@MainActor
+enum HomeRouter {
+    static func makeMileageListView() -> some View {
+        return MileageListView(viewModel: MileageListView.ViewModel())
+    }
+}
