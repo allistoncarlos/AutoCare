@@ -20,6 +20,7 @@ struct MileageEditView: View {
     @State private var fuelCost = 0
     @State private var odometer = 0
     @State private var liters = 0
+    @State private var isComplete = true
     
     var currencyFormatter: NumberFormatterProtocol
     var decimalFormatter: NumberFormatterProtocol
@@ -47,6 +48,7 @@ struct MileageEditView: View {
                 HStack {
                     Text("Litros")
                     CurrencyTextField(numberFormatter: decimalFormatter, value: $liters)
+                        .disabled(isComplete)
                 }
                 
                 HStack {
@@ -54,7 +56,7 @@ struct MileageEditView: View {
                     CurrencyTextField(numberFormatter: integerFormatter, value: $odometer)
                 }
                 
-                Toggle("Completo", isOn: $viewModel.complete)
+                Toggle("Completo", isOn: $isComplete)
             }
             
             if let odometerDifference = viewModel.odometerDifference, odometerDifference > 0 {
@@ -142,9 +144,13 @@ struct MileageEditView: View {
         })
         .onChange(of: totalCostValue, { _, newState in
             viewModel.totalCost = "\(Decimal(newState) / 100.0)"
+            
+            calculateLiters()
         })
         .onChange(of: fuelCost, { _, newState in
             viewModel.fuelCost = "\(Decimal(newState) / 100.0)"
+            
+            calculateLiters()
         })
         .onChange(of: odometer, { _, newState in
             viewModel.odometer = "\(Decimal(newState) / 100.0)"
@@ -152,6 +158,9 @@ struct MileageEditView: View {
         })
         .onChange(of: liters, { _, newState in
             viewModel.liters = (Decimal(newState) / 100.0)
+        })
+        .onChange(of: isComplete, { _, newState in
+            viewModel.complete = newState
         })
         .onReceive(viewModel.$state) { state in
             if case .successSave = state {
@@ -162,6 +171,18 @@ struct MileageEditView: View {
             await viewModel.fetchPreviousVehicleMileage()
         }
     }
+    
+    private func calculateLiters() {
+        if isComplete {
+            guard fuelCost > 0 else {
+                return
+            }
+            
+            let result = (Decimal(totalCostValue) / Decimal(fuelCost)) * 100
+            liters = Int(NSDecimalNumber(decimal: result).int16Value)
+        }
+    }
+
 }
 
 #Preview {
