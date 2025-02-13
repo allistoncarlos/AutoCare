@@ -19,6 +19,12 @@ struct HomeView: View {
                 .tabItem {
                     Label("Dashboard", systemImage: "display")
                 }
+            
+            HomeRouter.makeServiceListView()
+                .environmentObject(app)
+                .tabItem {
+                    Label("Serviços", systemImage: "car.badge.gearshape")
+                }
         }
     }
 }

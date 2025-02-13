@@ -12,4 +12,8 @@ enum HomeRouter {
     static func makeMileageListView() -> some View {
         return MileageListView(viewModel: MileageListView.ViewModel())
     }
+    
+    static func makeServiceListView() -> some View {
+        return ServiceListView(viewModel: ServiceListView.ViewModel())
+    }
 }
