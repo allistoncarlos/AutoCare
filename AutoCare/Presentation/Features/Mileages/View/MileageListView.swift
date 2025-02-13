@@ -16,8 +16,7 @@ struct MileageListView: View {
     @ObservedObject var viewModel: ViewModel
     @State private var isLoading = true
     @State private var isNewVehiclePresented = false
-    @State private var selectedVehicleMileage: VehicleMileage? = nil
-    
+
     @State private var presentedMileages = NavigationPath()
     
     var body: some View {
@@ -29,7 +28,7 @@ struct MileageListView: View {
                     }
                 }
             }
-            .navigationView(title: viewModel.selectedVehicle?.name ?? "")
+            .navigationView(title: viewModel.selectedVehicle.name)
             .toolbar {
                 Button(action: {}) {
                     NavigationLink(value: String()) {
@@ -38,20 +37,16 @@ struct MileageListView: View {
                 }
             }
             .navigationDestination(for: String.self) { _ in
-                if let user = app.currentUser,
-                   let realm = viewModel.realm,
-                   let vehicleId = viewModel.selectedVehicle?._id {
-                    navigateToEditMileageView(realm: realm, user: user, vehicleId: vehicleId)
+                if let user = app.currentUser {
+                    navigateToEditMileageView(realm: viewModel.realm, user: user, vehicleId: viewModel.selectedVehicle._id)
                 }
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
-                if let user = app.currentUser,
-                   let realm = viewModel.realm,
-                   let vehicleId = viewModel.selectedVehicle?._id {
+                if let user = app.currentUser {
                     navigateToEditMileageView(
-                        realm: realm,
+                        realm: viewModel.realm,
                         user: user,
-                        vehicleId: vehicleId,
+                        vehicleId: viewModel.selectedVehicle._id,
                         vehicleMileage: vehicleMileage
                     )
                 }
@@ -74,26 +69,15 @@ struct MileageListView: View {
             newValue in
             if newValue.isEmpty {
                 Task {
-                    if let user = app.currentUser,
-                       let realm = viewModel.realm,
-                       let vehicleId = viewModel.selectedVehicle?._id {
-                        await viewModel.fetchVehicleMileages(
-                            realm:realm,
-                            userId:user.id,
-                            vehicleId:vehicleId
-                        )
-                    }
+                    await viewModel.fetchVehicleMileages()
                 }
             }
         }
         .sheet(isPresented: $isNewVehiclePresented) {
-            if app.currentUser != nil,
-               let realm = viewModel.realm,
-               let vehicleId = viewModel.selectedVehicle?._id
-            {
+            if app.currentUser != nil {
                 viewModel.showEditVehicleView(
-                    realm: realm,
-                    vehicleId: vehicleId,
+                    realm: viewModel.realm,
+                    vehicleId: viewModel.selectedVehicle._id,
                     isPresented: $isNewVehiclePresented
                 )
             }
@@ -117,5 +101,19 @@ struct MileageListView: View {
 }
 
 #Preview {
-    MileageListView(viewModel: MileageListView.ViewModel())
+    MileageListView(
+        viewModel: MileageListView.ViewModel(
+            realm: try! Realm(),
+            selectedVehicle: Vehicle(
+                name: "Fiat Argo 2021",
+                brand: "Fiat",
+                model: "Argo",
+                year: "2021",
+                licensePlate: "AAA-1C34",
+                odometer: 0,
+                owner_id: "11234",
+                vehicleType: VehicleType(name: "Car")
+            )
+        )
+    )
 }

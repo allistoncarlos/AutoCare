@@ -10,8 +10,7 @@ import SwiftUI
 @MainActor
 enum LoginRouter {
     static func makeHomeView() -> some View {
-//        return MileageListView(viewModel: MileageListView.ViewModel())
-        return HomeView(mileageListViewViewModel: MileageListView.ViewModel())
+        return HomeView(viewModel: HomeView.ViewModel())
     }
 
     static func makeLoginView() -> some View {

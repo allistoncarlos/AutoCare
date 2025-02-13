@@ -16,13 +16,18 @@ extension ServiceListView {
     class ViewModel: ObservableObject {
 //        @Published var state: ServiceListState = .idle
 //        @Published var vehicleServices = [VehicleService]()
-//        @Published var selectedVehicle: Vehicle?
+        @Published var selectedVehicle: Vehicle
         
         // MARK: - Properties
-        var realm: Realm? = nil
+        var realm: Realm
         
         private var app: RealmSwift.App?
         private var cancellable = Set<AnyCancellable>()
+        
+        init(realm: Realm, selectedVehicle: Vehicle) {
+            self.realm = realm
+            self.selectedVehicle = selectedVehicle
+        }
         
         func setup(app: RealmSwift.App) async {
             self.app = app
