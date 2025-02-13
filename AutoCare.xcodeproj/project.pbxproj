@@ -23,6 +23,7 @@
 		A53F41632D5E104100FE70B7 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41622D5E104100FE70B7 /* HomeViewModel.swift */; };
 		A53F41662D5E107A00FE70B7 /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41652D5E107A00FE70B7 /* HomeState.swift */; };
 		A53F41692D5E63CF00FE70B7 /* ServiceListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */; };
+		A53F416B2D5E651C00FE70B7 /* ServiceListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */; };
 		A546DBE52D50E84700B220A4 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A546DBE42D50E84700B220A4 /* RealmSwift */; };
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
 		A55918DE2BA9BE8300EB3ED3 /* MileageListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55918DD2BA9BE8300EB3ED3 /* MileageListItem.swift */; };
@@ -68,6 +69,7 @@
 		A53F41622D5E104100FE70B7 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		A53F41652D5E107A00FE70B7 /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
 		A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceListState.swift; sourceTree = "<group>"; };
+		A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceListItem.swift; sourceTree = "<group>"; };
 		A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		A55918DD2BA9BE8300EB3ED3 /* MileageListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListItem.swift; sourceTree = "<group>"; };
 		A55918E02BA9C53D00EB3ED3 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				A53F41572D5E05FC00FE70B7 /* ServiceListView.swift */,
+				A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				A50FC89B2BE6C1550044E126 /* NavigationViewModifier.swift in Sources */,
 				A529BB942BC85596003DCCBC /* MileageEditView.swift in Sources */,
 				A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */,
+				A53F416B2D5E651C00FE70B7 /* ServiceListItem.swift in Sources */,
 				A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */,
 				A53F41582D5E05FC00FE70B7 /* ServiceListView.swift in Sources */,
 				A5804B302BEBB6D600BE9602 /* CurrencyTextField.swift in Sources */,

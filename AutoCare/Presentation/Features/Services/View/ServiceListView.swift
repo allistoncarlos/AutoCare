@@ -24,7 +24,7 @@ struct ServiceListView: View {
             ScrollView {
                 ForEach(viewModel.vehicleServices, id: \.id) { vehicleService in
                     NavigationLink(value: vehicleService) {
-                        Text(vehicleService.comment)
+                        ServiceListItem(vehicleService: vehicleService)
                     }
                 }
             }

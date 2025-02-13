@@ -8,21 +8,37 @@
 import Foundation
 import RealmSwift
 
-enum VehicleServiceType: String, PersistableEnum {
+enum VehicleServiceType: String, CustomStringConvertible, PersistableEnum {
     case wheelsAndTyres
+    
+    var description : String {
+        switch self {
+        case .wheelsAndTyres: return "Rodas e Pneus"
+        default: return "Outros"
+        }
+    }
 }
 
-enum VehicleServiceSubtype: String, PersistableEnum {
-    case calibration
+enum VehicleServiceSubtype: String, CustomStringConvertible, PersistableEnum {
+    case calibrate
     case flatTyre
     case newTyres
+    
+    var description : String {
+        switch self {
+        case .calibrate: return "Calibragem"
+        case .flatTyre: return "Pneu Furado"
+        case .newTyres: return "Novos Pneus"
+        default: return "Outros"
+        }
+    }
 }
 
 class VehicleService: Object, Identifiable {
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var date: Date = Date()
     @Persisted var odometer: Int = 0
-    @Persisted var serviceType: VehicleServiceType
+    @Persisted var type: VehicleServiceType
     @Persisted var subtype: VehicleServiceSubtype
     @Persisted var totalCost: Decimal128 = 0
     @Persisted var comment: String = ""
@@ -32,7 +48,7 @@ class VehicleService: Object, Identifiable {
     convenience init(
         date: Date,
         odometer: Int,
-        serviceType: VehicleServiceType,
+        type: VehicleServiceType,
         subtype: VehicleServiceSubtype,
         totalCost: Decimal128,
         comment: String,
@@ -43,7 +59,7 @@ class VehicleService: Object, Identifiable {
         
         self.date = date
         self.odometer = odometer
-        self.serviceType = serviceType
+        self.type = type
         self.subtype = subtype
         self.totalCost = totalCost
         self.comment = comment
