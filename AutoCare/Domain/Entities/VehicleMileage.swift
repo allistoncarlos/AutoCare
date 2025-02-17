@@ -8,7 +8,16 @@
 import Foundation
 import RealmSwift
 
-class VehicleMileage: Object, Identifiable {
+protocol SwiftDataConvertible {
+    associatedtype Model
+    
+    func mapToModel() -> Model
+}
+
+class VehicleMileage: Object, Identifiable, SwiftDataConvertible {
+    typealias Source = VehicleMileage
+    typealias Model = VehicleMileageData
+    
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var date: Date = Date()
     @Persisted var totalCost: Decimal128 = 0
@@ -46,5 +55,25 @@ class VehicleMileage: Object, Identifiable {
         self.owner_id = owner_id
         
         self.vehicle_id = vehicle_id
+    }
+    
+    func mapToModel() -> VehicleMileageData {
+        let mileageId = "\(self._id)"
+        
+        let vehicleMileageData = VehicleMileageData(
+            id: mileageId,
+            date: self.date,
+            totalCost: self.totalCost.decimalValue,
+            odometer: self.odometer,
+            odometerDifference: self.odometerDifference,
+            liters: self.liters.decimalValue,
+            fuelCost: self.fuelCost.decimalValue,
+            calculatedMileage: self.calculatedMileage.decimalValue,
+            complete: self.complete,
+            ownerId: self.owner_id,
+            vehicleId: "\(self.vehicle_id)"
+        )
+        
+        return vehicleMileageData
     }
 }

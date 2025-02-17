@@ -10,6 +10,7 @@ import RealmSwift
 import Realm
 import Combine
 import FormValidator
+import SwiftData
 
 extension VehicleListView {
     @MainActor
@@ -17,14 +18,17 @@ extension VehicleListView {
         // MARK: - Published properties
         @Published var state: VehicleListState = .idle
         @Published var vehicles = [Vehicle]()
+        @Published var vehiclesData = [VehicleData]()
         
         // MARK: - Properties
         private var cancellable = Set<AnyCancellable>()
         private var realm: Realm
+        private var modelContext: ModelContext
         
         // MARK: - Init
-        init(realm: Realm) {
+        init(realm: Realm, modelContext: ModelContext) {
             self.realm = realm
+            self.modelContext = modelContext
             
             $state
                 .receive(on: RunLoop.main)
@@ -42,9 +46,40 @@ extension VehicleListView {
         func fetchVehicles() async {
             state = .loading
             
+            self.fetchVehiclesData()
+            
             let vehicles = Array(realm.objects(Vehicle.self))
 
+            vehicles.forEach { vehicle in
+                let vehicleId = "\(vehicle._id)"
+                
+                let vehicleData = VehicleData(
+                    id: vehicleId,
+                    name: vehicle.name,
+                    brand: vehicle.brand,
+                    model: vehicle.model,
+                    year: vehicle.year,
+                    licensePlate: vehicle.licensePlate,
+                    odometer: vehicle.odometer,
+                    enabled: vehicle.enabled,
+                    ownerId: vehicle.owner_id
+                )
+                
+                if vehiclesData.count == 0 {
+                    modelContext.insert(vehicleData)
+                }
+            }
+            
             state = .successVehicles(Array(vehicles))
+        }
+        
+        func fetchVehiclesData() {
+            do {
+                let descriptor = FetchDescriptor<VehicleData>(sortBy: [SortDescriptor(\.name)])
+                self.vehiclesData = try modelContext.fetch(descriptor)
+            } catch {
+                print("Fetch failed")
+            }
         }
     }
 }

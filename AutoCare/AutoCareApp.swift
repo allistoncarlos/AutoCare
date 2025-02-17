@@ -8,6 +8,7 @@
 import SwiftUI
 import RealmSwift
 import TTProgressHUD
+import SwiftData
 
 @main
 struct AutoCareApp: SwiftUI.App {
@@ -23,11 +24,27 @@ struct AutoCareApp: SwiftUI.App {
         caption: "Por favor aguarde..."
     )
     
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            VehicleData.self,
+            VehicleMileageData.self
+        ])
+
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
     var body: some Scene {
         WindowGroup {
             resultView()
                 .environmentObject(AutoCareApp.app)
         }
+        .modelContainer(sharedModelContainer)
     }
     
     @MainActor

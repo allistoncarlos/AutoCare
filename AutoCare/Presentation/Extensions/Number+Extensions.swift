@@ -42,6 +42,27 @@ extension Decimal {
     }
 }
 
+extension Decimal {
+    func toLeadingZerosString(decimalPlaces: Int) -> String? {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.maximumFractionDigits = decimalPlaces
+
+        return numberFormatter.string(from: NSDecimalNumber(decimal: self))
+    }
+    
+    func toCurrencyString(currencyCode: String = "BRL", identifier: String = "pt_BR") -> String? {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        formatter.currencyCode = currencyCode
+        formatter.locale = Locale(identifier: identifier)
+        formatter.numberStyle = .currency
+
+        return formatter.string(for: self)
+    }
+}
+
 extension Decimal128 {
     func toLeadingZerosString(decimalPlaces: Int) -> String? {
         let numberFormatter = NumberFormatter()

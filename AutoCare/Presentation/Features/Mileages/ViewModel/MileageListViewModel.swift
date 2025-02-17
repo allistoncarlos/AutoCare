@@ -10,22 +10,30 @@ import RealmSwift
 import Realm
 import SwiftUI
 import Combine
+import SwiftData
 
 extension MileageListView {
     @MainActor
     class ViewModel: ObservableObject {
         @Published var state: MileageListState = .idle
-        @Published var vehicleMileages = [VehicleMileage]()
+//        @Published var vehicleMileages = [VehicleMileage]()
+        @Published var vehicleMileagesData = [VehicleMileageData]()
         @Published var selectedVehicle: Vehicle
         
         // MARK: - Properties
         var realm: Realm
+        private var modelContext: ModelContext
         
         private var app: RealmSwift.App?
         private var cancellable = Set<AnyCancellable>()
         
-        init(realm: Realm, selectedVehicle: Vehicle) {
+        init(
+            realm: Realm,
+            modelContext: ModelContext,
+            selectedVehicle: Vehicle
+        ) {
             self.realm = realm
+            self.modelContext = modelContext
             self.selectedVehicle = selectedVehicle
         }
         
@@ -36,8 +44,8 @@ extension MileageListView {
                 .receive(on: RunLoop.main)
                 .sink { [weak self] state in
                     switch state {
-                    case let .successVehicleMileages(vehicleMileages):
-                        self?.vehicleMileages = vehicleMileages
+                    case let .successVehicleMileagesData(vehicleMileagesData):
+                        self?.vehicleMileagesData = vehicleMileagesData
                     default:
                         break
                     }
@@ -94,7 +102,41 @@ extension MileageListView {
                     $0.date.compare($1.date) == .orderedDescending
                 })
                 
+                self.syncSwiftData(vehicleMileagesArray)
+                
                 state = .successVehicleMileages(vehicleMileagesArray)
+            }
+        }
+        
+        func syncSwiftData(_ vehicleMileages: [VehicleMileage]) {
+            do {
+                try modelContext.delete(model: VehicleMileageData.self)
+                
+                vehicleMileages.forEach { vehicleMileage in
+                    let vehicleMileageData = vehicleMileage.mapToModel()
+                    
+                    modelContext.insert(vehicleMileageData)
+                }
+                
+                self.fetchVehicleMileagesData()
+            } catch {
+                print(error)
+            }
+        }
+        
+        func fetchVehicleMileagesData() {
+            do {
+                state = .loading
+                
+                let descriptor = FetchDescriptor<VehicleMileageData>(
+                    sortBy: [SortDescriptor(\.date, order: .reverse)]
+                )
+
+                let vehicleMileagesData = try modelContext.fetch(descriptor)
+                
+                state = .successVehicleMileagesData(vehicleMileagesData)
+            } catch {
+                print("Fetch failed")
             }
         }
     }

@@ -11,6 +11,8 @@ import TTProgressHUD
 
 struct HomeView: View {
     @EnvironmentObject var app: RLMApp
+    @Environment(\.modelContext) private var modelContext
+    
     @ObservedObject var viewModel: HomeView.ViewModel
     @State private var isLoading = true
     @State private var isNewVehiclePresented = false
@@ -21,11 +23,15 @@ struct HomeView: View {
     var body: some View {
         TabView {
             if let realm = viewModel.realm, let selectedVehicle = viewModel.selectedVehicle {
-                HomeRouter.makeMileageListView(realm: realm, selectedVehicle: selectedVehicle)
-                    .environmentObject(app)
-                    .tabItem {
-                        Label("Dashboard", systemImage: "display")
-                    }
+                HomeRouter.makeMileageListView(
+                    realm: realm,
+                    modelContext: modelContext,
+                    selectedVehicle: selectedVehicle
+                )
+                .environmentObject(app)
+                .tabItem {
+                    Label("Dashboard", systemImage: "display")
+                }
                 
                 HomeRouter.makeServiceListView(realm: realm, selectedVehicle: selectedVehicle)
                     .environmentObject(app)
