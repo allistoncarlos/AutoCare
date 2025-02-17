@@ -8,8 +8,10 @@
 import SwiftUI
 import TTProgressHUD
 import RealmSwift
+import SwiftData
 
 struct VehicleListView: View {
+    @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: ViewModel
     @State var isLoading = true
     
@@ -58,7 +60,16 @@ struct VehicleListView: View {
     }
 }
 
-// TODO: VER COMO MOCKAR REALM
-//#Preview {
-//    VehicleListView(viewModel: VehicleListView.ViewModel(realm: Realm()))
-//}
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    
+    VehicleListView(
+        viewModel: VehicleListView.ViewModel(
+            realm: try! Realm(),
+            modelContext: ModelContext(
+                try! ModelContainer(for: VehicleData.self, configurations: config)
+            )
+        )
+    )
+    .modelContainer(for: VehicleData.self, inMemory: true)
+}

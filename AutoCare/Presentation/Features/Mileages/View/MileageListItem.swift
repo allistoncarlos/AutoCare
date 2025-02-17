@@ -9,7 +9,7 @@ import SwiftUI
 import RealmSwift
 
 struct MileageListItem: View {
-    var vehicleMileage: VehicleMileage
+    var vehicleMileage: VehicleMileageData
     
     var body: some View {
         VStack {
@@ -56,7 +56,8 @@ struct MileageListItem: View {
 
 #Preview {
     MileageListItem(
-        vehicleMileage: VehicleMileage(
+        vehicleMileage: VehicleMileageData(
+            id: "123",
             date: Date(),
             totalCost: 131.55,
             odometer: 685,
@@ -65,8 +66,8 @@ struct MileageListItem: View {
             fuelCost: 5.97,
             calculatedMileage: 11.0,
             complete: true,
-            owner_id: "1",
-            vehicle_id: try! ObjectId(string: "65f7489acdac2f577161d7f7")
+            ownerId: "1",
+            vehicleId: "65f7489acdac2f577161d7f7"
         )
     )
 }

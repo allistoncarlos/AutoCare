@@ -7,12 +7,17 @@
 
 import SwiftUI
 import RealmSwift
+import SwiftData
 
 @MainActor
 enum HomeRouter {
-    static func makeMileageListView(realm: Realm, selectedVehicle: Vehicle) -> some View {
+    static func makeMileageListView(realm: Realm, modelContext: ModelContext, selectedVehicle: Vehicle) -> some View {
         return MileageListView(
-            viewModel: MileageListView.ViewModel(realm: realm, selectedVehicle: selectedVehicle)
+            viewModel: MileageListView.ViewModel(
+                realm: realm,
+                modelContext: modelContext,
+                selectedVehicle: selectedVehicle
+            )
         )
     }
     
