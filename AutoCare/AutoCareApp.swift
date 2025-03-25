@@ -49,12 +49,8 @@ struct AutoCareApp: SwiftUI.App {
     
     @MainActor
     private func resultView() -> AnyView {
-        guard let currentUser = AutoCareApp.app.currentUser else {
-            return AnyView(LoginRouter.makeLoginView())
-        }
-        
-        return currentUser.isLoggedIn ?
-            AnyView(LoginRouter.makeHomeView()) :
+        return KeychainDataSource.hasValidToken() ?
+        AnyView(LoginRouter.makeHomeView()) :
             AnyView(LoginRouter.makeLoginView())
     }
 }
