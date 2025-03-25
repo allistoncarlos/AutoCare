@@ -28,6 +28,27 @@
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
 		A55918DE2BA9BE8300EB3ED3 /* MileageListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55918DD2BA9BE8300EB3ED3 /* MileageListItem.swift */; };
 		A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55918E02BA9C53D00EB3ED3 /* Date+Extensions.swift */; };
+		A562EE872D9333A900D68116 /* KeychainDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EE862D9333A500D68116 /* KeychainDataSource.swift */; };
+		A562EE8A2D9333F500D68116 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A562EE892D9333F500D68116 /* KeychainAccess */; };
+		A562EE8D2D9334E500D68116 /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = A562EE8C2D9334E500D68116 /* Factory */; };
+		A562EE912D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EE902D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift */; };
+		A562EE962D93367600D68116 /* LoginRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EE952D93367600D68116 /* LoginRepository.swift */; };
+		A562EE982D93372900D68116 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EE972D93372900D68116 /* Login.swift */; };
+		A562EE9E2D93378600D68116 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EE9D2D93378600D68116 /* LoginRequest.swift */; };
+		A562EEA22D93387300D68116 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEA12D93387300D68116 /* LoginResponse.swift */; };
+		A562EEA42D9338A200D68116 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEA32D9338A200D68116 /* RequestError.swift */; };
+		A562EEA82D93390100D68116 /* LoginDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEA72D93390100D68116 /* LoginDataSource.swift */; };
+		A562EEAA2D93393C00D68116 /* AutoCareApp+DataSourceInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEA92D93393C00D68116 /* AutoCareApp+DataSourceInjection.swift */; };
+		A562EEAC2D93397F00D68116 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEAB2D93397F00D68116 /* NetworkManager.swift */; };
+		A562EEAF2D933AC700D68116 /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = A562EEAE2D933AC700D68116 /* Pulse */; };
+		A562EEB12D933AC700D68116 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A562EEB02D933AC700D68116 /* PulseUI */; };
+		A562EEB42D933B2D00D68116 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A562EEB32D933B2D00D68116 /* Alamofire */; };
+		A562EEB62D933B5100D68116 /* AutoCareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEB52D933B5100D68116 /* AutoCareAPI.swift */; };
+		A562EEB82D933C0B00D68116 /* RefreshTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEB72D933C0B00D68116 /* RefreshTokenRequest.swift */; };
+		A562EEBB2D933C4E00D68116 /* DefaultEventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEBA2D933C4E00D68116 /* DefaultEventMonitor.swift */; };
+		A562EEBD2D933C5800D68116 /* NetworkLoggerEventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEBC2D933C5800D68116 /* NetworkLoggerEventMonitor.swift */; };
+		A562EEC02D933C8200D68116 /* DefaultRequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEBF2D933C8200D68116 /* DefaultRequestInterceptor.swift */; };
+		A562EEC22D933CAA00D68116 /* RefreshTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEC12D933CAA00D68116 /* RefreshTokenResponse.swift */; };
 		A5804B302BEBB6D600BE9602 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5804B2F2BEBB6D600BE9602 /* CurrencyTextField.swift */; };
 		A5804B322BEBB6EC00BE9602 /* CurrencyUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5804B312BEBB6EC00BE9602 /* CurrencyUITextField.swift */; };
 		A5804B352BEBB70A00BE9602 /* PreviewNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */; };
@@ -75,6 +96,22 @@
 		A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		A55918DD2BA9BE8300EB3ED3 /* MileageListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListItem.swift; sourceTree = "<group>"; };
 		A55918E02BA9C53D00EB3ED3 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		A562EE862D9333A500D68116 /* KeychainDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainDataSource.swift; sourceTree = "<group>"; };
+		A562EE902D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+RepositoryInjection.swift"; sourceTree = "<group>"; };
+		A562EE952D93367600D68116 /* LoginRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRepository.swift; sourceTree = "<group>"; };
+		A562EE972D93372900D68116 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		A562EE9D2D93378600D68116 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
+		A562EEA12D93387300D68116 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		A562EEA32D9338A200D68116 /* RequestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
+		A562EEA72D93390100D68116 /* LoginDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDataSource.swift; sourceTree = "<group>"; };
+		A562EEA92D93393C00D68116 /* AutoCareApp+DataSourceInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+DataSourceInjection.swift"; sourceTree = "<group>"; };
+		A562EEAB2D93397F00D68116 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		A562EEB52D933B5100D68116 /* AutoCareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCareAPI.swift; sourceTree = "<group>"; };
+		A562EEB72D933C0B00D68116 /* RefreshTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenRequest.swift; sourceTree = "<group>"; };
+		A562EEBA2D933C4E00D68116 /* DefaultEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultEventMonitor.swift; sourceTree = "<group>"; };
+		A562EEBC2D933C5800D68116 /* NetworkLoggerEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLoggerEventMonitor.swift; sourceTree = "<group>"; };
+		A562EEBF2D933C8200D68116 /* DefaultRequestInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultRequestInterceptor.swift; sourceTree = "<group>"; };
+		A562EEC12D933CAA00D68116 /* RefreshTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenResponse.swift; sourceTree = "<group>"; };
 		A5804B2F2BEBB6D600BE9602 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		A5804B312BEBB6EC00BE9602 /* CurrencyUITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyUITextField.swift; sourceTree = "<group>"; };
 		A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewNumberFormatter.swift; sourceTree = "<group>"; };
@@ -112,7 +149,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A562EEAF2D933AC700D68116 /* Pulse in Frameworks */,
+				A562EEB42D933B2D00D68116 /* Alamofire in Frameworks */,
+				A562EE8A2D9333F500D68116 /* KeychainAccess in Frameworks */,
+				A562EE8D2D9334E500D68116 /* Factory in Frameworks */,
 				A546DBE52D50E84700B220A4 /* RealmSwift in Frameworks */,
+				A562EEB12D933AC700D68116 /* PulseUI in Frameworks */,
 				A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */,
 				A50014BB2B86726A00040E3C /* TTProgressHUD in Frameworks */,
 			);
@@ -223,6 +265,138 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		A562EE852D9333A000D68116 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				A562EE862D9333A500D68116 /* KeychainDataSource.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		A562EE8F2D93352600D68116 /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				A562EE902D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift */,
+				A562EEA92D93393C00D68116 /* AutoCareApp+DataSourceInjection.swift */,
+			);
+			path = DI;
+			sourceTree = "<group>";
+		};
+		A562EE922D93365500D68116 /* DataProviders */ = {
+			isa = PBXGroup;
+			children = (
+				A562EE932D93365B00D68116 /* Repositories */,
+				A562EEA52D9338D700D68116 /* DataSources */,
+				A562EE992D93376C00D68116 /* API */,
+			);
+			path = DataProviders;
+			sourceTree = "<group>";
+		};
+		A562EE932D93365B00D68116 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				A562EE942D93366600D68116 /* Login */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		A562EE942D93366600D68116 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				A562EE952D93367600D68116 /* LoginRepository.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		A562EE992D93376C00D68116 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEB92D933C4600D68116 /* EventMonitor */,
+				A562EEBE2D933C7B00D68116 /* RequestInterceptor */,
+				A562EE9A2D93377400D68116 /* Entities */,
+				A562EEB52D933B5100D68116 /* AutoCareAPI.swift */,
+				A562EEAB2D93397F00D68116 /* NetworkManager.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		A562EE9A2D93377400D68116 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				A562EE9B2D93377A00D68116 /* Request */,
+				A562EE9F2D93386800D68116 /* Response */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		A562EE9B2D93377A00D68116 /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				A562EE9C2D93378200D68116 /* Login */,
+				A562EEA32D9338A200D68116 /* RequestError.swift */,
+			);
+			path = Request;
+			sourceTree = "<group>";
+		};
+		A562EE9C2D93378200D68116 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEB72D933C0B00D68116 /* RefreshTokenRequest.swift */,
+				A562EE9D2D93378600D68116 /* LoginRequest.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		A562EE9F2D93386800D68116 /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEA02D93386E00D68116 /* Login */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
+		A562EEA02D93386E00D68116 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEC12D933CAA00D68116 /* RefreshTokenResponse.swift */,
+				A562EEA12D93387300D68116 /* LoginResponse.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		A562EEA52D9338D700D68116 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEA62D9338EF00D68116 /* Login */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
+		A562EEA62D9338EF00D68116 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEA72D93390100D68116 /* LoginDataSource.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		A562EEB92D933C4600D68116 /* EventMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEBC2D933C5800D68116 /* NetworkLoggerEventMonitor.swift */,
+				A562EEBA2D933C4E00D68116 /* DefaultEventMonitor.swift */,
+			);
+			path = EventMonitor;
+			sourceTree = "<group>";
+		};
+		A562EEBE2D933C7B00D68116 /* RequestInterceptor */ = {
+			isa = PBXGroup;
+			children = (
+				A562EEBF2D933C8200D68116 /* DefaultRequestInterceptor.swift */,
+			);
+			path = RequestInterceptor;
+			sourceTree = "<group>";
+		};
 		A5804B2E2BEBB6C600BE9602 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,12 +497,14 @@
 		A5E333872AEBE48F0089DD81 /* AutoCare */ = {
 			isa = PBXGroup;
 			children = (
+				A562EE922D93365500D68116 /* DataProviders */,
+				A562EE8F2D93352600D68116 /* DI */,
 				A5FCB7752AED431C0038A546 /* Presentation */,
 				A5E333A22AEBEE180089DD81 /* Domain */,
 				A5E3339E2AEBEA5F0089DD81 /* Info.plist */,
 				A5E3339C2AEBEA220089DD81 /* Config */,
-				A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */,
 				A5E3338C2AEBE4900089DD81 /* Assets.xcassets */,
+				A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */,
 				A5E3338E2AEBE4900089DD81 /* AutoCare.entitlements */,
 				A5E3338F2AEBE4900089DD81 /* Preview Content */,
 			);
@@ -355,6 +531,7 @@
 		A5E333A22AEBEE180089DD81 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				A562EE852D9333A000D68116 /* Keychain */,
 				A5E333A32AEBEE1E0089DD81 /* Entities */,
 			);
 			path = Domain;
@@ -364,6 +541,7 @@
 			isa = PBXGroup;
 			children = (
 				A5A7A5712D6276AD008608DC /* SwiftData */,
+				A562EE972D93372900D68116 /* Login.swift */,
 				A5FCB7862AED45AE0038A546 /* Vehicle.swift */,
 				A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */,
 				A5B8898B2BA77488007CB002 /* VehicleMileage.swift */,
@@ -491,6 +669,11 @@
 				A53B23E82B6443450025AFB1 /* FormValidator */,
 				A50014BA2B86726A00040E3C /* TTProgressHUD */,
 				A546DBE42D50E84700B220A4 /* RealmSwift */,
+				A562EE892D9333F500D68116 /* KeychainAccess */,
+				A562EE8C2D9334E500D68116 /* Factory */,
+				A562EEAE2D933AC700D68116 /* Pulse */,
+				A562EEB02D933AC700D68116 /* PulseUI */,
+				A562EEB32D933B2D00D68116 /* Alamofire */,
 			);
 			productName = AutoCare;
 			productReference = A5E333852AEBE48F0089DD81 /* AutoCare.app */;
@@ -524,6 +707,10 @@
 				A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */,
 				A50014B92B86726A00040E3C /* XCRemoteSwiftPackageReference "TTProgressHUD" */,
 				A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				A562EE882D9333F500D68116 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				A562EE8B2D9334E500D68116 /* XCRemoteSwiftPackageReference "Factory" */,
+				A562EEAD2D933AC700D68116 /* XCRemoteSwiftPackageReference "Pulse" */,
+				A562EEB22D933B2D00D68116 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = A5E333862AEBE48F0089DD81 /* Products */;
 			projectDirPath = "";
@@ -556,18 +743,25 @@
 				A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */,
 				A5804B322BEBB6EC00BE9602 /* CurrencyUITextField.swift in Sources */,
 				A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */,
+				A562EEBB2D933C4E00D68116 /* DefaultEventMonitor.swift in Sources */,
 				A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */,
+				A562EEB62D933B5100D68116 /* AutoCareAPI.swift in Sources */,
 				A50014B52B86626000040E3C /* MainButtonStyle.swift in Sources */,
 				A529BB962BC855A6003DCCBC /* MileageEditViewModel.swift in Sources */,
 				A5804B352BEBB70A00BE9602 /* PreviewNumberFormatter.swift in Sources */,
 				A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */,
 				A5DD63E82AF035BB009254C2 /* VehicleEditState.swift in Sources */,
 				A53F41632D5E104100FE70B7 /* HomeViewModel.swift in Sources */,
+				A562EEC02D933C8200D68116 /* DefaultRequestInterceptor.swift in Sources */,
+				A562EEBD2D933C5800D68116 /* NetworkLoggerEventMonitor.swift in Sources */,
 				A5B470ED2CDFF7B200ECE77E /* HomeRouter.swift in Sources */,
 				A50FC89D2BE6C4270044E126 /* MileageEditState.swift in Sources */,
+				A562EE9E2D93378600D68116 /* LoginRequest.swift in Sources */,
 				A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */,
+				A562EEAC2D93397F00D68116 /* NetworkManager.swift in Sources */,
 				A5E333892AEBE48F0089DD81 /* AutoCareApp.swift in Sources */,
 				A5B470E82CDFF60300ECE77E /* HomeView.swift in Sources */,
+				A562EE982D93372900D68116 /* Login.swift in Sources */,
 				A581939C2BC4296200887056 /* Number+Extensions.swift in Sources */,
 				A52C71E52B850CAA007BAFEE /* LoginViewModel.swift in Sources */,
 				A53F41662D5E107A00FE70B7 /* HomeState.swift in Sources */,
@@ -579,15 +773,24 @@
 				A53F415B2D5E065900FE70B7 /* ServiceListViewModel.swift in Sources */,
 				A5C3A94B2BA716D800A0CC21 /* MileagesRouter.swift in Sources */,
 				A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */,
+				A562EEA82D93390100D68116 /* LoginDataSource.swift in Sources */,
 				A53F415D2D5E084900FE70B7 /* VehicleService.swift in Sources */,
 				A58ED06E2B83FBBA0023295E /* LoginView.swift in Sources */,
 				A5B8898C2BA77488007CB002 /* VehicleMileage.swift in Sources */,
+				A562EE912D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift in Sources */,
+				A562EEB82D933C0B00D68116 /* RefreshTokenRequest.swift in Sources */,
+				A562EE872D9333A900D68116 /* KeychainDataSource.swift in Sources */,
+				A562EEC22D933CAA00D68116 /* RefreshTokenResponse.swift in Sources */,
+				A562EEA42D9338A200D68116 /* RequestError.swift in Sources */,
 				A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */,
 				A55918DE2BA9BE8300EB3ED3 /* MileageListItem.swift in Sources */,
+				A562EE962D93367600D68116 /* LoginRepository.swift in Sources */,
+				A562EEA22D93387300D68116 /* LoginResponse.swift in Sources */,
 				A50FC8982BE6C12B0044E126 /* View+Extensions.swift in Sources */,
 				A53F41692D5E63CF00FE70B7 /* ServiceListState.swift in Sources */,
 				A50FC89B2BE6C1550044E126 /* NavigationViewModifier.swift in Sources */,
 				A529BB942BC85596003DCCBC /* MileageEditView.swift in Sources */,
+				A562EEAA2D93393C00D68116 /* AutoCareApp+DataSourceInjection.swift in Sources */,
 				A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */,
 				A53F416B2D5E651C00FE70B7 /* ServiceListItem.swift in Sources */,
 				A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */,
@@ -847,6 +1050,38 @@
 				kind = branch;
 			};
 		};
+		A562EE882D9333F500D68116 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		A562EE8B2D9334E500D68116 /* XCRemoteSwiftPackageReference "Factory" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hmlongco/Factory";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.3;
+			};
+		};
+		A562EEAD2D933AC700D68116 /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.3;
+			};
+		};
+		A562EEB22D933B2D00D68116 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -864,6 +1099,31 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		A562EE892D9333F500D68116 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A562EE882D9333F500D68116 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		A562EE8C2D9334E500D68116 /* Factory */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A562EE8B2D9334E500D68116 /* XCRemoteSwiftPackageReference "Factory" */;
+			productName = Factory;
+		};
+		A562EEAE2D933AC700D68116 /* Pulse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A562EEAD2D933AC700D68116 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = Pulse;
+		};
+		A562EEB02D933AC700D68116 /* PulseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A562EEAD2D933AC700D68116 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseUI;
+		};
+		A562EEB32D933B2D00D68116 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A562EEB22D933B2D00D68116 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

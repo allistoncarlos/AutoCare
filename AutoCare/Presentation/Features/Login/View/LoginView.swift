@@ -10,7 +10,7 @@ import Realm
 import TTProgressHUD
 
 struct LoginView: View {
-    @State var email: String = ""
+    @State var username: String = ""
     @State var password: String = ""
     @State var isLoading = false
 
@@ -24,11 +24,11 @@ struct LoginView: View {
             } else {
                 NavigationView {
                     Form {
-                        TextField("E-mail", text: $email)
+                        TextField("Username", text: $username)
                             .autocapitalization(.none)
                         SecureField("Password", text: $password) {
                             Task {
-                                await viewModel.login(email: email, password: password)
+                                await viewModel.login(username: username, password: password)
                             }
                         }
 
@@ -36,10 +36,10 @@ struct LoginView: View {
                             footer:
                             Button("Login") {
                                 Task {
-                                    await viewModel.login(email: email, password: password)
+                                    await viewModel.login(username: username, password: password)
                                 }
                             }
-                            .disabled(email.isEmpty || password.isEmpty || viewModel.state == .loading)
+                            .disabled(username.isEmpty || password.isEmpty || viewModel.state == .loading)
                             .buttonStyle(MainButtonStyle())
                         ) {
                             EmptyView()

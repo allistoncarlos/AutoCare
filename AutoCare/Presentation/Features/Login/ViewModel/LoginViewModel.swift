@@ -9,6 +9,8 @@ import Foundation
 import Realm
 import RealmSwift
 import SwiftUI
+import Combine
+import Factory
 
 enum LoginError: Error, Equatable {
     case invalidUsernameOrPassword
@@ -21,22 +23,43 @@ class LoginViewModel: ObservableObject {
     private var app: RealmSwift.App?
     var realm: Realm? = nil
     
+    @Injected(\.loginRepository) private var repository: LoginRepositoryProtocol
+    private var cancellable = Set<AnyCancellable>()
+    
     func setup(app: RealmSwift.App) async {
         self.app = app
     }
-
-    func login(email: String, password: String) async {
+    
+    func login(username: String, password: String) async {
         state = .loading
-        
-        if app?.currentUser == nil {
-            do {
-                let credentials = Credentials.emailPassword(email: email, password: password)
-                _ = try await app?.login(credentials: credentials)
-                
-                state = .success
-            } catch {
-                state = .error(.invalidUsernameOrPassword)
-            }
+
+        let result = await repository.login(login: Login(username: username, password: password))
+
+        if let result {
+            saveToken(response: result)
+
+            state = .success(result)
+        } else {
+            state = .error(.invalidUsernameOrPassword)
+        }
+    }
+    
+    private func saveToken(response: Login?) {
+        if let session = response,
+           let id = session.id,
+           let accessToken = session.accessToken,
+           let refreshToken = session.refreshToken,
+           let expiresIn = session.expiresIn {
+            let dateFormatter = ISO8601DateFormatter()
+
+            let formattedExpiresIn = dateFormatter.string(from: expiresIn)
+
+            KeychainDataSource.id.set(id)
+            KeychainDataSource.accessToken.set(accessToken)
+            KeychainDataSource.refreshToken.set(refreshToken)
+            KeychainDataSource.expiresIn.set(formattedExpiresIn)
+        } else {
+            KeychainDataSource.clear()
         }
     }
 }
