@@ -65,15 +65,17 @@ struct ServiceListView: View {
     ServiceListView(
         viewModel: ServiceListView.ViewModel(
             realm: try! Realm(),
-            selectedVehicle: Vehicle(
+            selectedVehicle: VehicleData(
+                id: "1",
                 name: "Fiat Argo 2021",
                 brand: "Fiat",
                 model: "Argo",
                 year: "2021",
                 licensePlate: "AAA-1C34",
                 odometer: 0,
-                owner_id: "11234",
-                vehicleType: VehicleType(name: "Car")
+                vehicleTypeId: "1",
+                vehicleType: "Car",
+                vehicleTypeEmoji: "🏎️"
             )
         )
     )

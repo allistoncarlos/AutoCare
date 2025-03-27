@@ -22,7 +22,7 @@ extension MileageEditView {
         
         private var cancellable = Set<AnyCancellable>()
         private var realm: Realm
-        private var vehicleId: ObjectId
+        private var vehicleId: String
         
         @Published var isFormValid = false
         
@@ -49,7 +49,7 @@ extension MileageEditView {
         init(
             realm: Realm,
             vehicleMileage: VehicleMileage?,
-            vehicleId: ObjectId
+            vehicleId: String
         ) {
             self.realm = realm
             self.vehicleMileage = vehicleMileage
@@ -85,38 +85,6 @@ extension MileageEditView {
         }
         
         func fetchPreviousVehicleMileage() async {
-            do {
-                guard let userId = AutoCareApp.app.currentUser?.id else {
-                    throw RLMError(.fail)
-                }
-                
-                state = .loading
-                
-                let vehicleMileages = realm.objects(VehicleMileage.self)
-                
-                var lastVehicleMileage: VehicleMileage? = nil
-                
-                if let vehicleMileage {
-                    let index = vehicleMileages.lastIndex(where: { $0._id == vehicleMileage._id })
-
-                    if let index, index < vehicleMileages.count - 1 {
-                        lastVehicleMileage = vehicleMileages[index + 1]
-                    }
-                } else {
-                    lastVehicleMileage = vehicleMileages
-                        .where {
-                            $0.owner_id == userId &&
-                            $0.vehicle_id == vehicleId
-                        }
-                        .sorted { $0.date > $1.date }
-                        .first
-                }
-                
-                state = .successPreviousMileage(lastVehicleMileage)
-            } catch {
-                print(error)
-                state = .error
-            }
         }
         
         func save() async {
@@ -132,7 +100,6 @@ extension MileageEditView {
                         let resultVehicleMileage = vehicleMileage ?? VehicleMileage()
                         
                         resultVehicleMileage.owner_id = userId
-                        resultVehicleMileage.vehicle_id = vehicleId
                         resultVehicleMileage.date = date
                         
                         if let odometer, let odometer = Int(odometer) {

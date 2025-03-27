@@ -17,7 +17,7 @@ extension VehicleListView {
     class ViewModel: ObservableObject {
         // MARK: - Published properties
         @Published var state: VehicleListState = .idle
-        @Published var vehicles = [Vehicle]()
+        @Published var vehicles = [VehicleData]()
         @Published var vehiclesData = [VehicleData]()
         
         // MARK: - Properties
@@ -47,28 +47,6 @@ extension VehicleListView {
             state = .loading
             
             self.fetchVehiclesData()
-            
-            let vehicles = Array(realm.objects(Vehicle.self))
-
-            vehicles.forEach { vehicle in
-                let vehicleId = "\(vehicle._id)"
-                
-                let vehicleData = VehicleData(
-                    id: vehicleId,
-                    name: vehicle.name,
-                    brand: vehicle.brand,
-                    model: vehicle.model,
-                    year: vehicle.year,
-                    licensePlate: vehicle.licensePlate,
-                    odometer: vehicle.odometer,
-                    enabled: vehicle.enabled,
-                    ownerId: vehicle.owner_id
-                )
-                
-                if vehiclesData.count == 0 {
-                    modelContext.insert(vehicleData)
-                }
-            }
             
             state = .successVehicles(Array(vehicles))
         }

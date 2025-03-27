@@ -11,7 +11,7 @@ import SwiftData
 
 @MainActor
 enum HomeRouter {
-    static func makeMileageListView(realm: Realm, modelContext: ModelContext, selectedVehicle: Vehicle) -> some View {
+    static func makeMileageListView(realm: Realm, modelContext: ModelContext, selectedVehicle: VehicleData) -> some View {
         return MileageListView(
             viewModel: MileageListView.ViewModel(
                 realm: realm,
@@ -21,7 +21,7 @@ enum HomeRouter {
         )
     }
     
-    static func makeServiceListView(realm: Realm, selectedVehicle: Vehicle) -> some View {
+    static func makeServiceListView(realm: Realm, selectedVehicle: VehicleData) -> some View {
         return ServiceListView(
             viewModel: ServiceListView.ViewModel(realm: realm, selectedVehicle: selectedVehicle)
         )

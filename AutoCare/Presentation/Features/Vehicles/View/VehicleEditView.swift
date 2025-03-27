@@ -31,12 +31,20 @@ struct VehicleEditView: View {
         return years.reversed()
     }
     
+    var title: String {
+        if let name = viewModel.vehicle?.name {
+            return name
+        }
+        
+        return ""
+    }
+    
     var body: some View {
         Form {
             Section(header: Text("Veículo")) {
                 Picker("Vehicle Types", selection: $viewModel.selectedVehicleType) {
                     ForEach(viewModel.vehicleTypes, id: \.name) { vehicleType in
-                        Text(vehicleType.localizedName())
+                        Text(vehicleType.emoji)
                             .tag(vehicleType.name)
                     }
                 }
@@ -67,7 +75,7 @@ struct VehicleEditView: View {
                     .validation(viewModel.odometerValidation)
             }
         }
-        .navigationTitle(viewModel.vehicle.name.isEmpty ? "Novo Veículo" : viewModel.vehicle.name)
+        .navigationTitle(title)
         .toolbar {
             Button("Salvar") {
                 Task {

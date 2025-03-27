@@ -40,7 +40,7 @@ struct MileageListView: View {
             }
             .navigationDestination(for: String.self) { _ in
                 if let user = app.currentUser {
-                    navigateToEditMileageView(realm: viewModel.realm, user: user, vehicleId: viewModel.selectedVehicle._id)
+                    navigateToEditMileageView(realm: viewModel.realm, user: user, vehicleId: viewModel.selectedVehicle.id)
                 }
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
@@ -48,7 +48,7 @@ struct MileageListView: View {
                     navigateToEditMileageView(
                         realm: viewModel.realm,
                         user: user,
-                        vehicleId: viewModel.selectedVehicle._id,
+                        vehicleId: viewModel.selectedVehicle.id,
                         vehicleMileage: vehicleMileage
                     )
                 }
@@ -79,7 +79,7 @@ struct MileageListView: View {
             if app.currentUser != nil {
                 viewModel.showEditVehicleView(
                     realm: viewModel.realm,
-                    vehicleId: viewModel.selectedVehicle._id,
+                    vehicleId: viewModel.selectedVehicle.id,
                     isPresented: $isNewVehiclePresented
                 )
             }
@@ -89,7 +89,7 @@ struct MileageListView: View {
     func navigateToEditMileageView(
         realm: Realm,
         user: User,
-        vehicleId: ObjectId,
+        vehicleId: String,
         vehicleMileage: VehicleMileage? = nil
     ) -> some View {
         return viewModel.editMileageView(
@@ -128,15 +128,17 @@ struct MileageListView: View {
             modelContext: ModelContext(
                 try! ModelContainer(for: VehicleMileageData.self, configurations: config)
             ),
-            selectedVehicle: Vehicle(
+            selectedVehicle: VehicleData(
+                id: "1",
                 name: "Fiat Argo 2021",
                 brand: "Fiat",
                 model: "Argo",
                 year: "2021",
                 licensePlate: "AAA-1C34",
                 odometer: 0,
-                owner_id: "11234",
-                vehicleType: VehicleType(name: "Car")
+                vehicleTypeId: "1",
+                vehicleType: "Car",
+                vehicleTypeEmoji: "🏎️"
             )
         )
     )

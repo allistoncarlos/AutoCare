@@ -10,11 +10,16 @@ import Foundation
 
 internal enum APIConstants {
     static let userResource = "user"
+    static let vehicleResource = "vehicle"
 }
 
 public enum AutoCareAPI {
+    private static let apiArea = "autocare"
+    
     case login(data: LoginRequest)
     case refreshToken(data: RefreshTokenRequest)
+    case vehicles
+    case vehicle(id: String)
 
     var baseURL: String {
         switch self {
@@ -29,11 +34,19 @@ public enum AutoCareAPI {
             return "\(APIConstants.userResource)/login"
         case .refreshToken:
             return "\(APIConstants.userResource)/refresh"
+            
+        case .vehicles:
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)"
+        case let .vehicle(id):
+            return "\(AutoCareAPI.apiArea)\(APIConstants.vehicleResource)/\(id)"
         }
     }
 
     var method: HTTPMethod {
         switch self {
+        case .vehicles,
+             .vehicle:
+            return .get
         case .login,
              .refreshToken:
             return .post
@@ -65,6 +78,9 @@ public enum AutoCareAPI {
             return try parameterEncoder.encode(parameters, into: request)
         case let .refreshToken(parameters):
             return try parameterEncoder.encode(parameters, into: request)
+        case .vehicles,
+             .vehicle:
+            return request
         }
     }
 

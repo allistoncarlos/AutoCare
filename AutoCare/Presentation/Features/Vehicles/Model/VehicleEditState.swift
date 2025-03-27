@@ -11,6 +11,6 @@ enum VehicleEditState: Equatable {
     case idle
     case loading
     case error
-    case successVehicleTypes([VehicleType])
+    case successVehicleTypes([VehicleTypeData])
     case successSavedVehicle
 }

@@ -17,8 +17,10 @@ final class VehicleData {
     var year: String = ""
     var licensePlate: String = ""
     var odometer: Int = 0
-    var enabled: Bool = true
-    var ownerId: String
+
+    var vehicleTypeId: String
+    var vehicleType: String?
+    var vehicleTypeEmoji: String?
     
     init(
         id: String,
@@ -28,8 +30,9 @@ final class VehicleData {
         year: String,
         licensePlate: String,
         odometer: Int,
-        enabled: Bool,
-        ownerId: String
+        vehicleTypeId: String,
+        vehicleType: String,
+        vehicleTypeEmoji: String
     ) {
         self.id = id
         self.name = name
@@ -38,7 +41,8 @@ final class VehicleData {
         self.year = year
         self.licensePlate = licensePlate
         self.odometer = odometer
-        self.enabled = enabled
-        self.ownerId = ownerId
+        self.vehicleTypeId = vehicleTypeId
+        self.vehicleType = vehicleType
+        self.vehicleTypeEmoji = vehicleTypeEmoji
     }
 }

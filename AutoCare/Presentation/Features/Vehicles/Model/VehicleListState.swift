@@ -11,5 +11,5 @@ enum VehicleListState: Equatable {
     case idle
     case loading
     case error
-    case successVehicles([Vehicle])
+    case successVehicles([VehicleData])
 }

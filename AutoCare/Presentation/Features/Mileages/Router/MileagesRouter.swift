@@ -13,7 +13,7 @@ import RealmSwift
 enum MileagesRouter {
     static func makeEditVehicleView(
         realm: Realm,
-        vehicleId: ObjectId?,
+        vehicleId: String?,
         isPresented: Binding<Bool>
     ) -> some View {
         return VehicleEditView(
@@ -30,7 +30,7 @@ enum MileagesRouter {
         navigationPath: Binding<NavigationPath>,
         realm: Realm,
         userId: String,
-        vehicleId: ObjectId,
+        vehicleId: String,
         vehicleMileage: VehicleMileage?
     ) -> some View {
         let viewModel = MileageEditView.ViewModel(

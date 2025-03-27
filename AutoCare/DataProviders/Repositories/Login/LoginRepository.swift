@@ -14,8 +14,7 @@ protocol LoginRepositoryProtocol {
 
 struct LoginRepository: LoginRepositoryProtocol {
     func login(login: Login) async -> Login? {
-        do {
-            return await dataSource.login(loginRequest: try login.toRequest())
+        do {return await dataSource.login(loginRequest: try login.toRequest())
         } catch {
             print(error)
             return nil

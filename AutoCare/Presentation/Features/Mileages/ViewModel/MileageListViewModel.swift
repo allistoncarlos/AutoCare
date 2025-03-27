@@ -16,9 +16,8 @@ extension MileageListView {
     @MainActor
     class ViewModel: ObservableObject {
         @Published var state: MileageListState = .idle
-//        @Published var vehicleMileages = [VehicleMileage]()
         @Published var vehicleMileagesData = [VehicleMileageData]()
-        @Published var selectedVehicle: Vehicle
+        @Published var selectedVehicle: VehicleData
         
         // MARK: - Properties
         var realm: Realm
@@ -30,7 +29,7 @@ extension MileageListView {
         init(
             realm: Realm,
             modelContext: ModelContext,
-            selectedVehicle: Vehicle
+            selectedVehicle: VehicleData
         ) {
             self.realm = realm
             self.modelContext = modelContext
@@ -57,7 +56,7 @@ extension MileageListView {
         // MARK: - Router
         func showEditVehicleView(
             realm: Realm,
-            vehicleId: ObjectId?,
+            vehicleId: String?,
             isPresented: Binding<Bool>
         ) -> some View {
             return MileagesRouter.makeEditVehicleView(
@@ -71,7 +70,7 @@ extension MileageListView {
             navigationPath: Binding<NavigationPath>,
             realm: Realm,
             userId: String,
-            vehicleId: ObjectId,
+            vehicleId: String,
             vehicleMileage: VehicleMileage? = nil
         ) -> some View {
             return MileagesRouter.makeEditMileageView(
@@ -85,27 +84,6 @@ extension MileageListView {
         
         func fetchVehicleMileages() async {
             state = .loading
-            
-            if let app, let user = app.currentUser {
-                let vehicleMileages = try! await realm.objects(VehicleMileage.self)
-                    .where {
-                        $0.owner_id == user.id &&
-                        $0.vehicle_id == selectedVehicle._id
-                    }
-                    .subscribe(
-                        name: "vehicle-mileages",
-                        waitForSync: .onCreation
-                    )
-                
-                var vehicleMileagesArray = Array(vehicleMileages)
-                vehicleMileagesArray = vehicleMileagesArray.sorted(by: {
-                    $0.date.compare($1.date) == .orderedDescending
-                })
-                
-                self.syncSwiftData(vehicleMileagesArray)
-                
-                state = .successVehicleMileages(vehicleMileagesArray)
-            }
         }
         
         func syncSwiftData(_ vehicleMileages: [VehicleMileage]) {

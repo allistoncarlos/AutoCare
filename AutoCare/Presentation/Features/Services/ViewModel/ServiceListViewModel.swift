@@ -16,7 +16,7 @@ extension ServiceListView {
     class ViewModel: ObservableObject {
         @Published var state: ServiceListState = .idle
         @Published var vehicleServices = [VehicleService]()
-        @Published var selectedVehicle: Vehicle
+        @Published var selectedVehicle: VehicleData
         
         // MARK: - Properties
         var realm: Realm
@@ -24,7 +24,7 @@ extension ServiceListView {
         private var app: RealmSwift.App?
         private var cancellable = Set<AnyCancellable>()
         
-        init(realm: Realm, selectedVehicle: Vehicle) {
+        init(realm: Realm, selectedVehicle: VehicleData) {
             self.realm = realm
             self.selectedVehicle = selectedVehicle
         }
@@ -46,43 +46,13 @@ extension ServiceListView {
             await fetchVehicleServices()
         }
         
-//        // MARK: - Router
-//        func showEditVehicleView(
-//            realm: Realm,
-//            vehicleId: ObjectId?,
-//            isPresented: Binding<Bool>
-//        ) -> some View {
-//            return ServicesRouter.makeEditVehicleView(
-//                realm: realm,
-//                vehicleId: vehicleId,
-//                isPresented: isPresented
-//            )
-//        }
-//        
-//        func editServiceView(
-//            navigationPath: Binding<NavigationPath>,
-//            realm: Realm,
-//            userId: String,
-//            vehicleId: ObjectId,
-//            vehicleService: VehicleService? = nil
-//        ) -> some View {
-//            return ServicesRouter.makeEditServiceView(
-//                navigationPath: navigationPath,
-//                realm: realm,
-//                userId: userId,
-//                vehicleId: vehicleId,
-//                vehicleService: vehicleService
-//            )
-//        }
-        
         func fetchVehicleServices() async {
             state = .loading
             
             if let app, let user = app.currentUser {
                 let vehicleServices = try! await realm.objects(VehicleService.self)
                     .where {
-                        $0.owner_id == user.id &&
-                        $0.vehicle_id == selectedVehicle._id
+                        $0.owner_id == user.id
                     }
                     .subscribe(
                         name: "vehicle-services",

@@ -9,17 +9,20 @@ import Foundation
 import RealmSwift
 import Realm
 import Combine
+import Factory
 
 extension HomeView {
     @MainActor
     class ViewModel: ObservableObject {
         @Published var state: HomeState = .idle
-        @Published var selectedVehicle: Vehicle?
+        @Published var selectedVehicle: VehicleData?
         
         var realm: Realm? = nil
         
         private var app: RealmSwift.App?
         private var cancellable = Set<AnyCancellable>()
+        
+        @Injected(\.vehicleRepository) private var repository: VehicleRepositoryProtocol
         
         func setup(app: RealmSwift.App) async {
             self.app = app
@@ -28,6 +31,8 @@ extension HomeView {
                 .receive(on: RunLoop.main)
                 .sink { [weak self] state in
                     switch state {
+                    case let .successVehicleData(vehiclesData):
+                        print(vehiclesData.debugDescription)
                     case let .successVehicle(vehicles):
                         // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
                         self?.selectedVehicle = vehicles.first
@@ -42,34 +47,12 @@ extension HomeView {
         private func fetchVehicles() async {
             state = .loading
             
-            if realm == nil {
-                do {
-                    self.realm = try await self.openRealm()
-                } catch {
-                    state = .error
-                }
-            }
-            
-            if let realm, let app, let user = app.currentUser {
-                let vehicles = try! await realm.objects(Vehicle.self)
-                    .where { $0.owner_id == user.id }
-                    .subscribe(
-                        name: "vehicle",
-                        waitForSync: .onCreation
-                    )
-                
-                _ = try! await realm.objects(VehicleType.self)
-                    .where { $0.enabled }
-                    .subscribe(
-                        name: "enabled-vehicle-types",
-                        waitForSync: .onCreation
-                    )
-                
-                if vehicles.isEmpty {
-                    state = .newVehicle
-                } else {
-                    state = .successVehicle(Array(vehicles))
-                }
+            let result = await repository.fetchData()
+
+            if let result {
+                state = .successVehicleData(result)
+            } else {
+                state = .error
             }
         }
         

@@ -190,7 +190,7 @@ struct MileageEditView: View {
         viewModel: MileageEditView.ViewModel(
             realm: try! Realm(),
             vehicleMileage: VehicleMileage(),
-            vehicleId: try! ObjectId(string: "65f7489acdac2f577161d7f7")
+            vehicleId: "65f7489acdac2f577161d7f7"
         ),
         navigationPath: .constant(
             NavigationPath()

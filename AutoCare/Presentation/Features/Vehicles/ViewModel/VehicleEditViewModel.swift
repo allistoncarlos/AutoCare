@@ -16,9 +16,9 @@ extension VehicleEditView {
     class ViewModel: ObservableObject {
         // MARK: - Published properties
         @Published var state: VehicleEditState = .idle
-        @Published var vehicle: Vehicle = Vehicle()
-        @Published var vehicleId: ObjectId? = nil
-        @Published var vehicleTypes = [VehicleType]()
+        @Published var vehicle: VehicleData?
+        @Published var vehicleId: String? = nil
+        @Published var vehicleTypes = [VehicleTypeData]()
         @Published var isFormValid = false
         
         @Published var manager = FormManager(validationType: .immediate)
@@ -60,7 +60,7 @@ extension VehicleEditView {
         
         // MARK: - Init
         init(
-            vehicleId: ObjectId?,
+            vehicleId: String?,
             realm: Realm
         ) {
             self.realm = realm
@@ -80,11 +80,6 @@ extension VehicleEditView {
         
         // MARK: - Func
         func fetchVehicleTypes() async {
-            state = .loading
-            
-            let vehicleTypes = Array(realm.objects(VehicleType.self))
-
-            state = .successVehicleTypes(Array(vehicleTypes))
         }
 
         func save() async {
@@ -98,18 +93,14 @@ extension VehicleEditView {
                         throw RLMError(.fail)
                     }
                     
-                    vehicle.vehicleType = vehicleTypes.first { $0.name == selectedVehicleType }
-                    vehicle.owner_id = userId
+                    guard let vehicle else { return }
+                    
                     vehicle.name = self.name
                     vehicle.brand = self.brand
                     vehicle.model = self.model
                     vehicle.year = self.year
                     vehicle.licensePlate = self.licensePlate
                     vehicle.odometer = odometer
-                    
-                    try await realm.asyncWrite {
-                        realm.add(vehicle)
-                    }
                     
                     state = .successSavedVehicle
                 } catch {

@@ -12,5 +12,6 @@ enum HomeState: Equatable {
     case loading
     case error
     case newVehicle
-    case successVehicle([Vehicle])
+    case successVehicle([VehicleData])
+    case successVehicleData([VehicleData])
 }

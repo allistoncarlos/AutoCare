@@ -10,4 +10,6 @@ import Foundation
 
 extension Container {
     var loginDataSource: Factory<LoginDataSourceProtocol> { self { LoginDataSource() } }
+    
+    var vehicleDataSource: Factory<VehicleDataSourceProtocol> { self { VehicleDataSource() } }
 }
