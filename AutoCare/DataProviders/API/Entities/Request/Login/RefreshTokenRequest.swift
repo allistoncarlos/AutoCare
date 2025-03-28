@@ -5,7 +5,7 @@
 //  Created by Alliston Aleixo on 25/03/25.
 //
 
-public struct RefreshTokenRequest: Codable {
+public struct RefreshTokenRequest: Codable, Sendable {
     public var accessToken: String
     public var refreshToken: String
 

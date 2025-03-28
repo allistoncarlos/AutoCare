@@ -9,18 +9,24 @@ import Foundation
 import SwiftData
 
 @Model
-final class VehicleTypeData {
-    var id: String = ""
-    var name: String = ""
-    var emoji: String = ""
+final class VehicleTypeData: Syncable {
+    var id: String
+    var name: String
+    var emoji: String
+    
+    var synced: Bool
     
     init(
         id: String,
         name: String,
-        emoji: String
+        emoji: String,
+        
+        synced: Bool = false
     ) {
         self.id = id
         self.name = name
         self.emoji = emoji
+        
+        self.synced = synced
     }
 }

@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import RealmSwift
-import Realm
 import SwiftUI
 import Combine
 
@@ -18,54 +16,80 @@ extension ServiceListView {
         @Published var vehicleServices = [VehicleService]()
         @Published var selectedVehicle: VehicleData
         
-        // MARK: - Properties
-        var realm: Realm
-        
-        private var app: RealmSwift.App?
         private var cancellable = Set<AnyCancellable>()
         
-        init(realm: Realm, selectedVehicle: VehicleData) {
-            self.realm = realm
+        init(selectedVehicle: VehicleData) {
             self.selectedVehicle = selectedVehicle
         }
         
-        func setup(app: RealmSwift.App) async {
-            self.app = app
-            
-            $state
-                .receive(on: RunLoop.main)
-                .sink { [weak self] state in
-                    switch state {
-                    case let .successVehicleServices(vehicleServices):
-                        self?.vehicleServices = vehicleServices
-                    default:
-                        break
-                    }
-                }.store(in: &cancellable)
-            
-            await fetchVehicleServices()
-        }
+//        func setup(app: RealmSwift.App) async {
+//            self.app = app
+//            
+//            $state
+//                .receive(on: RunLoop.main)
+//                .sink { [weak self] state in
+//                    switch state {
+//                    case let .successVehicleServices(vehicleServices):
+//                        self?.vehicleServices = vehicleServices
+//                    default:
+//                        break
+//                    }
+//                }.store(in: &cancellable)
+//            
+//            await fetchVehicleServices()
+//        }
         
-        func fetchVehicleServices() async {
-            state = .loading
-            
-            if let app, let user = app.currentUser {
-                let vehicleServices = try! await realm.objects(VehicleService.self)
-                    .where {
-                        $0.owner_id == user.id
-                    }
-                    .subscribe(
-                        name: "vehicle-services",
-                        waitForSync: .onCreation
-                    )
-                
-                var vehicleServicesArray = Array(vehicleServices)
-                vehicleServicesArray = vehicleServicesArray.sorted(by: {
-                    $0.date.compare($1.date) == .orderedDescending
-                })
-                
-                state = .successVehicleServices(vehicleServicesArray)
-            }
-        }
+//        // MARK: - Router
+//        func showEditVehicleView(
+//            realm: Realm,
+//            vehicleId: ObjectId?,
+//            isPresented: Binding<Bool>
+//        ) -> some View {
+//            return ServicesRouter.makeEditVehicleView(
+//                realm: realm,
+//                vehicleId: vehicleId,
+//                isPresented: isPresented
+//            )
+//        }
+//        
+//        func editServiceView(
+//            navigationPath: Binding<NavigationPath>,
+//            realm: Realm,
+//            userId: String,
+//            vehicleId: ObjectId,
+//            vehicleService: VehicleService? = nil
+//        ) -> some View {
+//            return ServicesRouter.makeEditServiceView(
+//                navigationPath: navigationPath,
+//                realm: realm,
+//                userId: userId,
+//                vehicleId: vehicleId,
+//                vehicleService: vehicleService
+//            )
+//        }
+        
+//        func fetchVehicleServices() async {
+//            state = .loading
+//            
+//            if let app, let user = app.currentUser {
+//                let vehicleServices = try! await realm.objects(VehicleService.self)
+//                    .where {
+//                        // TODO: Colocar o vehicleId correto aqui
+//                        $0.owner_id == user.id /*&&
+//                        $0.vehicle_id == selectedVehicle.id*/
+//                    }
+//                    .subscribe(
+//                        name: "vehicle-services",
+//                        waitForSync: .onCreation
+//                    )
+//                
+//                var vehicleServicesArray = Array(vehicleServices)
+//                vehicleServicesArray = vehicleServicesArray.sorted(by: {
+//                    $0.date.compare($1.date) == .orderedDescending
+//                })
+//                
+//                state = .successVehicleServices(vehicleServicesArray)
+//            }
+//        }
     }
 }

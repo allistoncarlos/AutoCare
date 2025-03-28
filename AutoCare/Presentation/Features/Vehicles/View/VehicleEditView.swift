@@ -15,6 +15,8 @@ struct VehicleEditView: View {
     @State private var isLoading = true
     @State private var selectedYear = ""
     
+    @StateObject var networkConnectivity = NetworkConnectivity()
+    
     @Binding var isPresented: Bool
     
     var currentYear: Int = Calendar(identifier: .gregorian).dateComponents([.year], from: .now).year!
@@ -98,7 +100,7 @@ struct VehicleEditView: View {
             viewModel.year = newYear
         })
         .task {
-            await viewModel.fetchVehicleTypes()
+            await viewModel.fetchData(isConnected: networkConnectivity.status == .connected)
         }
     }
 }

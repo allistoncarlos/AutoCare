@@ -5,7 +5,7 @@
 //  Created by Alliston Aleixo on 25/03/25.
 //
 
-public struct LoginRequest: Codable {
+public struct LoginRequest: Codable, Sendable {
     public var username: String
     public var password: String
 

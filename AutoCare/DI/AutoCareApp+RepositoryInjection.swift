@@ -11,5 +11,6 @@ import Foundation
 extension Container {
     var loginRepository: Factory<LoginRepositoryProtocol> { self { LoginRepository() } }
     
+    var vehicleTypeRepository: Factory<VehicleTypeRepositoryProtocol> { self { VehicleTypeRepository() } }
     var vehicleRepository: Factory<VehicleRepositoryProtocol> { self { VehicleRepository() } }
 }

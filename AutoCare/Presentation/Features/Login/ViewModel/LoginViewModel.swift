@@ -11,6 +11,7 @@ import RealmSwift
 import SwiftUI
 import Combine
 import Factory
+import SwiftData
 
 enum LoginError: Error, Equatable {
     case invalidUsernameOrPassword
@@ -66,7 +67,7 @@ class LoginViewModel: ObservableObject {
 
 extension LoginViewModel {
     @MainActor
-    func homeView() -> some View {
-        return LoginRouter.makeHomeView()
+    func homeView(modelContext: ModelContext) -> some View {
+        return LoginRouter.makeHomeView(modelContext: modelContext)
     }
 }

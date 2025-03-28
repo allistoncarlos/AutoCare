@@ -26,6 +26,7 @@ struct AutoCareApp: SwiftUI.App {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
+            VehicleTypeData.self,
             VehicleData.self,
             VehicleMileageData.self
         ])
@@ -41,16 +42,16 @@ struct AutoCareApp: SwiftUI.App {
     
     var body: some Scene {
         WindowGroup {
-            resultView()
+            resultView(modelContext: sharedModelContainer.mainContext)
                 .environmentObject(AutoCareApp.app)
         }
         .modelContainer(sharedModelContainer)
     }
     
     @MainActor
-    private func resultView() -> AnyView {
+    private func resultView(modelContext: ModelContext) -> AnyView {
         return KeychainDataSource.hasValidToken() ?
-        AnyView(LoginRouter.makeHomeView()) :
+        AnyView(LoginRouter.makeHomeView(modelContext: modelContext)) :
             AnyView(LoginRouter.makeLoginView())
     }
 }

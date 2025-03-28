@@ -188,7 +188,6 @@ struct MileageEditView: View {
 #Preview {
     MileageEditView(
         viewModel: MileageEditView.ViewModel(
-            realm: try! Realm(),
             vehicleMileage: VehicleMileage(),
             vehicleId: "65f7489acdac2f577161d7f7"
         ),

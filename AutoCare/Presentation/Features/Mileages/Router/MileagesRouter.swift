@@ -7,34 +7,15 @@
 
 import Foundation
 import SwiftUI
-import RealmSwift
 
 @MainActor
 enum MileagesRouter {
-    static func makeEditVehicleView(
-        realm: Realm,
-        vehicleId: String?,
-        isPresented: Binding<Bool>
-    ) -> some View {
-        return VehicleEditView(
-            viewModel: VehicleEditView.ViewModel(
-                vehicleId: vehicleId,
-                realm: realm
-            ),
-            isPresented: isPresented
-        )
-        .interactiveDismissDisabled()
-    }
-    
     static func makeEditMileageView(
         navigationPath: Binding<NavigationPath>,
-        realm: Realm,
-        userId: String,
         vehicleId: String,
         vehicleMileage: VehicleMileage?
     ) -> some View {
         let viewModel = MileageEditView.ViewModel(
-            realm: realm,
             vehicleMileage: vehicleMileage,
             vehicleId: vehicleId
         )

@@ -8,11 +8,9 @@
 import SwiftUI
 import Realm
 import TTProgressHUD
-import RealmSwift
 import SwiftData
 
 struct MileageListView: View {
-    @EnvironmentObject var app: RLMApp
     @Environment(\.modelContext) private var modelContext
     
     @ObservedObject var viewModel: ViewModel
@@ -39,19 +37,13 @@ struct MileageListView: View {
                 }
             }
             .navigationDestination(for: String.self) { _ in
-                if let user = app.currentUser {
-                    navigateToEditMileageView(realm: viewModel.realm, user: user, vehicleId: viewModel.selectedVehicle.id)
-                }
+                navigateToEditMileageView(vehicleId: viewModel.selectedVehicle.id)
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
-                if let user = app.currentUser {
-                    navigateToEditMileageView(
-                        realm: viewModel.realm,
-                        user: user,
-                        vehicleId: viewModel.selectedVehicle.id,
-                        vehicleMileage: vehicleMileage
-                    )
-                }
+                navigateToEditMileageView(
+                    vehicleId: viewModel.selectedVehicle.id,
+                    vehicleMileage: vehicleMileage
+                )
             }
         }
         .disabled(isLoading)
@@ -59,7 +51,8 @@ struct MileageListView: View {
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
         .task {
-            await viewModel.setup(app: app)
+//            await viewModel.setup(app: app)
+//            await viewModel.fetchData() // TODO: refatorar pra isso
         }
         .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
@@ -75,27 +68,14 @@ struct MileageListView: View {
                 }
             }
         }
-        .sheet(isPresented: $isNewVehiclePresented) {
-            if app.currentUser != nil {
-                viewModel.showEditVehicleView(
-                    realm: viewModel.realm,
-                    vehicleId: viewModel.selectedVehicle.id,
-                    isPresented: $isNewVehiclePresented
-                )
-            }
-        }
     }
     
     func navigateToEditMileageView(
-        realm: Realm,
-        user: User,
         vehicleId: String,
         vehicleMileage: VehicleMileage? = nil
     ) -> some View {
         return viewModel.editMileageView(
             navigationPath: $presentedMileages,
-            realm: realm,
-            userId: user.id,
             vehicleId: vehicleId,
             vehicleMileage: vehicleMileage
         )
@@ -124,7 +104,6 @@ struct MileageListView: View {
     
     MileageListView(
         viewModel: MileageListView.ViewModel(
-            realm: try! Realm(),
             modelContext: ModelContext(
                 try! ModelContainer(for: VehicleMileageData.self, configurations: config)
             ),

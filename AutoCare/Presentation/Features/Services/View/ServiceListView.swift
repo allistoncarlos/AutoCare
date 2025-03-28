@@ -6,12 +6,10 @@
 //
 
 import SwiftUI
-import Realm
 import TTProgressHUD
 import RealmSwift
 
 struct ServiceListView: View {
-    @EnvironmentObject var app: RLMApp
     
     @ObservedObject var viewModel: ViewModel
     @State private var isLoading = true
@@ -41,9 +39,10 @@ struct ServiceListView: View {
         .overlay(
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
-        .task {
-            await viewModel.setup(app: app)
-        }
+//        .task {
+//            await viewModel.fetchData() // TODO: REFATORAR PARA ISSO
+//            await viewModel.setup(app: app)
+//        }
         .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
             
@@ -54,7 +53,7 @@ struct ServiceListView: View {
             newValue in
             if newValue.isEmpty {
                 Task {
-                    await viewModel.fetchVehicleServices()
+//                    await viewModel.fetchVehicleServices()
                 }
             }
         }
@@ -64,7 +63,6 @@ struct ServiceListView: View {
 #Preview {
     ServiceListView(
         viewModel: ServiceListView.ViewModel(
-            realm: try! Realm(),
             selectedVehicle: VehicleData(
                 id: "1",
                 name: "Fiat Argo 2021",

@@ -6,65 +6,135 @@
 //
 
 import Foundation
-import RealmSwift
-import Realm
 import Combine
 import Factory
+import SwiftData
+import SwiftUI
 
 extension HomeView {
     @MainActor
     class ViewModel: ObservableObject {
+        private var modelContext: ModelContext
+        
         @Published var state: HomeState = .idle
         @Published var selectedVehicle: VehicleData?
         
-        var realm: Realm? = nil
-        
-        private var app: RealmSwift.App?
         private var cancellable = Set<AnyCancellable>()
         
         @Injected(\.vehicleRepository) private var repository: VehicleRepositoryProtocol
         
-        func setup(app: RealmSwift.App) async {
-            self.app = app
+        init(modelContext: ModelContext) {
+            self.modelContext = modelContext
             
             $state
                 .receive(on: RunLoop.main)
                 .sink { [weak self] state in
                     switch state {
-                    case let .successVehicleData(vehiclesData):
-                        print(vehiclesData.debugDescription)
                     case let .successVehicle(vehicles):
-                        // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
                         self?.selectedVehicle = vehicles.first
+                        
+                        // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
                     default:
                         break
                     }
                 }.store(in: &cancellable)
-            
-            await fetchVehicles()
         }
         
-        private func fetchVehicles() async {
+        func showEditVehicleView(
+            vehicleId: String?,
+            isPresented: Binding<Bool>
+        ) -> some View {
+            return HomeRouter.makeEditVehicleView(
+                modelContext: modelContext,
+                vehicleId: vehicleId,
+                isPresented: isPresented
+            )
+        }
+        
+//        func setup(app: RealmSwift.App) async {
+//            self.app = app
+//            
+//            $state
+//                .receive(on: RunLoop.main)
+//                .sink { [weak self] state in
+//                    switch state {
+//                    case let .successVehicleData(vehiclesData):
+//                        print(vehiclesData.debugDescription)
+//                    case let .successVehicle(vehicles):
+//                        // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
+//                        self?.selectedVehicle = vehicles.first
+//                    default:
+//                        break
+//                    }
+//                }.store(in: &cancellable)
+//            
+//            await fetchVehicles()
+//        }
+        
+//        private func fetchVehicles() async {
+//            state = .loading
+//            
+//            let result = await repository.fetchData()
+//
+//            if vehicles.isEmpty {
+//                state = .newVehicle
+//            } else {
+//                state = .successVehicle(Array(vehicles))
+//            }
+//        }
+        func fetchData(isConnected: Bool) async {
+            if isConnected {
+                await fetchRemoteData()
+            } else {
+                fetchLocalData()
+            }
+        }
+        
+        private func fetchRemoteData() async {
             state = .loading
-            
+
             let result = await repository.fetchData()
 
             if let result {
-                state = .successVehicleData(result)
+                state = .successVehicle(result)
+                
+                self.syncData(result)
             } else {
-                state = .error
+                state = .newVehicle
             }
         }
         
-        private func openRealm() async throws -> Realm {
-            guard let app = app, let user = app.currentUser else {
-                throw AppError(_nsError: NSError())
+        private func fetchLocalData() {
+            do {
+                state = .loading
+                
+                let descriptor = FetchDescriptor<VehicleData>(
+                    sortBy: [SortDescriptor(\.name)]
+                )
+
+                let result = try modelContext.fetch(descriptor)
+                
+                state = result.isEmpty ? .newVehicle : .successVehicle(result)
+            } catch {
+                state = .newVehicle
             }
-            
-            let config = user.flexibleSyncConfiguration()
-            let realm = try await Realm(configuration: config)
-            
-            return realm
+        }
+        
+        private func syncData(_ vehicles: [VehicleData]) {
+            do {
+                try modelContext.delete(model: VehicleData.self)
+                
+                vehicles.forEach { vehicle in
+//                    vehicle.synced = true
+                    modelContext.insert(vehicle)
+                }
+                
+                try modelContext.save()
+                
+                self.fetchLocalData()
+            } catch {
+                print(error)
+            }
         }
     }
 }

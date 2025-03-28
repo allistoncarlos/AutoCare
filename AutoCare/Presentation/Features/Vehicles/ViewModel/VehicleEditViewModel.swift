@@ -6,15 +6,16 @@
 //
 
 import Foundation
-import RealmSwift
-import Realm
 import Combine
 import FormValidator
+import Factory
+import SwiftData
 
 extension VehicleEditView {
     @MainActor
     class ViewModel: ObservableObject {
-        // MARK: - Published properties
+        private var modelContext: ModelContext
+        
         @Published var state: VehicleEditState = .idle
         @Published var vehicle: VehicleData?
         @Published var vehicleId: String? = nil
@@ -23,9 +24,11 @@ extension VehicleEditView {
         
         @Published var manager = FormManager(validationType: .immediate)
         
+        @Injected(\.vehicleRepository) private var repository: VehicleRepositoryProtocol
+        @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository: VehicleTypeRepositoryProtocol
+        
         // MARK: - Properties
         private var cancellable = Set<AnyCancellable>()
-        private var realm: Realm
         
         // MARK: - Form Fields
         @FormField(validator: NonEmptyValidator(message: "Selecione o Tipo do Veículo"))
@@ -60,10 +63,10 @@ extension VehicleEditView {
         
         // MARK: - Init
         init(
-            vehicleId: String?,
-            realm: Realm
+            modelContext: ModelContext,
+            vehicleId: String?
         ) {
-            self.realm = realm
+            self.modelContext = modelContext
             self.vehicleId = vehicleId
             
             $state
@@ -78,36 +81,88 @@ extension VehicleEditView {
                 }.store(in: &cancellable)
         }
         
-        // MARK: - Func
-        func fetchVehicleTypes() async {
+        func fetchData(isConnected: Bool) async {
+            if isConnected {
+                await fetchRemoteData()
+            } else {
+                fetchLocalData()
+            }
+        }
+        
+        private func fetchRemoteData() async {
+            state = .loading
+
+            let result = await vehicleTypeRepository.fetchData()
+            
+            if let result {
+                state = .successVehicleTypes(result)
+                
+                self.syncData(result)
+            } else {
+                state = .error
+            }
+        }
+        
+        private func fetchLocalData() {
+            do {
+                state = .loading
+                
+                let descriptor = FetchDescriptor<VehicleTypeData>(
+                    sortBy: [SortDescriptor(\.name)]
+                )
+
+                let result = try modelContext.fetch(descriptor)
+                
+                state = .successVehicleTypes(result)
+            } catch {
+                state = .error
+            }
+        }
+        
+        private func syncData(_ vehicleTypes: [VehicleTypeData]) {
+            do {
+                try modelContext.delete(model: VehicleTypeData.self)
+                
+                vehicleTypes.forEach { vehicleType in
+                    vehicleType.synced = true
+                    modelContext.insert(vehicleType)
+                }
+                
+                try modelContext.save()
+                
+                self.fetchLocalData()
+            } catch {
+                print(error)
+            }
         }
 
         func save() async {
-            state = .loading
-            
-            if manager.triggerValidation() {
-                guard let odometer = Int(self.odometer) else { return }
-                
-                do {
-                    guard let userId = AutoCareApp.app.currentUser?.id else {
-                        throw RLMError(.fail)
-                    }
-                    
-                    guard let vehicle else { return }
-                    
-                    vehicle.name = self.name
-                    vehicle.brand = self.brand
-                    vehicle.model = self.model
-                    vehicle.year = self.year
-                    vehicle.licensePlate = self.licensePlate
-                    vehicle.odometer = odometer
-                    
-                    state = .successSavedVehicle
-                } catch {
-                    print(error)
-                    state = .error
-                }
-            }
+//            state = .loading
+//            
+//            if manager.triggerValidation() {
+//                guard let odometer = Int(self.odometer) else { return }
+//                
+//                do {
+//                    guard let vehicle else { return }
+//                    
+////                    vehicle.vehicleType = vehicleTypes.first { $0.name == selectedVehicleType }
+//                    vehicle.name = self.name
+//                    vehicle.brand = self.brand
+//                    vehicle.model = self.model
+//                    vehicle.year = self.year
+//                    vehicle.licensePlate = self.licensePlate
+//                    vehicle.odometer = odometer
+//                    
+////                    try await realm.asyncWrite {
+////                        realm.add(vehicle)
+////                    }
+//                    
+//                    state = .successSavedVehicle
+//                } catch {
+//                    print(error)
+//                    state = .error
+//                }
+//            }
         }
     }
 }

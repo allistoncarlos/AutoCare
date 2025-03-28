@@ -13,5 +13,4 @@ enum HomeState: Equatable {
     case error
     case newVehicle
     case successVehicle([VehicleData])
-    case successVehicleData([VehicleData])
 }

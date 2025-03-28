@@ -11,6 +11,7 @@ import Factory
 protocol VehicleRepositoryProtocol {
     func fetchData() async -> [VehicleData]?
     func fetchData(id: String) async -> VehicleData?
+//    @discardableResult func savePlatform(id: String?, platform: Platform) async -> Platform?
 }
 
 struct VehicleRepository: VehicleRepositoryProtocol {
@@ -21,6 +22,10 @@ struct VehicleRepository: VehicleRepositoryProtocol {
     func fetchData(id: String) async -> VehicleData? {
         return await dataSource.fetchData(id: id)
     }
+
+//    func savePlatform(id: String?, platform: Platform) async -> Platform? {
+//        return await dataSource.savePlatform(id: id, platform: platform)
+//    }
 
     @Injected(\.vehicleDataSource) var dataSource: VehicleDataSourceProtocol
 }
