@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import Realm
-import RealmSwift
 import SwiftUI
 import Combine
 import Factory
@@ -20,17 +18,9 @@ enum LoginError: Error, Equatable {
 @MainActor
 class LoginViewModel: ObservableObject {
     @Published var state: LoginState = .idle
-    
-    private var app: RealmSwift.App?
-    var realm: Realm? = nil
-    
     @Injected(\.loginRepository) private var repository: LoginRepositoryProtocol
     private var cancellable = Set<AnyCancellable>()
-    
-    func setup(app: RealmSwift.App) async {
-        self.app = app
-    }
-    
+
     func login(username: String, password: String) async {
         state = .loading
 

@@ -6,14 +6,11 @@
 //
 
 import SwiftUI
-import RealmSwift
 import TTProgressHUD
 import SwiftData
 
 @main
 struct AutoCareApp: SwiftUI.App {
-    static var app = App(id: Config.appId)
-    
     static let dateTimeFormat = "dd/MM/yyyy HH:mm"
     static let dateFormat = "dd/MM/yyyy"
     static let shortDateFormat = "dd/MM"
@@ -43,7 +40,6 @@ struct AutoCareApp: SwiftUI.App {
     var body: some Scene {
         WindowGroup {
             resultView(modelContext: sharedModelContainer.mainContext)
-                .environmentObject(AutoCareApp.app)
         }
         .modelContainer(sharedModelContainer)
     }

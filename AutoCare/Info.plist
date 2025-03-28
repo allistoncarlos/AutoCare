@@ -4,7 +4,5 @@
 <dict>
 	<key>API_PATH</key>
 	<string>$(API_PATH)</string>
-	<key>APP_ID</key>
-	<string>$(APP_ID)</string>
 </dict>
 </plist>

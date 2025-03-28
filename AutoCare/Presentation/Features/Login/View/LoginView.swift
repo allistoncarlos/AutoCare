@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Realm
 import TTProgressHUD
 
 struct LoginView: View {
@@ -16,7 +15,6 @@ struct LoginView: View {
     @State var password: String = ""
     @State var isLoading = false
 
-    @EnvironmentObject var app: RLMApp
     @ObservedObject var viewModel: LoginViewModel
 
     var body: some View {
@@ -61,9 +59,6 @@ struct LoginView: View {
                     alertView(error)
                 }
             }
-        }
-        .task {
-            await viewModel.setup(app: app)
         }
     }
 

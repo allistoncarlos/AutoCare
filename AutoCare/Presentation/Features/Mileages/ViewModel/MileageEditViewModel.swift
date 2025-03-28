@@ -72,8 +72,8 @@ extension MileageEditView {
             // Diferença de quilometragem, pela litragem
             if let odometerDifference = odometerDifference, let liters = liters {
                 let calculatedMileage = Decimal(odometerDifference) / liters
-                let roundedMileage = calculatedMileage.roundedDecimal128(places: 2)
-//                return roundedMileage
+                let roundedMileage = calculatedMileage.roundedDecimal(places: 2)
+                return roundedMileage
             }
             
             return nil

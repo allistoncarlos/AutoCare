@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import RealmSwift
 
-enum VehicleServiceType: String, CustomStringConvertible, PersistableEnum {
+enum VehicleServiceType: String, CustomStringConvertible {
     case wheelsAndTyres
     
     var description : String {
@@ -19,7 +18,7 @@ enum VehicleServiceType: String, CustomStringConvertible, PersistableEnum {
     }
 }
 
-enum VehicleServiceSubtype: String, CustomStringConvertible, PersistableEnum {
+enum VehicleServiceSubtype: String, CustomStringConvertible {
     case calibrate
     case flatTyre
     case newTyres
@@ -34,36 +33,33 @@ enum VehicleServiceSubtype: String, CustomStringConvertible, PersistableEnum {
     }
 }
 
-class VehicleService: Object, Identifiable {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var date: Date = Date()
-    @Persisted var odometer: Int = 0
-    @Persisted var type: VehicleServiceType
-    @Persisted var subtype: VehicleServiceSubtype
-    @Persisted var totalCost: Decimal128 = 0
-    @Persisted var comment: String = ""
-    @Persisted var owner_id: String
-    @Persisted var vehicle_id: ObjectId
+final class VehicleService: Identifiable {
+    var id: String
+    var date: Date = Date()
+    var odometer: Int = 0
+    var type: VehicleServiceType
+    var subtype: VehicleServiceSubtype
+    var totalCost: Decimal = 0
+    var comment: String = ""
+    var vehicle_id: String
 
-    convenience init(
+    init(
+        id: String,
         date: Date,
         odometer: Int,
         type: VehicleServiceType,
         subtype: VehicleServiceSubtype,
-        totalCost: Decimal128,
+        totalCost: Decimal,
         comment: String,
-        owner_id: String,
-        vehicle_id: ObjectId
+        vehicle_id: String
     ) {
-        self.init()
-        
+        self.id = id
         self.date = date
         self.odometer = odometer
         self.type = type
         self.subtype = subtype
         self.totalCost = totalCost
         self.comment = comment
-        self.owner_id = owner_id
         
         self.vehicle_id = vehicle_id
     }

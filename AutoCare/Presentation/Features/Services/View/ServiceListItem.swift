@@ -8,7 +8,6 @@
 import SwiftUI
 
 import SwiftUI
-import RealmSwift
 
 struct ServiceListItem: View {
     var vehicleService: VehicleService
@@ -42,14 +41,14 @@ struct ServiceListItem: View {
 #Preview {
     ServiceListItem(
         vehicleService: VehicleService(
+            id: "1",
             date: Date(),
             odometer: 1234,
             type: .wheelsAndTyres,
             subtype: .calibrate,
-            totalCost: Decimal128(value: 0),
+            totalCost: 0,
             comment: "Comentário",
-            owner_id: "123",
-            vehicle_id: try! ObjectId(string: "65f7489acdac2f573161d7f7")
+            vehicle_id: "65f7489acdac2f573161d7f7"
         )
     )
 }

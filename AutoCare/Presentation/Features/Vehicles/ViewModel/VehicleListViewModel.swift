@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import RealmSwift
-import Realm
 import Combine
 import FormValidator
 import SwiftData
@@ -22,12 +20,10 @@ extension VehicleListView {
         
         // MARK: - Properties
         private var cancellable = Set<AnyCancellable>()
-        private var realm: Realm
         private var modelContext: ModelContext
         
         // MARK: - Init
-        init(realm: Realm, modelContext: ModelContext) {
-            self.realm = realm
+        init(modelContext: ModelContext) {
             self.modelContext = modelContext
             
             $state

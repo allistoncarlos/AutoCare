@@ -25,7 +25,6 @@
 		A53F41662D5E107A00FE70B7 /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41652D5E107A00FE70B7 /* HomeState.swift */; };
 		A53F41692D5E63CF00FE70B7 /* ServiceListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */; };
 		A53F416B2D5E651C00FE70B7 /* ServiceListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */; };
-		A546DBE52D50E84700B220A4 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A546DBE42D50E84700B220A4 /* RealmSwift */; };
 		A54EB8DD2D943234001AE2A7 /* VehicleRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54EB8DC2D943234001AE2A7 /* VehicleRepository.swift */; };
 		A54EB8DF2D948432001AE2A7 /* VehicleTypeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54EB8DE2D948432001AE2A7 /* VehicleTypeData.swift */; };
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
@@ -165,7 +164,6 @@
 				A562EEB42D933B2D00D68116 /* Alamofire in Frameworks */,
 				A562EE8A2D9333F500D68116 /* KeychainAccess in Frameworks */,
 				A562EE8D2D9334E500D68116 /* Factory in Frameworks */,
-				A546DBE52D50E84700B220A4 /* RealmSwift in Frameworks */,
 				A562EEB12D933AC700D68116 /* PulseUI in Frameworks */,
 				A53B23E92B6443450025AFB1 /* FormValidator in Frameworks */,
 				A50014BB2B86726A00040E3C /* TTProgressHUD in Frameworks */,
@@ -742,7 +740,6 @@
 			packageProductDependencies = (
 				A53B23E82B6443450025AFB1 /* FormValidator */,
 				A50014BA2B86726A00040E3C /* TTProgressHUD */,
-				A546DBE42D50E84700B220A4 /* RealmSwift */,
 				A562EE892D9333F500D68116 /* KeychainAccess */,
 				A562EE8C2D9334E500D68116 /* Factory */,
 				A562EEAE2D933AC700D68116 /* Pulse */,
@@ -780,7 +777,6 @@
 			packageReferences = (
 				A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */,
 				A50014B92B86726A00040E3C /* XCRemoteSwiftPackageReference "TTProgressHUD" */,
-				A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				A562EE882D9333F500D68116 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				A562EE8B2D9334E500D68116 /* XCRemoteSwiftPackageReference "Factory" */,
 				A562EEAD2D933AC700D68116 /* XCRemoteSwiftPackageReference "Pulse" */,
@@ -1122,14 +1118,6 @@
 				minimumVersion = 1.0.3;
 			};
 		};
-		A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-swift.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		A562EE882D9333F500D68116 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
@@ -1174,11 +1162,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A53B23E72B6443450025AFB1 /* XCRemoteSwiftPackageReference "SwiftUIFormValidator" */;
 			productName = FormValidator;
-		};
-		A546DBE42D50E84700B220A4 /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A546DBE32D50E84700B220A4 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = RealmSwift;
 		};
 		A562EE892D9333F500D68116 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;

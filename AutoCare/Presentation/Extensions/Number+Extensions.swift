@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 extension Double {
     func toCurrencyString() -> String? {
@@ -24,7 +23,7 @@ extension Int {
 }
 
 extension Decimal {
-    public func roundedDecimal128(places: Int16) -> Decimal128 {
+    public func roundedDecimal(places: Int16) -> Decimal {
         let roundingBehavior = NSDecimalNumberHandler(
             roundingMode: .bankers,
             scale: places,
@@ -38,7 +37,7 @@ extension Decimal {
         let roundedNumber = decimalNumber.rounding(accordingToBehavior: roundingBehavior)
         
         let roundedDecimal = roundedNumber as Decimal
-        return Decimal128(value: roundedDecimal)
+        return roundedDecimal
     }
 }
 
@@ -63,23 +62,23 @@ extension Decimal {
     }
 }
 
-extension Decimal128 {
-    func toLeadingZerosString(decimalPlaces: Int) -> String? {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        numberFormatter.maximumFractionDigits = decimalPlaces
-
-        return numberFormatter.string(from: NSDecimalNumber(decimal: self.decimalValue))
-    }
-
-    func toCurrencyString(currencyCode: String = "BRL", identifier: String = "pt_BR") -> String? {
-        let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 2
-        formatter.currencyCode = currencyCode
-        formatter.locale = Locale(identifier: identifier)
-        formatter.numberStyle = .currency
-
-        return formatter.string(for: self.decimalValue)
-    }
-}
+//extension Decimal128 {
+//    func toLeadingZerosString(decimalPlaces: Int) -> String? {
+//        let numberFormatter = NumberFormatter()
+//        numberFormatter.numberStyle = .decimal
+//        numberFormatter.maximumFractionDigits = decimalPlaces
+//
+//        return numberFormatter.string(from: NSDecimalNumber(decimal: self.decimalValue))
+//    }
+//
+//    func toCurrencyString(currencyCode: String = "BRL", identifier: String = "pt_BR") -> String? {
+//        let formatter = NumberFormatter()
+//        formatter.maximumFractionDigits = 2
+//        formatter.minimumFractionDigits = 2
+//        formatter.currencyCode = currencyCode
+//        formatter.locale = Locale(identifier: identifier)
+//        formatter.numberStyle = .currency
+//
+//        return formatter.string(for: self.decimalValue)
+//    }
+//}

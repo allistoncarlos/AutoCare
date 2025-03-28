@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import RealmSwift
 
 struct MileageListItem: View {
     var vehicleMileage: VehicleMileage

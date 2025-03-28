@@ -12,5 +12,6 @@ enum ServiceListState: Equatable {
     case loading
     case error
     case newVehicle
-    case successVehicleServices([VehicleService])
+    // TODO: REFATORAR EQUATABLE COM OS ENUMS
+//    case successVehicleServices([VehicleService])
 }

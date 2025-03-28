@@ -7,7 +7,6 @@
 
 import SwiftUI
 import TTProgressHUD
-import RealmSwift
 
 struct ServiceListView: View {
     
@@ -21,9 +20,10 @@ struct ServiceListView: View {
         NavigationStack(path: $presentedServices) {
             ScrollView {
                 ForEach(viewModel.vehicleServices, id: \.id) { vehicleService in
-                    NavigationLink(value: vehicleService) {
-                        ServiceListItem(vehicleService: vehicleService)
-                    }
+                    // TODO: REFATORAR VEHICLESERVICE
+//                    NavigationLink(value: vehicleService) {
+//                        ServiceListItem(vehicleService: vehicleService)
+//                    }
                 }
             }
             .navigationView(title: viewModel.selectedVehicle.name)

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import TTProgressHUD
-import RealmSwift
 import SwiftData
 
 struct VehicleListView: View {
@@ -65,7 +64,6 @@ struct VehicleListView: View {
     
     VehicleListView(
         viewModel: VehicleListView.ViewModel(
-            realm: try! Realm(),
             modelContext: ModelContext(
                 try! ModelContainer(for: Vehicle.self, configurations: config)
             )

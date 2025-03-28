@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import RealmSwift
 import TTProgressHUD
 
 struct VehicleEditView: View {
