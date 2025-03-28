@@ -188,8 +188,19 @@ struct MileageEditView: View {
 #Preview {
     MileageEditView(
         viewModel: MileageEditView.ViewModel(
-            vehicleMileage: VehicleMileage(),
-            vehicleId: "65f7489acdac2f577161d7f7"
+            vehicleMileage: VehicleMileage(
+                id: "123",
+                date: Date(),
+                totalCost: 131.55,
+                odometer: 685,
+                odometerDifference: 250,
+                liters: 22.720,
+                fuelCost: 5.97,
+                calculatedMileage: 11.0,
+                complete: true,
+                vehicleId: "65f7489acdac2f577161d7f7"
+            ),
+            vehicleId: "1"
         ),
         navigationPath: .constant(
             NavigationPath()

@@ -15,8 +15,8 @@ extension MileageListView {
     class ViewModel: ObservableObject {
         @Published var state: MileageListState = .idle
 //        @Published var vehicleMileages = [VehicleMileage]()
-        @Published var vehicleMileagesData = [VehicleMileageData]()
-        @Published var selectedVehicle: VehicleData
+        @Published var vehicleMileagesData = [VehicleMileage]()
+        @Published var selectedVehicle: Vehicle
         
         // MARK: - Properties
         private var modelContext: ModelContext
@@ -25,7 +25,7 @@ extension MileageListView {
         
         init(
             modelContext: ModelContext,
-            selectedVehicle: VehicleData
+            selectedVehicle: Vehicle
         ) {
             self.modelContext = modelContext
             self.selectedVehicle = selectedVehicle
@@ -87,13 +87,13 @@ extension MileageListView {
         
         func syncSwiftData(_ vehicleMileages: [VehicleMileage]) {
             do {
-                try modelContext.delete(model: VehicleMileageData.self)
+                try modelContext.delete(model: VehicleMileage.self)
                 
-                vehicleMileages.forEach { vehicleMileage in
-                    let vehicleMileageData = vehicleMileage.mapToModel()
-                    
-                    modelContext.insert(vehicleMileageData)
-                }
+//                vehicleMileages.forEach { vehicleMileage in
+//                    let vehicleMileageData = vehicleMileage.mapToModel()
+//                    
+//                    modelContext.insert(vehicleMileageData)
+//                }
                 
                 self.fetchVehicleMileagesData()
             } catch {
@@ -105,7 +105,7 @@ extension MileageListView {
             do {
                 state = .loading
                 
-                let descriptor = FetchDescriptor<VehicleMileageData>(
+                let descriptor = FetchDescriptor<VehicleMileage>(
                     sortBy: [SortDescriptor(\.date, order: .reverse)]
                 )
 

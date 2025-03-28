@@ -63,11 +63,10 @@
 		A5804B352BEBB70A00BE9602 /* PreviewNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */; };
 		A581939C2BC4296200887056 /* Number+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A581939B2BC4296200887056 /* Number+Extensions.swift */; };
 		A58ED06E2B83FBBA0023295E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58ED06D2B83FBBA0023295E /* LoginView.swift */; };
-		A5A7A5732D6276B8008608DC /* VehicleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7A5722D6276B4008608DC /* VehicleData.swift */; };
-		A5A7A5752D628547008608DC /* VehicleMileageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7A5742D628547008608DC /* VehicleMileageData.swift */; };
+		A5A7A5732D6276B8008608DC /* Vehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7A5722D6276B4008608DC /* Vehicle.swift */; };
+		A5A7A5752D628547008608DC /* VehicleMileage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7A5742D628547008608DC /* VehicleMileage.swift */; };
 		A5B470E82CDFF60300ECE77E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B470E62CDFF60000ECE77E /* HomeView.swift */; };
 		A5B470ED2CDFF7B200ECE77E /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B470EC2CDFF7B000ECE77E /* HomeRouter.swift */; };
-		A5B8898C2BA77488007CB002 /* VehicleMileage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B8898B2BA77488007CB002 /* VehicleMileage.swift */; };
 		A5C3A94B2BA716D800A0CC21 /* MileagesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */; };
 		A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */; };
 		A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */; };
@@ -78,7 +77,6 @@
 		A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E3338C2AEBE4900089DD81 /* Assets.xcassets */; };
 		A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E333902AEBE4900089DD81 /* Preview Assets.xcassets */; };
 		A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3339F2AEBEAA20089DD81 /* Config.swift */; };
-		A5E333A52AEBEE2F0089DD81 /* VehicleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */; };
 		A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77B2AED43620038A546 /* VehicleListView.swift */; };
 		A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */; };
 		A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB7842AED43A10038A546 /* MileageListView.swift */; };
@@ -134,11 +132,10 @@
 		A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewNumberFormatter.swift; sourceTree = "<group>"; };
 		A581939B2BC4296200887056 /* Number+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Number+Extensions.swift"; sourceTree = "<group>"; };
 		A58ED06D2B83FBBA0023295E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		A5A7A5722D6276B4008608DC /* VehicleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleData.swift; sourceTree = "<group>"; };
-		A5A7A5742D628547008608DC /* VehicleMileageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileageData.swift; sourceTree = "<group>"; };
+		A5A7A5722D6276B4008608DC /* Vehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vehicle.swift; sourceTree = "<group>"; };
+		A5A7A5742D628547008608DC /* VehicleMileage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileage.swift; sourceTree = "<group>"; };
 		A5B470E62CDFF60000ECE77E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A5B470EC2CDFF7B000ECE77E /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
-		A5B8898B2BA77488007CB002 /* VehicleMileage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileage.swift; sourceTree = "<group>"; };
 		A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileagesRouter.swift; sourceTree = "<group>"; };
 		A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListViewModel.swift; sourceTree = "<group>"; };
 		A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListState.swift; sourceTree = "<group>"; };
@@ -153,7 +150,6 @@
 		A5E3339D2AEBEA300089DD81 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A5E3339E2AEBEA5F0089DD81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A5E3339F2AEBEAA20089DD81 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleType.swift; sourceTree = "<group>"; };
 		A5FCB77B2AED43620038A546 /* VehicleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
 		A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditView.swift; sourceTree = "<group>"; };
 		A5FCB7842AED43A10038A546 /* MileageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListView.swift; sourceTree = "<group>"; };
@@ -517,8 +513,8 @@
 			isa = PBXGroup;
 			children = (
 				A55953AC2D96D97D004DAD6A /* Protocols */,
-				A5A7A5722D6276B4008608DC /* VehicleData.swift */,
-				A5A7A5742D628547008608DC /* VehicleMileageData.swift */,
+				A5A7A5722D6276B4008608DC /* Vehicle.swift */,
+				A5A7A5742D628547008608DC /* VehicleMileage.swift */,
 				A54EB8DE2D948432001AE2A7 /* VehicleTypeData.swift */,
 			);
 			path = SwiftData;
@@ -623,8 +619,6 @@
 			children = (
 				A5A7A5712D6276AD008608DC /* SwiftData */,
 				A562EE972D93372900D68116 /* Login.swift */,
-				A5E333A42AEBEE2F0089DD81 /* VehicleType.swift */,
-				A5B8898B2BA77488007CB002 /* VehicleMileage.swift */,
 				A53F415C2D5E084900FE70B7 /* VehicleService.swift */,
 			);
 			path = Entities;
@@ -818,7 +812,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A5A7A5732D6276B8008608DC /* VehicleData.swift in Sources */,
+				A5A7A5732D6276B8008608DC /* Vehicle.swift in Sources */,
 				A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */,
 				A57F1DBC2D942EFE00584AEC /* VehicleResponse.swift in Sources */,
 				A5804B322BEBB6EC00BE9602 /* CurrencyUITextField.swift in Sources */,
@@ -851,9 +845,8 @@
 				A54EB8DD2D943234001AE2A7 /* VehicleRepository.swift in Sources */,
 				A53F41662D5E107A00FE70B7 /* HomeState.swift in Sources */,
 				A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */,
-				A5E333A52AEBEE2F0089DD81 /* VehicleType.swift in Sources */,
 				A5FCB78D2AED49380038A546 /* MileageListViewModel.swift in Sources */,
-				A5A7A5752D628547008608DC /* VehicleMileageData.swift in Sources */,
+				A5A7A5752D628547008608DC /* VehicleMileage.swift in Sources */,
 				A52C71E82B850CCD007BAFEE /* LoginState.swift in Sources */,
 				A53F415B2D5E065900FE70B7 /* ServiceListViewModel.swift in Sources */,
 				A5C3A94B2BA716D800A0CC21 /* MileagesRouter.swift in Sources */,
@@ -861,7 +854,6 @@
 				A562EEA82D93390100D68116 /* LoginDataSource.swift in Sources */,
 				A53F415D2D5E084900FE70B7 /* VehicleService.swift in Sources */,
 				A58ED06E2B83FBBA0023295E /* LoginView.swift in Sources */,
-				A5B8898C2BA77488007CB002 /* VehicleMileage.swift in Sources */,
 				A562EE912D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift in Sources */,
 				A55953A52D96C575004DAD6A /* NetworkConnectivity.swift in Sources */,
 				A5088FD52D95E55300D3712A /* VehicleTypeResponse.swift in Sources */,

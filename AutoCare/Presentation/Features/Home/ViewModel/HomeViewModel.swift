@@ -17,7 +17,7 @@ extension HomeView {
         private var modelContext: ModelContext
         
         @Published var state: HomeState = .idle
-        @Published var selectedVehicle: VehicleData?
+        @Published var selectedVehicle: Vehicle?
         
         private var cancellable = Set<AnyCancellable>()
         
@@ -58,7 +58,7 @@ extension HomeView {
 //                .receive(on: RunLoop.main)
 //                .sink { [weak self] state in
 //                    switch state {
-//                    case let .successVehicleData(vehiclesData):
+//                    case let .successVehicle(vehiclesData):
 //                        print(vehiclesData.debugDescription)
 //                    case let .successVehicle(vehicles):
 //                        // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
@@ -108,7 +108,7 @@ extension HomeView {
             do {
                 state = .loading
                 
-                let descriptor = FetchDescriptor<VehicleData>(
+                let descriptor = FetchDescriptor<Vehicle>(
                     sortBy: [SortDescriptor(\.name)]
                 )
 
@@ -120,9 +120,9 @@ extension HomeView {
             }
         }
         
-        private func syncData(_ vehicles: [VehicleData]) {
+        private func syncData(_ vehicles: [Vehicle]) {
             do {
-                try modelContext.delete(model: VehicleData.self)
+                try modelContext.delete(model: Vehicle.self)
                 
                 vehicles.forEach { vehicle in
 //                    vehicle.synced = true

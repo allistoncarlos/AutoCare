@@ -14,11 +14,11 @@ extension ServiceListView {
     class ViewModel: ObservableObject {
         @Published var state: ServiceListState = .idle
         @Published var vehicleServices = [VehicleService]()
-        @Published var selectedVehicle: VehicleData
+        @Published var selectedVehicle: Vehicle
         
         private var cancellable = Set<AnyCancellable>()
         
-        init(selectedVehicle: VehicleData) {
+        init(selectedVehicle: Vehicle) {
             self.selectedVehicle = selectedVehicle
         }
         

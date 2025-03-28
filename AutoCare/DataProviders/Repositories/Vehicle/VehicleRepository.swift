@@ -9,17 +9,17 @@ import Foundation
 import Factory
 
 protocol VehicleRepositoryProtocol {
-    func fetchData() async -> [VehicleData]?
-    func fetchData(id: String) async -> VehicleData?
+    func fetchData() async -> [Vehicle]?
+    func fetchData(id: String) async -> Vehicle?
 //    @discardableResult func savePlatform(id: String?, platform: Platform) async -> Platform?
 }
 
 struct VehicleRepository: VehicleRepositoryProtocol {
-    func fetchData() async -> [VehicleData]? {
+    func fetchData() async -> [Vehicle]? {
         return await dataSource.fetchData()
     }
 
-    func fetchData(id: String) async -> VehicleData? {
+    func fetchData(id: String) async -> Vehicle? {
         return await dataSource.fetchData(id: id)
     }
 

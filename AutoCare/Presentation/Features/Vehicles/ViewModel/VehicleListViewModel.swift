@@ -17,8 +17,8 @@ extension VehicleListView {
     class ViewModel: ObservableObject {
         // MARK: - Published properties
         @Published var state: VehicleListState = .idle
-        @Published var vehicles = [VehicleData]()
-        @Published var vehiclesData = [VehicleData]()
+        @Published var vehicles = [Vehicle]()
+        @Published var vehiclesData = [Vehicle]()
         
         // MARK: - Properties
         private var cancellable = Set<AnyCancellable>()
@@ -49,12 +49,12 @@ extension VehicleListView {
             self.fetchVehiclesData()
             
             // TODO: REMOVE REALM VEHICLES AND REPLACE FOR VEHICLE FROM API
-//            let vehicles = Array(realm.objects(VehicleData.self))
+//            let vehicles = Array(realm.objects(Vehicle.self))
 //
 //            vehicles.forEach { vehicle in
 //                let vehicleId = "\(vehicle._id)"
 //                
-//                let vehicleData = VehicleData(
+//                let vehicleData = Vehicle(
 //                    id: vehicleId,
 //                    name: vehicle.name,
 //                    brand: vehicle.brand,
@@ -74,7 +74,7 @@ extension VehicleListView {
         
         func fetchVehiclesData() {
             do {
-                let descriptor = FetchDescriptor<VehicleData>(sortBy: [SortDescriptor(\.name)])
+                let descriptor = FetchDescriptor<Vehicle>(sortBy: [SortDescriptor(\.name)])
                 self.vehiclesData = try modelContext.fetch(descriptor)
             } catch {
                 print("Fetch failed")

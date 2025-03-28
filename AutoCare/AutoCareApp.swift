@@ -27,8 +27,8 @@ struct AutoCareApp: SwiftUI.App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             VehicleTypeData.self,
-            VehicleData.self,
-            VehicleMileageData.self
+            Vehicle.self,
+            VehicleMileage.self
         ])
 
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)

@@ -63,7 +63,7 @@ struct ServiceListView: View {
 #Preview {
     ServiceListView(
         viewModel: ServiceListView.ViewModel(
-            selectedVehicle: VehicleData(
+            selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",
                 brand: "Fiat",

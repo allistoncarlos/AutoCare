@@ -63,7 +63,7 @@ struct HomeView: View {
     
     HomeView(viewModel: HomeView.ViewModel(
         modelContext: ModelContext(
-            try! ModelContainer(for: VehicleData.self, configurations: config)
+            try! ModelContainer(for: Vehicle.self, configurations: config)
         )
     ))
 }

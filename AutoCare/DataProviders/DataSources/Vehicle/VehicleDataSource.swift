@@ -8,15 +8,15 @@
 import Foundation
 
 protocol VehicleDataSourceProtocol {
-    func fetchData() async -> [VehicleData]?
-    func fetchData(id: String) async -> VehicleData?
-//    func saveVehicle(id: String?, Vehicle: Vehicle) async -> VehicleData?
+    func fetchData() async -> [Vehicle]?
+    func fetchData(id: String) async -> Vehicle?
+//    func saveVehicle(id: String?, Vehicle: Vehicle) async -> Vehicle?
 }
 
-// MARK: - VehicleDataSource
+// MARK: - VehicleSource
 
 class VehicleDataSource: VehicleDataSourceProtocol {
-    func fetchData() async -> [VehicleData]? {
+    func fetchData() async -> [Vehicle]? {
         if let apiResult = await NetworkManager.shared
             .performRequest(
                 responseType: [VehicleResponse].self,
@@ -30,7 +30,7 @@ class VehicleDataSource: VehicleDataSourceProtocol {
         return nil
     }
 
-    func fetchData(id: String) async -> VehicleData? {
+    func fetchData(id: String) async -> Vehicle? {
         if let apiResult = await NetworkManager.shared
             .performRequest(
                 responseType: VehicleResponse.self,

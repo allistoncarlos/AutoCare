@@ -1,5 +1,5 @@
 //
-//  VehicleData.swift
+//  Vehicle.swift
 //  AutoCare
 //
 //  Created by Alliston Aleixo on 16/02/25.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class VehicleData {
+final class Vehicle {
     var id: String = ""
     var name: String = ""
     var brand: String = ""

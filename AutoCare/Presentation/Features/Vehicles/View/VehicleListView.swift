@@ -67,9 +67,9 @@ struct VehicleListView: View {
         viewModel: VehicleListView.ViewModel(
             realm: try! Realm(),
             modelContext: ModelContext(
-                try! ModelContainer(for: VehicleData.self, configurations: config)
+                try! ModelContainer(for: Vehicle.self, configurations: config)
             )
         )
     )
-    .modelContainer(for: VehicleData.self, inMemory: true)
+    .modelContainer(for: Vehicle.self, inMemory: true)
 }

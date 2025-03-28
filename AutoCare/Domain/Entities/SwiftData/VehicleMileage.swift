@@ -1,5 +1,5 @@
 //
-//  VehicleMileageData.swift
+//  VehicleMileage.swift
 //  AutoCare
 //
 //  Created by Alliston Aleixo on 16/02/25.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class VehicleMileageData {
+final class VehicleMileage {
     var id: String
     var date: Date = Date()
     var totalCost: Decimal = 0
@@ -19,7 +19,6 @@ final class VehicleMileageData {
     var fuelCost: Decimal = 0
     var calculatedMileage: Decimal = 0
     var complete: Bool = true
-    var ownerId: String
     var vehicleId: String
 
     init(
@@ -32,7 +31,6 @@ final class VehicleMileageData {
         fuelCost: Decimal,
         calculatedMileage: Decimal,
         complete: Bool,
-        ownerId: String,
         vehicleId: String
     ) {
         self.id = id
@@ -44,7 +42,6 @@ final class VehicleMileageData {
         self.fuelCost = fuelCost
         self.calculatedMileage = calculatedMileage
         self.complete = complete
-        self.ownerId = ownerId
         
         self.vehicleId = vehicleId
     }

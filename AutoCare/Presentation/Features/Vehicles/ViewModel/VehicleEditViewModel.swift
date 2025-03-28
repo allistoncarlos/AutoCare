@@ -17,7 +17,7 @@ extension VehicleEditView {
         private var modelContext: ModelContext
         
         @Published var state: VehicleEditState = .idle
-        @Published var vehicle: VehicleData?
+        @Published var vehicle: Vehicle?
         @Published var vehicleId: String? = nil
         @Published var vehicleTypes = [VehicleTypeData]()
         @Published var isFormValid = false

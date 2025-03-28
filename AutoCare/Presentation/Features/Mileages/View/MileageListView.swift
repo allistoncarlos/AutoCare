@@ -105,9 +105,9 @@ struct MileageListView: View {
     MileageListView(
         viewModel: MileageListView.ViewModel(
             modelContext: ModelContext(
-                try! ModelContainer(for: VehicleMileageData.self, configurations: config)
+                try! ModelContainer(for: VehicleMileage.self, configurations: config)
             ),
-            selectedVehicle: VehicleData(
+            selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",
                 brand: "Fiat",
@@ -121,5 +121,5 @@ struct MileageListView: View {
             )
         )
     )
-    .modelContainer(for: VehicleMileageData.self, inMemory: true)
+    .modelContainer(for: VehicleMileage.self, inMemory: true)
 }

@@ -30,8 +30,8 @@ struct VehicleResponse: Identifiable, Codable {
         case vehicleType
     }
     
-    func toVehicle() -> VehicleData {
-        return VehicleData(
+    func toVehicle() -> Vehicle {
+        return Vehicle(
             id: id,
             name: self.name,
             brand: self.brand,
