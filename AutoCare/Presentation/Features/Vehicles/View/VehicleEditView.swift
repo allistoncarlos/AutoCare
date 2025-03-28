@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TTProgressHUD
+import SwiftData
 
 struct VehicleEditView: View {
     @ObservedObject var viewModel: ViewModel
@@ -39,21 +40,21 @@ struct VehicleEditView: View {
         
         return ""
     }
-    
+
     var body: some View {
         Form {
             Section(header: Text("Veículo")) {
-                Picker("Vehicle Types", selection: $viewModel.selectedVehicleType) {
+                Picker("", selection: $viewModel.selectedVehicleType) {
                     ForEach(viewModel.vehicleTypes, id: \.name) { vehicleType in
                         Text(vehicleType.emoji)
-                            .tag(vehicleType.name)
+                            .tag(vehicleType.id)
                     }
                 }
                 .pickerStyle(.segmented)
                 .validation(viewModel.selectedVehicleTypeValidation)
                 
                 TextField("Nome", text: $viewModel.name)
-                    .validation(viewModel.nameValidation)
+                .validation(viewModel.nameValidation)
                 
                 TextField("Marca", text: $viewModel.brand)
                     .validation(viewModel.brandValidation)
@@ -75,15 +76,20 @@ struct VehicleEditView: View {
                     .keyboardType(.numberPad)
                     .validation(viewModel.odometerValidation)
             }
-        }
-        .navigationTitle(title)
-        .toolbar {
-            Button("Salvar") {
-                Task {
-                    await viewModel.save()
+            
+            Section(footer:
+                Button("Salvar") {
+                    Task {
+                        await viewModel.save(isConnected: networkConnectivity.status == .connected)
+                    }
                 }
+                .disabled(!viewModel.isFormValid)
+                .buttonStyle(MainButtonStyle())
+            ) {
+                EmptyView()
             }
         }
+        .navigationTitle(title)
         .disabled(isLoading)
         .overlay(
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
@@ -104,7 +110,16 @@ struct VehicleEditView: View {
     }
 }
 
-// TODO: VER COMO MOCKAR USER
-//#Preview {
-//    VehicleEditView(viewModel: VehicleEditView.ViewModel(configuration: Realm.Configuration()))
-//}
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    
+    VehicleEditView(
+        viewModel: VehicleEditView.ViewModel(
+            modelContext: ModelContext(
+                try! ModelContainer(for: Vehicle.self, configurations: config)
+            ),
+            vehicleId: nil
+        ),
+        isPresented: .constant(true)
+    )
+}

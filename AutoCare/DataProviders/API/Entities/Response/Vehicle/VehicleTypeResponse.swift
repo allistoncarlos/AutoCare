@@ -18,8 +18,8 @@ struct VehicleTypeResponse: Codable {
         case emoji
     }
     
-    func toVehicleType() -> VehicleTypeData {
-        return VehicleTypeData(
+    func toVehicleType() -> VehicleType {
+        return VehicleType(
             id: id,
             name: self.name,
             emoji: self.emoji

@@ -7,11 +7,11 @@
 
 
 protocol VehicleTypeDataSourceProtocol {
-    func fetchData() async -> [VehicleTypeData]?
+    func fetchData() async -> [VehicleType]?
 }
 
 class VehicleTypeDataSource: VehicleTypeDataSourceProtocol {
-    func fetchData() async -> [VehicleTypeData]? {
+    func fetchData() async -> [VehicleType]? {
         if let apiResult = await NetworkManager.shared
             .performRequest(
                 responseType: [VehicleTypeResponse].self,

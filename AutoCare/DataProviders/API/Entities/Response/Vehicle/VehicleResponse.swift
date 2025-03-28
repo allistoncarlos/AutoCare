@@ -40,9 +40,7 @@ struct VehicleResponse: Identifiable, Codable {
             licensePlate: self.licensePlate,
             odometer: self.odometer,
             
-            vehicleTypeId: self.vehicleType.id,
-            vehicleType: self.vehicleType.name,
-            vehicleTypeEmoji: self.vehicleType.emoji
+            vehicleTypeId: self.vehicleType.id
         )
     }
 }

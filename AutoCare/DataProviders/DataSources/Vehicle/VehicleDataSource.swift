@@ -10,7 +10,7 @@ import Foundation
 protocol VehicleDataSourceProtocol {
     func fetchData() async -> [Vehicle]?
     func fetchData(id: String) async -> Vehicle?
-//    func saveVehicle(id: String?, Vehicle: Vehicle) async -> Vehicle?
+    func save(id: String?, vehicle: Vehicle) async -> Vehicle?
 }
 
 // MARK: - VehicleSource
@@ -42,17 +42,15 @@ class VehicleDataSource: VehicleDataSourceProtocol {
         return nil
     }
 
-//    func saveVehicle(id: String?, Vehicle: Vehicle) async -> Vehicle? {
-//        if let apiResult = await NetworkManager.shared
-//            .performRequest(
-//                responseType: VehicleResponse.self,
-//                endpoint: .saveVehicle(id: id, data: Vehicle.toRequest())
-//            ) {
-//            if apiResult.ok {
-//                return apiResult.data.toVehicle()
-//            }
-//        }
-//
-//        return nil
-//    }
+    func save(id: String?, vehicle: Vehicle) async -> Vehicle? {
+        if let apiResult = await NetworkManager.shared
+            .performRequest(
+                responseType: VehicleResponse.self,
+                endpoint: .saveVehicle(id: id, data: vehicle.toRequest())
+            ) {
+            return apiResult.toVehicle()
+        }
+
+        return nil
+    }
 }

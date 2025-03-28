@@ -9,11 +9,11 @@ import Foundation
 import Factory
 
 protocol VehicleTypeRepositoryProtocol {
-    func fetchData() async -> [VehicleTypeData]?
+    func fetchData() async -> [VehicleType]?
 }
 
 struct VehicleTypeRepository: VehicleTypeRepositoryProtocol {
-    func fetchData() async -> [VehicleTypeData]? {
+    func fetchData() async -> [VehicleType]? {
         return await dataSource.fetchData()
     }
     

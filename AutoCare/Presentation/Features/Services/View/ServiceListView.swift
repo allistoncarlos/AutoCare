@@ -71,9 +71,7 @@ struct ServiceListView: View {
                 year: "2021",
                 licensePlate: "AAA-1C34",
                 odometer: 0,
-                vehicleTypeId: "1",
-                vehicleType: "Car",
-                vehicleTypeEmoji: "🏎️"
+                vehicleTypeId: "1"
             )
         )
     )

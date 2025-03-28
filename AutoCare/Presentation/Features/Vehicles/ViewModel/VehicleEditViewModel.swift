@@ -19,38 +19,36 @@ extension VehicleEditView {
         @Published var state: VehicleEditState = .idle
         @Published var vehicle: Vehicle?
         @Published var vehicleId: String? = nil
-        @Published var vehicleTypes = [VehicleTypeData]()
+        @Published var vehicleTypes = [VehicleType]()
         @Published var isFormValid = false
         
-        @Published var manager = FormManager(validationType: .immediate)
+        @Published private var manager = FormManager(validationType: .immediate)
         
         @Injected(\.vehicleRepository) private var repository: VehicleRepositoryProtocol
         @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository: VehicleTypeRepositoryProtocol
         
-        // MARK: - Properties
         private var cancellable = Set<AnyCancellable>()
         
-        // MARK: - Form Fields
         @FormField(validator: NonEmptyValidator(message: "Selecione o Tipo do Veículo"))
-        var selectedVehicleType: String = ""
+        var selectedVehicleType: String = "" { didSet { self.triggerValidation()} }
         
         @FormField(validator: NonEmptyValidator(message: "Campo Nome obrigatório"))
-        var name: String = ""
+        var name: String = "" { didSet { self.triggerValidation()} }
         
         @FormField(validator: NonEmptyValidator(message: "Campo Marca obrigatório"))
-        var brand: String = ""
+        var brand: String = "" { didSet { self.triggerValidation()} }
         
         @FormField(validator: NonEmptyValidator(message: "Campo Modelo obrigatório"))
-        var model: String = ""
+        var model: String = "" { didSet { self.triggerValidation()} }
         
         @FormField(validator: NonEmptyValidator(message: "Campo Ano obrigatório"))
-        var year: String = ""
+        var year: String = "" { didSet { self.triggerValidation()} }
         
         @FormField(validator: NonEmptyValidator(message: "Campo Placa obrigatório"))
-        var licensePlate: String = ""
+        var licensePlate: String = "" { didSet { self.triggerValidation()} }
         
         @FormField(validator: NonEmptyValidator(message: "Campo Odômetro obrigatório"))
-        var odometer: String = ""
+        var odometer: String = "" { didSet { self.triggerValidation()} }
 
         // MARK: - Validations
         lazy var nameValidation = _name.validation(manager: manager)
@@ -107,7 +105,7 @@ extension VehicleEditView {
             do {
                 state = .loading
                 
-                let descriptor = FetchDescriptor<VehicleTypeData>(
+                let descriptor = FetchDescriptor<VehicleType>(
                     sortBy: [SortDescriptor(\.name)]
                 )
 
@@ -119,9 +117,9 @@ extension VehicleEditView {
             }
         }
         
-        private func syncData(_ vehicleTypes: [VehicleTypeData]) {
+        private func syncData(_ vehicleTypes: [VehicleType]) {
             do {
-                try modelContext.delete(model: VehicleTypeData.self)
+                try modelContext.delete(model: VehicleType.self)
                 
                 vehicleTypes.forEach { vehicleType in
                     vehicleType.synced = true
@@ -135,34 +133,108 @@ extension VehicleEditView {
                 print(error)
             }
         }
+        
+        private func triggerValidation() {
+            isFormValid = manager.triggerValidation()
+        }
 
-        func save() async {
-//            state = .loading
-//            
-//            if manager.triggerValidation() {
-//                guard let odometer = Int(self.odometer) else { return }
-//                
-//                do {
-//                    guard let vehicle else { return }
-//                    
-////                    vehicle.vehicleType = vehicleTypes.first { $0.name == selectedVehicleType }
-//                    vehicle.name = self.name
-//                    vehicle.brand = self.brand
-//                    vehicle.model = self.model
-//                    vehicle.year = self.year
-//                    vehicle.licensePlate = self.licensePlate
-//                    vehicle.odometer = odometer
-//                    
-////                    try await realm.asyncWrite {
-////                        realm.add(vehicle)
-////                    }
-//                    
-//                    state = .successSavedVehicle
-//                } catch {
-//                    print(error)
-//                    state = .error
-//                }
-//            }
+        func save(isConnected: Bool) async {
+            isConnected ? await self.saveRemote() : self.saveLocal()
+        }
+        
+        private func saveRemote() async {
+            state = .loading
+
+            if isFormValid {
+                guard let odometer = Int(self.odometer) else { return }
+                
+                if vehicle == nil {
+                    vehicle = Vehicle(
+                        name: name,
+                        brand: brand,
+                        model: model,
+                        year: year,
+                        licensePlate: licensePlate,
+                        odometer: odometer,
+                        vehicleTypeId: selectedVehicleType
+                    )
+                }
+                
+                guard let vehicle else { return }
+
+                let result = await repository.save(id: vehicle.id, vehicle: vehicle)
+
+                if result != nil {
+                    state = .successSavedVehicle
+                } else {
+                    state = .error
+                }
+            }
+        }
+        
+        private func saveLocal() {
+            state = .loading
+            
+            do {
+                if let id = vehicle?.id {
+                    try update(id: id)
+                } else {
+                    try insert()
+                }
+            } catch {
+                state = .error
+            }
+        }
+        
+        private func update(id: String) throws {
+            let descriptor = createUpdateDescriptor(for: id)
+            
+            let result = try modelContext.fetch(descriptor)
+            
+            if result.count == 1, let vehicleResult = result.first {
+                vehicleResult.synced = false
+                try modelContext.save()
+                state = .successSavedVehicle
+            } else {
+                state = .error
+            }
+        }
+        
+        private func insert() throws {
+            guard let vehicle else { return }
+            
+            modelContext.insert(vehicle)
+            try modelContext.save()
+                
+            let descriptor = createInsertDescriptor(for: vehicle.name)
+
+            let result = try modelContext.fetch(descriptor)
+            
+            if result.count == 1 {
+                state = .successSavedVehicle
+            } else {
+                state = .error
+            }
+        }
+        
+        private func createUpdateDescriptor(for id: String) -> FetchDescriptor<Vehicle> {
+            var descriptor = FetchDescriptor<Vehicle>(predicate: #Predicate { vehicle in
+                vehicle.id == id
+            })
+            
+            descriptor.fetchLimit = 1
+            
+            return descriptor
+        }
+
+        private func createInsertDescriptor(for name: String) -> FetchDescriptor<Vehicle> {
+            var descriptor = FetchDescriptor<Vehicle>(predicate: #Predicate { vehicle in
+                vehicle.name == name
+            })
+            
+            descriptor.fetchLimit = 1
+            
+            return descriptor
         }
     }
 }

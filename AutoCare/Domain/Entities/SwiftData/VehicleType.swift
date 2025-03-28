@@ -1,5 +1,5 @@
 //
-//  VehicleTypeData.swift
+//  VehicleType.swift
 //  AutoCare
 //
 //  Created by Alliston Aleixo on 26/03/25.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class VehicleTypeData: Syncable {
+final class VehicleType: Syncable {
     var id: String
     var name: String
     var emoji: String

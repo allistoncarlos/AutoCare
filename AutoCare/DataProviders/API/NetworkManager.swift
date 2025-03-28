@@ -11,10 +11,10 @@ import Foundation
 import Pulse
 
 public class NetworkManager {
-    public static let shared = NetworkManager()
+    static let shared = NetworkManager()
 
     @discardableResult
-    public func performRequest<T: Decodable>(responseType: T.Type, endpoint: AutoCareAPI, cache: Bool = false) async -> T? {
+    func performRequest<T: Decodable>(responseType: T.Type, endpoint: AutoCareAPI, cache: Bool = false) async -> T? {
         do {
             let request = sessionManager.request(endpoint)
                 .validate(statusCode: 200 ... 300)

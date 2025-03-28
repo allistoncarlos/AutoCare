@@ -36,13 +36,17 @@ struct MileageListView: View {
                 }
             }
             .navigationDestination(for: String.self) { _ in
-                navigateToEditMileageView(vehicleId: viewModel.selectedVehicle.id)
+                if let id = viewModel.selectedVehicle.id {
+                    navigateToEditMileageView(vehicleId: id)
+                }
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
-                navigateToEditMileageView(
-                    vehicleId: viewModel.selectedVehicle.id,
-                    vehicleMileage: vehicleMileage
-                )
+                if let id = viewModel.selectedVehicle.id {
+                    navigateToEditMileageView(
+                        vehicleId: id,
+                        vehicleMileage: vehicleMileage
+                    )
+                }
             }
         }
         .disabled(isLoading)
@@ -114,9 +118,7 @@ struct MileageListView: View {
                 year: "2021",
                 licensePlate: "AAA-1C34",
                 odometer: 0,
-                vehicleTypeId: "1",
-                vehicleType: "Car",
-                vehicleTypeEmoji: "🏎️"
+                vehicleTypeId: "1"
             )
         )
     )

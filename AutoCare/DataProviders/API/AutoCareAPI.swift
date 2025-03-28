@@ -8,13 +8,13 @@
 import Alamofire
 import Foundation
 
-internal enum APIConstants {
+enum APIConstants {
     static let userResource = "user"
     static let vehicleTypeResource = "vehicleType"
     static let vehicleResource = "vehicle"
 }
 
-public enum AutoCareAPI {
+enum AutoCareAPI {
     private static let apiArea = "autocare"
     
     case login(data: LoginRequest)
@@ -22,6 +22,7 @@ public enum AutoCareAPI {
     case vehicleType
     case vehicles
     case vehicle(id: String)
+    case saveVehicle(id: String?, data: VehicleRequest)
 
     var baseURL: String {
         switch self {
@@ -43,7 +44,13 @@ public enum AutoCareAPI {
         case .vehicles:
             return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)"
         case let .vehicle(id):
-            return "\(AutoCareAPI.apiArea)\(APIConstants.vehicleResource)/\(id)"
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/\(id)"
+        case let .saveVehicle(id, _):
+            if let id = id {
+                return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/\(id)"
+            }
+
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/"
         }
     }
 
@@ -55,6 +62,13 @@ public enum AutoCareAPI {
             return .get
         case .login,
              .refreshToken:
+            return .post
+            
+        case let .saveVehicle(id, _):
+            if id != nil {
+                return .put
+            }
+
             return .post
         }
     }
@@ -84,6 +98,8 @@ public enum AutoCareAPI {
             return try parameterEncoder.encode(parameters, into: request)
         case let .refreshToken(parameters):
             return try parameterEncoder.encode(parameters, into: request)
+        case let .saveVehicle(_, model):
+            return try parameterEncoder.encode(model, into: request)
         case .vehicleType,
              .vehicles,
              .vehicle:

@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @Model
-final class Vehicle {
-    var id: String = ""
+final class Vehicle: Syncable {
+    var id: String?
     var name: String = ""
     var brand: String = ""
     var model: String = ""
@@ -19,11 +19,11 @@ final class Vehicle {
     var odometer: Int = 0
 
     var vehicleTypeId: String
-    var vehicleType: String?
-    var vehicleTypeEmoji: String?
+    
+    var synced: Bool
     
     init(
-        id: String,
+        id: String? = nil,
         name: String,
         brand: String,
         model: String,
@@ -31,8 +31,8 @@ final class Vehicle {
         licensePlate: String,
         odometer: Int,
         vehicleTypeId: String,
-        vehicleType: String,
-        vehicleTypeEmoji: String
+        
+        synced: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -42,7 +42,20 @@ final class Vehicle {
         self.licensePlate = licensePlate
         self.odometer = odometer
         self.vehicleTypeId = vehicleTypeId
-        self.vehicleType = vehicleType
-        self.vehicleTypeEmoji = vehicleTypeEmoji
+        
+        self.synced = synced
+    }
+    
+    public func toRequest() -> VehicleRequest {
+        return VehicleRequest(
+            id: id,
+            name: name,
+            brand: brand,
+            model: model,
+            year: year,
+            licensePlate: licensePlate,
+            odometer: odometer,
+            vehicleTypeId: vehicleTypeId
+        )
     }
 }
