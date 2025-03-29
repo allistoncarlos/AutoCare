@@ -18,10 +18,12 @@ struct MileageListView: View {
 
     @State private var presentedMileages = NavigationPath()
     
+    @StateObject var networkConnectivity = NetworkConnectivity()
+    
     var body: some View {
         NavigationStack(path: $presentedMileages) {
             ScrollView {
-                ForEach(viewModel.vehicleMileagesData, id: \.id) { vehicleMileage in
+                ForEach(viewModel.vehicleMileages, id: \.id) { vehicleMileage in
                     NavigationLink(value: vehicleMileage) {
                         MileageListItem(vehicleMileage: vehicleMileage)
                     }
@@ -54,8 +56,7 @@ struct MileageListView: View {
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
         .task {
-//            await viewModel.setup(app: app)
-//            await viewModel.fetchData() // TODO: refatorar pra isso
+            await viewModel.fetchData(isConnected: networkConnectivity.status == .connected)
         }
         .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
@@ -67,7 +68,7 @@ struct MileageListView: View {
             newValue in
             if newValue.isEmpty {
                 Task {
-                    await viewModel.fetchVehicleMileages()
+                    await viewModel.fetchData(isConnected: networkConnectivity.status == .connected)
                 }
             }
         }
@@ -85,23 +86,6 @@ struct MileageListView: View {
     }
 }
 
-//#Preview {
-//    MileageListView(
-//        viewModel: MileageListView.ViewModel(
-//            realm: try! Realm(),
-//            selectedVehicle: Vehicle(
-//                name: "Fiat Argo 2021",
-//                brand: "Fiat",
-//                model: "Argo",
-//                year: "2021",
-//                licensePlate: "AAA-1C34",
-//                odometer: 0,
-//                owner_id: "11234",
-//                vehicleType: VehicleType(name: "Car")
-//            )
-//        )
-//    )
-//}
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     

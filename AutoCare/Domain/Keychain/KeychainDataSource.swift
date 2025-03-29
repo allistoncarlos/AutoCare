@@ -19,7 +19,7 @@ public enum KeychainDataSource: String {
     case expiresIn = "expires_in"
 
     private var keychain: Keychain {
-        var identifier: String = Constants.keychainIdentifier
+        let identifier: String = Constants.keychainIdentifier
 
         return Keychain(service: identifier)
     }

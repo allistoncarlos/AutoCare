@@ -51,37 +51,6 @@ extension HomeView {
             )
         }
         
-//        func setup(app: RealmSwift.App) async {
-//            self.app = app
-//            
-//            $state
-//                .receive(on: RunLoop.main)
-//                .sink { [weak self] state in
-//                    switch state {
-//                    case let .successVehicle(vehiclesData):
-//                        print(vehiclesData.debugDescription)
-//                    case let .successVehicle(vehicles):
-//                        // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
-//                        self?.selectedVehicle = vehicles.first
-//                    default:
-//                        break
-//                    }
-//                }.store(in: &cancellable)
-//            
-//            await fetchVehicles()
-//        }
-        
-//        private func fetchVehicles() async {
-//            state = .loading
-//            
-//            let result = await repository.fetchData()
-//
-//            if vehicles.isEmpty {
-//                state = .newVehicle
-//            } else {
-//                state = .successVehicle(Array(vehicles))
-//            }
-//        }
         func fetchData(isConnected: Bool) async {
             if isConnected {
                 await fetchRemoteData()
@@ -125,7 +94,7 @@ extension HomeView {
                 try modelContext.delete(model: Vehicle.self)
                 
                 vehicles.forEach { vehicle in
-//                    vehicle.synced = true
+                    vehicle.synced = true
                     modelContext.insert(vehicle)
                 }
                 

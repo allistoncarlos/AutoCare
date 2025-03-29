@@ -9,7 +9,7 @@
 import Alamofire
 import Foundation
 
-class DefaultRequestInterceptor: RequestInterceptor {
+final class DefaultRequestInterceptor: RequestInterceptor {
     let retryLimit = 3
     let retryDelay: TimeInterval = 10
 

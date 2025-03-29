@@ -13,4 +13,5 @@ extension Container {
     
     var vehicleTypeDataSource: Factory<VehicleTypeDataSourceProtocol> { self { VehicleTypeDataSource() } }
     var vehicleDataSource: Factory<VehicleDataSourceProtocol> { self { VehicleDataSource() } }
+    var vehicleMileageDataSource: Factory<VehicleMileageDataSourceProtocol> { self { VehicleMileageDataSource() } }
 }

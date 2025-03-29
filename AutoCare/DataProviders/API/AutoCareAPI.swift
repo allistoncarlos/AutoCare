@@ -12,6 +12,7 @@ enum APIConstants {
     static let userResource = "user"
     static let vehicleTypeResource = "vehicleType"
     static let vehicleResource = "vehicle"
+    static let vehicleMileageResource = "vehicleMileage"
 }
 
 enum AutoCareAPI {
@@ -23,6 +24,9 @@ enum AutoCareAPI {
     case vehicles
     case vehicle(id: String)
     case saveVehicle(id: String?, data: VehicleRequest)
+    case vehicleMileages(vehicleId: String)
+    case vehicleMileage(vehicleId: String, id: String)
+    case saveVehicleMileage(id: String?, data: VehicleMileageRequest)
 
     var baseURL: String {
         switch self {
@@ -51,6 +55,17 @@ enum AutoCareAPI {
             }
 
             return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/"
+            
+        case let .vehicleMileages(vehicleId):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)"
+        case let .vehicleMileage(vehicleId, id):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)/\(id)"
+        case let .saveVehicleMileage(id, _):
+            if let id = id {
+                return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(id)"
+            }
+
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/"
         }
     }
 
@@ -58,13 +73,23 @@ enum AutoCareAPI {
         switch self {
         case .vehicleType,
              .vehicles,
-             .vehicle:
+             .vehicle,
+            
+             .vehicleMileages,
+             .vehicleMileage:
             return .get
         case .login,
              .refreshToken:
             return .post
             
         case let .saveVehicle(id, _):
+            if id != nil {
+                return .put
+            }
+
+            return .post
+            
+        case let .saveVehicleMileage(id, _):
             if id != nil {
                 return .put
             }
@@ -78,7 +103,7 @@ enum AutoCareAPI {
         case .get: return URLEncodedFormParameterEncoder()
         default:
             let encoder = JSONParameterEncoder()
-            encoder.encoder.dateEncodingStrategy = .iso8601
+//            encoder.encoder.dateEncodingStrategy = .iso8601
             return encoder
         }
     }
@@ -100,9 +125,14 @@ enum AutoCareAPI {
             return try parameterEncoder.encode(parameters, into: request)
         case let .saveVehicle(_, model):
             return try parameterEncoder.encode(model, into: request)
+        case let .saveVehicleMileage(_, model):
+            return try parameterEncoder.encode(model, into: request)
         case .vehicleType,
              .vehicles,
-             .vehicle:
+             .vehicle,
+            
+             .vehicleMileages,
+             .vehicleMileage:
             return request
         }
     }

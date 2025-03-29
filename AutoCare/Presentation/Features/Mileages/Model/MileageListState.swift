@@ -13,5 +13,4 @@ enum MileageListState: Equatable {
     case error
     case newVehicle
     case successVehicleMileages([VehicleMileage])
-    case successVehicleMileagesData([VehicleMileage])
 }

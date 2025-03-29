@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-class DefaultEventMonitor: EventMonitor {
+final class DefaultEventMonitor: EventMonitor {
     func requestDidFinish(_ request: Request) {
         print(request.description)
     }

@@ -8,27 +8,15 @@
 import Foundation
 
 struct VehicleResponse: Identifiable, Codable {
-    public var id: String
-    public var name: String
-    public var brand: String
-    public var model: String
-    public var year: String
-    public var licensePlate: String
-    public var odometer: Int
+    var id: String
+    var name: String
+    var brand: String
+    var model: String
+    var year: String
+    var licensePlate: String
+    var odometer: Int
     
-    public var vehicleType: VehicleTypeResponse
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case brand
-        case model
-        case year
-        case licensePlate
-        case odometer
-
-        case vehicleType
-    }
+    var vehicleType: VehicleTypeResponse
     
     func toVehicle() -> Vehicle {
         return Vehicle(
