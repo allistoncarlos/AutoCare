@@ -7,7 +7,6 @@
 
 import SwiftUI
 import TTProgressHUD
-import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -66,11 +65,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    
-    HomeView(viewModel: HomeView.ViewModel(
-        modelContext: ModelContext(
-            try! ModelContainer(for: Vehicle.self, configurations: config)
-        )
-    ))
+    HomeView(viewModel: HomeView.ViewModel(modelContext: SwiftDataManager.shared.previewModelContext))
 }

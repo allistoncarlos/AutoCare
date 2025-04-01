@@ -111,13 +111,9 @@ struct VehicleEditView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    
     VehicleEditView(
         viewModel: VehicleEditView.ViewModel(
-            modelContext: ModelContext(
-                try! ModelContainer(for: Vehicle.self, configurations: config)
-            ),
+            modelContext: SwiftDataManager.shared.previewModelContext,
             vehicleId: nil
         ),
         isPresented: .constant(true)

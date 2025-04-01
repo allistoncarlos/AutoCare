@@ -7,7 +7,6 @@
 
 import SwiftUI
 import TTProgressHUD
-import SwiftData
 
 @main
 struct AutoCareApp: SwiftUI.App {
@@ -20,34 +19,18 @@ struct AutoCareApp: SwiftUI.App {
         title: "Carregando",
         caption: "Por favor aguarde..."
     )
-    
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            VehicleType.self,
-            Vehicle.self,
-            VehicleMileage.self
-        ])
 
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-    
     var body: some Scene {
         WindowGroup {
-            resultView(modelContext: sharedModelContainer.mainContext)
+            resultView()
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(SwiftDataManager.shared.container)
     }
     
     @MainActor
-    private func resultView(modelContext: ModelContext) -> AnyView {
+    private func resultView() -> AnyView {
         return KeychainDataSource.hasValidToken() ?
-        AnyView(LoginRouter.makeHomeView(modelContext: modelContext)) :
+        AnyView(LoginRouter.makeHomeView(modelContext: SwiftDataManager.shared.container.mainContext)) :
             AnyView(LoginRouter.makeLoginView())
     }
 }

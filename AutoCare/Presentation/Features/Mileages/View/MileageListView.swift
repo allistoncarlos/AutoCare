@@ -88,13 +88,9 @@ struct MileageListView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    
     MileageListView(
         viewModel: MileageListView.ViewModel(
-            modelContext: ModelContext(
-                try! ModelContainer(for: VehicleMileage.self, configurations: config)
-            ),
+            modelContext: SwiftDataManager.shared.previewModelContext,
             selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",
@@ -107,5 +103,4 @@ struct MileageListView: View {
             )
         )
     )
-    .modelContainer(for: VehicleMileage.self, inMemory: true)
 }
