@@ -51,6 +51,10 @@ extension HomeView {
             )
         }
         
+        func showPulseUI() -> some View {
+            return HomeRouter.makePulseUI()
+        }
+        
         func fetchData(isConnected: Bool) async {
             if isConnected {
                 await fetchRemoteData()

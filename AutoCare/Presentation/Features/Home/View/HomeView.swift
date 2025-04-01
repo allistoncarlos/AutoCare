@@ -15,6 +15,7 @@ struct HomeView: View {
     @ObservedObject var viewModel: HomeView.ViewModel
     @State private var isLoading = true
     @State private var isNewVehiclePresented = false
+    @State private var isPulseConsolePresented = false
     @State private var selectedVehicleMileage: VehicleMileage? = nil
 
     @State private var presentedMileages = NavigationPath()
@@ -49,11 +50,17 @@ struct HomeView: View {
             
             isNewVehiclePresented = newState == .newVehicle
         })
+        .onShake {
+            isPulseConsolePresented = true
+        }
         .sheet(isPresented: $isNewVehiclePresented) {
             viewModel.showEditVehicleView(
                 vehicleId: viewModel.selectedVehicle?.id,
                 isPresented: $isNewVehiclePresented
             )
+        }
+        .sheet(isPresented: $isPulseConsolePresented) {
+            viewModel.showPulseUI()
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import PulseUI
 
 @MainActor
 enum HomeRouter {
@@ -23,6 +24,10 @@ enum HomeRouter {
             isPresented: isPresented
         )
         .interactiveDismissDisabled()
+    }
+    
+    static func makePulseUI() -> some View {
+        return NavigationView { ConsoleView() }
     }
     
     static func makeMileageListView(
