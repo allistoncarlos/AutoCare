@@ -10,7 +10,7 @@ import SwiftData
 
 @Model
 final class VehicleMileage: Syncable {
-    var id: String
+    var id: String? = nil
     var date: Date = Date()
     var totalCost: Decimal = 0
     var odometer: Int = 0
@@ -24,7 +24,7 @@ final class VehicleMileage: Syncable {
     var synced: Bool
 
     init(
-        id: String,
+        id: String?,
         date: Date,
         totalCost: Decimal,
         odometer: Int,

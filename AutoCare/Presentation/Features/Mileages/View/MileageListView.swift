@@ -36,6 +36,7 @@ struct MileageListView: View {
                         Image(systemName: "plus")
                     }
                 }
+                .disabled(isLoading)
             }
             .navigationDestination(for: String.self) { _ in
                 if let id = viewModel.selectedVehicle.id {

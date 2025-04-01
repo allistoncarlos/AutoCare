@@ -65,7 +65,7 @@ enum AutoCareAPI {
                 return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(id)"
             }
 
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/"
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/"
         }
     }
 
@@ -103,7 +103,7 @@ enum AutoCareAPI {
         case .get: return URLEncodedFormParameterEncoder()
         default:
             let encoder = JSONParameterEncoder()
-//            encoder.encoder.dateEncodingStrategy = .iso8601
+            encoder.encoder.dateEncodingStrategy = .iso8601
             return encoder
         }
     }

@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 import Combine
 import FormValidator
+import SwiftData
+import Factory
 
 extension MileageEditView {
     @MainActor
@@ -19,11 +21,14 @@ extension MileageEditView {
         var previousMileage: VehicleMileage?
         
         private var cancellable = Set<AnyCancellable>()
+        private var modelContext: ModelContext
         private var vehicleId: String
         
         @Published var isFormValid = false
         
         @Published var manager = FormManager(validationType: .immediate)
+        
+        @Injected(\.vehicleMileageRepository) private var repository: VehicleMileageRepositoryProtocol
         
         // MARK: - Form Fields
         @FormField(validator: DateValidator(message: "Informe uma data válida"))
@@ -44,9 +49,11 @@ extension MileageEditView {
         lazy var totalCostValidation = _totalCost.validation(manager: manager)
         
         init(
+            modelContext: ModelContext,
             vehicleMileage: VehicleMileage?,
             vehicleId: String
         ) {
+            self.modelContext = modelContext
             self.vehicleMileage = vehicleMileage
             self.vehicleId = vehicleId
             
@@ -80,84 +87,125 @@ extension MileageEditView {
         }
         
         func fetchPreviousVehicleMileage() async {
-//            do {
-//                guard let userId = AutoCareApp.app.currentUser?.id else {
-//                    throw RLMError(.fail)
-//                }
-//                
-//                state = .loading
-//                
-//                let vehicleMileages = realm.objects(VehicleMileage.self)
-//                
-//                var lastVehicleMileage: VehicleMileage? = nil
-//                
-//                if let vehicleMileage {
-//                    let index = vehicleMileages.lastIndex(where: { $0._id == vehicleMileage._id })
-//
-//                    if let index, index < vehicleMileages.count - 1 {
-//                        lastVehicleMileage = vehicleMileages[index + 1]
-//                    }
-//                } else {
-//                    lastVehicleMileage = vehicleMileages
-//                        .where {
-//                            $0.owner_id == userId &&
-//                            $0.vehicle_id == vehicleId
-//                        }
-//                        .sorted { $0.date > $1.date }
-//                        .first
-//                }
-//                
-//                state = .successPreviousMileage(lastVehicleMileage)
-//            } catch {
-//                print(error)
-//                state = .error
-//            }
+            do {
+                state = .loading
+                
+                let descriptor = FetchDescriptor<VehicleMileage>(
+                    sortBy: [SortDescriptor(\.date, order: .reverse)]
+                )
+
+                let result = try modelContext.fetch(descriptor)
+                var lastVehicleMileage: VehicleMileage? = nil
+                
+                if let vehicleMileage {
+                    let index = result.lastIndex(where: { $0.id == vehicleMileage.id })
+
+                    if let index, index < result.count - 1 {
+                        lastVehicleMileage = result[index + 1]
+                    }
+                } else {
+                    lastVehicleMileage = result
+                        .sorted { $0.date > $1.date }
+                        .first(where: { $0.vehicleId == vehicleId })
+                }
+                
+                state = .successPreviousMileage(lastVehicleMileage)
+            } catch {
+                print(error)
+                state = .error
+            }
         }
         
-        func save() async {
-//            if manager.triggerValidation() {
-//                state = .loading
-//                
-//                do {
-//                    if let calculatedMileage = calculateMileage() {
-//                        let resultVehicleMileage = vehicleMileage ?? VehicleMileage()
-//                        
-//                        resultVehicleMileage.owner_id = userId
-////                        resultVehicleMileage.vehicle_id = vehicleId
-//                        resultVehicleMileage.date = date
-//                        
-//                        if let odometer, let odometer = Int(odometer) {
-//                            resultVehicleMileage.odometer = odometer
-//                        }
-//                        
-//                        if let odometerDifference {
-//                            resultVehicleMileage.odometerDifference = odometerDifference
-//                        }
-//                        
-//                        if let liters {
-//                            resultVehicleMileage.liters = Decimal128(value: liters)
-//                        }
-//                        
-//                        if let fuelCost {
-//                            resultVehicleMileage.fuelCost = Decimal128(value: fuelCost)
-//                        }
-//                        
-//                        resultVehicleMileage.totalCost = Decimal128(value: totalCost)
-//                        resultVehicleMileage.calculatedMileage = calculatedMileage
-//    
-//                        try await realm.asyncWrite {
-//                            realm.add(resultVehicleMileage)
-//                        }
-//                        
-//                        state = .successSave
-//                    } else {
-//                        state = .error
-//                    }
-//                } catch {
-//                    print(error)
-//                    state = .error
-//                }
-//            }
+        func save(isConnected: Bool) async {
+            if manager.triggerValidation() {
+                state = .loading
+                
+                let calculatedMileage = calculateMileage() ?? 0
+                    
+                guard
+                    let odometer,
+                    let odometer = Int(odometer),
+                    let liters,
+                    let fuelCost,
+                    let fuelCost = Decimal(string: fuelCost)
+                else {
+                    state = .error
+                    return
+                }
+                
+                let resultVehicleMileage = vehicleMileage ?? VehicleMileage(
+                    id: nil,
+                    date: date,
+                    totalCost: Decimal(string: totalCost)!,
+                    odometer: odometer,
+                    odometerDifference: odometerDifference ?? 0,
+                    liters: liters,
+                    fuelCost: fuelCost,
+                    calculatedMileage: calculatedMileage,
+                    complete: complete,
+                    vehicleId: vehicleId
+                )
+                    
+                isConnected ?
+                    await saveRemote(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage) :
+                    saveLocal(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage)
+            }
+        }
+        
+        private func saveRemote(id: String? = nil, vehicleMileage: VehicleMileage) async {
+            let result = await repository.save(id: id, vehicleMileage: vehicleMileage)
+
+            if result != nil {
+                state = .successSave
+            } else {
+                state = .error
+            }
+        }
+        
+        private func saveLocal(id: String? = nil, vehicleMileage: VehicleMileage) {
+            do {
+                if let id {
+                    try update(id: id, vehicleMileage: vehicleMileage)
+                } else {
+                    try insert(vehicleMileage: vehicleMileage)
+                }
+                
+                state = .successSave
+            } catch {
+                print(error.localizedDescription)
+                state = .error
+            }
+        }
+        
+        private func update(id: String, vehicleMileage: VehicleMileage) throws {
+            let descriptor = createUpdateDescriptor(for: id)
+            
+            let result = try modelContext.fetch(descriptor)
+            
+            if result.count == 1, let vehicleMileageResult = result.first {
+                vehicleMileageResult.synced = false
+                try modelContext.save()
+                state = .successSave
+            } else {
+                state = .error
+            }
+        }
+        
+        private func insert(vehicleMileage: VehicleMileage) throws {
+            modelContext.insert(vehicleMileage)
+            try modelContext.save()
+            
+            state = .successSave
+        }
+        
+        private func createUpdateDescriptor(for id: String) -> FetchDescriptor<Vehicle> {
+            var descriptor = FetchDescriptor<Vehicle>(predicate: #Predicate { vehicle in
+                vehicle.id == id
+            })
+            
+            descriptor.fetchLimit = 1
+            
+            return descriptor
         }
     }
 }

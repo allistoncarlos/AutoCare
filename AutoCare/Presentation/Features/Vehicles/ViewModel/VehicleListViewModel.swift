@@ -44,27 +44,6 @@ extension VehicleListView {
             
             self.fetchVehiclesData()
             
-            // TODO: REMOVE REALM VEHICLES AND REPLACE FOR VEHICLE FROM API
-//            let vehicles = Array(realm.objects(Vehicle.self))
-//
-//            vehicles.forEach { vehicle in
-//                let vehicleId = "\(vehicle._id)"
-//                
-//                let vehicleData = Vehicle(
-//                    id: vehicleId,
-//                    name: vehicle.name,
-//                    brand: vehicle.brand,
-//                    model: vehicle.model,
-//                    year: vehicle.year,
-//                    licensePlate: vehicle.licensePlate,
-//                    odometer: vehicle.odometer
-//                )
-//                
-//                if vehiclesData.count == 0 {
-//                    modelContext.insert(vehicleData)
-//                }
-//            }
-            
             state = .successVehicles(Array(vehicles))
         }
         

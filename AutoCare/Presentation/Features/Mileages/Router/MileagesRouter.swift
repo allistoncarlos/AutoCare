@@ -7,15 +7,18 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 @MainActor
 enum MileagesRouter {
     static func makeEditMileageView(
         navigationPath: Binding<NavigationPath>,
+        modelContext: ModelContext,
         vehicleId: String,
         vehicleMileage: VehicleMileage?
     ) -> some View {
         let viewModel = MileageEditView.ViewModel(
+            modelContext: modelContext,
             vehicleMileage: vehicleMileage,
             vehicleId: vehicleId
         )

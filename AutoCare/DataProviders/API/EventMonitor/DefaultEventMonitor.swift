@@ -12,6 +12,11 @@ import Alamofire
 final class DefaultEventMonitor: EventMonitor {
     func requestDidFinish(_ request: Request) {
         print(request.description)
+        
+        if let httpBody = request.request?.httpBody,
+           let json = try? JSONSerialization.jsonObject(with: httpBody, options: .mutableContainers) {
+            print(json)
+        }
     }
 
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {

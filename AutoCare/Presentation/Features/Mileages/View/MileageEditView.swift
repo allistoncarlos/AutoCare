@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TTProgressHUD
+import SwiftData
 
 struct MileageEditView: View {
     @ObservedObject var viewModel: ViewModel
@@ -20,6 +21,8 @@ struct MileageEditView: View {
     @State private var odometer = 0
     @State private var liters = 0
     @State private var isComplete = true
+    
+    @StateObject var networkConnectivity = NetworkConnectivity()
     
     var currencyFormatter: NumberFormatterProtocol
     var decimalFormatter: NumberFormatterProtocol
@@ -130,7 +133,7 @@ struct MileageEditView: View {
         .toolbar {
             Button("Salvar") {
                 Task {
-                    await viewModel.save()
+                    await viewModel.save(isConnected: networkConnectivity.status == .connected)
                 }
             }
         }
@@ -185,8 +188,13 @@ struct MileageEditView: View {
 }
 
 #Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    
     MileageEditView(
         viewModel: MileageEditView.ViewModel(
+            modelContext: ModelContext(
+                try! ModelContainer(for: VehicleMileage.self, configurations: config)
+            ),
             vehicleMileage: VehicleMileage(
                 id: "123",
                 date: Date(),

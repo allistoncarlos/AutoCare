@@ -49,6 +49,7 @@ extension MileageListView {
         ) -> some View {
             return MileagesRouter.makeEditMileageView(
                 navigationPath: navigationPath,
+                modelContext: modelContext,
                 vehicleId: vehicleId,
                 vehicleMileage: vehicleMileage
             )
