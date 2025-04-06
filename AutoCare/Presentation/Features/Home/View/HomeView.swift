@@ -18,7 +18,6 @@ struct HomeView: View {
     @State private var selectedVehicleMileage: VehicleMileage? = nil
 
     @State private var presentedMileages = NavigationPath()
-    @StateObject var networkConnectivity = NetworkConnectivity()
     
     var body: some View {
         TabView {
@@ -42,7 +41,7 @@ struct HomeView: View {
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
         .task {
-            await viewModel.fetchData(isConnected: networkConnectivity.status == .connected)
+            await viewModel.fetchData()
         }
         .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading

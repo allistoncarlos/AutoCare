@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 import PulseUI
 
-@MainActor
 enum HomeRouter {
     static func makeEditVehicleView(
         modelContext: ModelContext,

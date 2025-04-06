@@ -57,7 +57,7 @@ struct MileageListView: View {
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
         .task {
-            await viewModel.fetchData(isConnected: networkConnectivity.status == .connected)
+            await viewModel.fetchData()
         }
         .onChange(of: viewModel.state, { _, newState in
             isLoading = newState == .loading
@@ -69,7 +69,7 @@ struct MileageListView: View {
             newValue in
             if newValue.isEmpty {
                 Task {
-                    await viewModel.fetchData(isConnected: networkConnectivity.status == .connected)
+                    await viewModel.fetchData()
                 }
             }
         }

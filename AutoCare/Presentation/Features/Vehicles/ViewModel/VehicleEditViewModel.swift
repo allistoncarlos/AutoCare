@@ -12,7 +12,6 @@ import Factory
 import SwiftData
 
 extension VehicleEditView {
-    @MainActor
     class ViewModel: ObservableObject {
         private var modelContext: ModelContext
         
@@ -28,6 +27,7 @@ extension VehicleEditView {
         @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository: VehicleTypeRepositoryProtocol
         
         private var cancellable = Set<AnyCancellable>()
+        private var networkConnectivity = NetworkConnectivity()
         
         @FormField(validator: NonEmptyValidator(message: "Selecione o Tipo do Veículo"))
         var selectedVehicleType: String = "" { didSet { self.triggerValidation()} }
@@ -79,58 +79,14 @@ extension VehicleEditView {
                 }.store(in: &cancellable)
         }
         
-        func fetchData(isConnected: Bool) async {
-            if isConnected {
-                await fetchRemoteData()
-            } else {
-                fetchLocalData()
-            }
-        }
-        
-        private func fetchRemoteData() async {
-            state = .loading
-
-            let result = await vehicleTypeRepository.fetchData()
-            
-            if let result {
-                state = .successVehicleTypes(result)
-                
-                self.syncData(result)
-            } else {
-                state = .error
-            }
-        }
-        
-        private func fetchLocalData() {
+        func fetchData() async {
             do {
                 state = .loading
-                
-                let descriptor = FetchDescriptor<VehicleType>(
-                    sortBy: [SortDescriptor(\.name)]
-                )
-
-                let result = try modelContext.fetch(descriptor)
-                
-                state = .successVehicleTypes(result)
+                let vehicleTypes: [VehicleType] = try SwiftDataManager.shared.fetch<VehicleType>(sortBy: [])
+                state = .successVehicleTypes(vehicleTypes)
             } catch {
+                print(error.localizedDescription)
                 state = .error
-            }
-        }
-        
-        private func syncData(_ vehicleTypes: [VehicleType]) {
-            do {
-                try modelContext.delete(model: VehicleType.self)
-                
-                vehicleTypes.forEach { vehicleType in
-                    vehicleType.synced = true
-                    modelContext.insert(vehicleType)
-                }
-                
-                try modelContext.save()
-                
-                self.fetchLocalData()
-            } catch {
-                print(error)
             }
         }
         
@@ -138,13 +94,44 @@ extension VehicleEditView {
             isFormValid = manager.triggerValidation()
         }
 
-        func save(isConnected: Bool) async {
-            isConnected ? await self.saveRemote() : self.saveLocal()
+        // TODO: FAZER O SAVE - Ver como fazer com o remote e o local... não sei se salvo direto no remote e faço o sync, ou se salvo local e mando syncar depois... pode ser uma opção boa. ou talvez salvo local e já mando remote em seguida, embora ache que não fique tão legal assim...
+        func save() async {
+//            networkConnectivity.status == .connected ? await self.saveRemote() : self.saveLocal()
+            state = .loading
+ 
+            if isFormValid {
+                guard let odometer = Int(self.odometer) else { return }
+                
+                if vehicle == nil {
+                    vehicle = Vehicle(
+                        name: name,
+                        brand: brand,
+                        model: model,
+                        year: year,
+                        licensePlate: licensePlate,
+                        odometer: odometer,
+                        vehicleTypeId: selectedVehicleType
+                    )
+                }
+                
+                guard let vehicle else { return }
+                
+                await SwiftDataManager.shared.save(item: vehicle)
+
+//                let result = await repository.save(id: vehicle.id, vehicle: vehicle)
+//
+//                if result != nil {
+//                    state = .successSavedVehicle
+//                } else {
+//                    state = .error
+//                }
+            }
+            
         }
         
         private func saveRemote() async {
             state = .loading
-
+ 
             if isFormValid {
                 guard let odometer = Int(self.odometer) else { return }
                 

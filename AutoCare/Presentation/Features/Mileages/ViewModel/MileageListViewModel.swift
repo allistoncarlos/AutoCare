@@ -12,7 +12,6 @@ import SwiftData
 import Factory
 
 extension MileageListView {
-    @MainActor
     class ViewModel: ObservableObject {
         @Published var state: MileageListState = .idle
         @Published var vehicleMileages = [VehicleMileage]()
@@ -55,60 +54,16 @@ extension MileageListView {
             )
         }
         
-        func fetchData(isConnected: Bool) async {
-            if isConnected {
-                await fetchRemoteData()
-            } else {
-                fetchLocalData()
-            }
-        }
-        
-        private func fetchRemoteData() async {
-            if let id = selectedVehicle.id {
-                state = .loading
-                
-                let result = await repository.fetchData(vehicleId: id)
-                
-                if let result {
-                    state = .successVehicleMileages(result)
-                    
-                    self.syncData(result)
-                } else {
-                    state = .newVehicle
-                }
-            }
-        }
-        
-        private func fetchLocalData() {
+        func fetchData() async {
             do {
-                state = .loading
+                await MainActor.run { state = .loading }
                 
-                let descriptor = FetchDescriptor<VehicleMileage>(
-                    sortBy: [SortDescriptor(\.date, order: .reverse)]
-                )
-
-                let result = try modelContext.fetch(descriptor)
+                let result = try SwiftDataManager.shared.fetch<VehicleMileage>(sortBy: [SortDescriptor(\VehicleMileage.date, order: .reverse)])
                 
-                state = .successVehicleMileages(result)
+                await MainActor.run { state = .successVehicleMileages(result) }
             } catch {
-                state = .newVehicle
-            }
-        }
-        
-        private func syncData(_ vehicleMileages: [VehicleMileage]) {
-            do {
-                try modelContext.delete(model: VehicleMileage.self)
-                
-                vehicleMileages.forEach { vehicleMileage in
-                    vehicleMileage.synced = true
-                    modelContext.insert(vehicleMileage)
-                }
-                
-                try modelContext.save()
-                
-                self.fetchLocalData()
-            } catch {
-                print(error)
+                print(error.localizedDescription)
+                state = .error
             }
         }
     }

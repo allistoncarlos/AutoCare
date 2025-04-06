@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-@MainActor
 enum MileagesRouter {
     static func makeEditMileageView(
         navigationPath: Binding<NavigationPath>,

@@ -10,7 +10,6 @@ import SwiftUI
 import Combine
 
 extension ServiceListView {
-    @MainActor
     class ViewModel: ObservableObject {
         @Published var state: ServiceListState = .idle
         @Published var vehicleServices = [VehicleService]()

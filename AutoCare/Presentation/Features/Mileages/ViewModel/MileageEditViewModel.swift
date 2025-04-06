@@ -13,7 +13,6 @@ import SwiftData
 import Factory
 
 extension MileageEditView {
-    @MainActor
     class ViewModel: ObservableObject {
         @Published var state: MileageEditState = .idle
         @Published var vehicleMileage: VehicleMileage?
@@ -146,9 +145,12 @@ extension MileageEditView {
                     vehicleId: vehicleId
                 )
                     
-                isConnected ?
-                    await saveRemote(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage) :
-                    saveLocal(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage)
+//                isConnected ?
+//                    await saveRemote(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage) :
+//                    saveLocal(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage)
+                await SwiftDataManager.shared.save(item: resultVehicleMileage)
+                
+                state = .successSave
             }
         }
         

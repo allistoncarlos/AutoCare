@@ -12,16 +12,18 @@ import SwiftData
 import SwiftUI
 
 extension HomeView {
-    @MainActor
-    class ViewModel: ObservableObject {
-        private var modelContext: ModelContext
+    final class ViewModel: ObservableObject, Sendable {
+        let modelContext: ModelContext
         
         @Published var state: HomeState = .idle
         @Published var selectedVehicle: Vehicle?
         
         private var cancellable = Set<AnyCancellable>()
+        private var networkConnectivity = NetworkConnectivity()
         
+        @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository: VehicleTypeRepositoryProtocol
         @Injected(\.vehicleRepository) private var repository: VehicleRepositoryProtocol
+        @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository: VehicleMileageRepositoryProtocol
         
         init(modelContext: ModelContext) {
             self.modelContext = modelContext
@@ -34,6 +36,7 @@ extension HomeView {
                         self?.selectedVehicle = vehicles.first
                         
                         // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
+                        // TODO: SALVAR O ATRIBUTO ISDEFAULT NA ENTIDADE
                     default:
                         break
                     }
@@ -55,58 +58,61 @@ extension HomeView {
             return HomeRouter.makePulseUI()
         }
         
-        func fetchData(isConnected: Bool) async {
-            if isConnected {
-                await fetchRemoteData()
-            } else {
-                fetchLocalData()
-            }
-        }
-        
-        private func fetchRemoteData() async {
-            state = .loading
-
-            let result = await repository.fetchData()
-
-            if let result {
-                state = .successVehicle(result)
-                
-                self.syncData(result)
-            } else {
-                state = .newVehicle
-            }
-        }
-        
-        private func fetchLocalData() {
+        func fetchData() async {
+            if networkConnectivity.status != .connected { return }
+            
             do {
-                state = .loading
+//                state = .loading
                 
-                let descriptor = FetchDescriptor<Vehicle>(
-                    sortBy: [SortDescriptor(\.name)]
-                )
-
-                let result = try modelContext.fetch(descriptor)
+                var vehicleTypes: [VehicleType] = []
+                var vehicles: [Vehicle] = []
+                var vehicleMileages: [VehicleMileage] = []
                 
-                state = result.isEmpty ? .newVehicle : .successVehicle(result)
-            } catch {
-                state = .newVehicle
-            }
-        }
-        
-        private func syncData(_ vehicles: [Vehicle]) {
-            do {
-                try modelContext.delete(model: Vehicle.self)
-                
-                vehicles.forEach { vehicle in
-                    vehicle.synced = true
-                    modelContext.insert(vehicle)
+                await withTaskGroup(of: Void.self) { [weak self] group in
+                    vehicleTypes = await self?.vehicleTypeRepository.fetchData() ?? []
+                    
+                    vehicles = await self?.repository.fetchData() ?? []
                 }
                 
-                try modelContext.save()
+                await withTaskGroup(of: Void.self) { [weak self] group in
+                    for vehicle in vehicles {
+                        if let id = vehicle.id {
+                            group.addTask {
+                                let vehicleMileagesByVehicle = await self?.vehicleMileageRepository.fetchData(vehicleId: id)
+                                vehicleMileages.append(contentsOf: vehicleMileagesByVehicle ?? [])
+                            }
+                        }
+                    }
+                }
                 
-                self.fetchLocalData()
+                vehicleTypes = vehicleTypes.map { vehicleType in
+                    vehicleType.synced = true
+                    return vehicleType
+                }
+                
+                vehicles = vehicles.map { vehicle in
+                    vehicle.synced = true
+                    return vehicle
+                }
+                
+                vehicleMileages = vehicleMileages.map { vehicleMileage in
+                    vehicleMileage.synced = true
+                    return vehicleMileage
+                }
+                
+                for index in 0...50 {
+                    print(index)
+                    try await SwiftDataManager.shared.importData(vehicleTypes)
+                    try await SwiftDataManager.shared.importData(vehicles)
+                    try await SwiftDataManager.shared.importData(vehicleMileages)
+                }
+                
+                await MainActor.run {
+                    state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
+                }
             } catch {
-                print(error)
+                print(error.localizedDescription)
+                state = .newVehicle
             }
         }
     }

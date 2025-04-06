@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class VehicleMileage: Syncable {
+final class VehicleMileage: Syncable, Sendable {
     var id: String? = nil
     var date: Date = Date()
     var totalCost: Decimal = 0
