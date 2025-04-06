@@ -90,7 +90,7 @@ struct MileageListView: View {
 #Preview {
     MileageListView(
         viewModel: MileageListView.ViewModel(
-            modelContext: SwiftDataManager.shared.previewModelContext,
+            modelContext: SwiftDataManager.shared.previewModelContainer.mainContext,
             selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",

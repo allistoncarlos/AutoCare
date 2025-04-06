@@ -111,7 +111,7 @@ struct VehicleEditView: View {
 #Preview {
     VehicleEditView(
         viewModel: VehicleEditView.ViewModel(
-            modelContext: SwiftDataManager.shared.previewModelContext,
+            modelContext: SwiftDataManager.shared.previewModelContainer.mainContext,
             vehicleId: nil
         ),
         isPresented: .constant(true)

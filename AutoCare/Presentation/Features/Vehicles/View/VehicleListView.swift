@@ -60,5 +60,9 @@ struct VehicleListView: View {
 }
 
 #Preview {
-    VehicleListView(viewModel: VehicleListView.ViewModel(modelContext: SwiftDataManager.shared.previewModelContext))
+    VehicleListView(
+        viewModel: VehicleListView.ViewModel(
+            modelContext: SwiftDataManager.shared.previewModelContainer.mainContext
+        )
+    )
 }

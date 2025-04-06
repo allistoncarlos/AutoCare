@@ -11,44 +11,65 @@ import Factory
 import SwiftData
 import SwiftUI
 
-extension HomeView {
-    final class ViewModel: ObservableObject, Sendable {
-        let modelContext: ModelContext
+extension HomeView.ViewModel {
+    actor ViewModelState {
+        let statePublisher = CurrentValueSubject<HomeState, Never>(.idle)
+        let selectedVehiclePublisher = PassthroughSubject<Vehicle?, Never>()
         
-        @Published var state: HomeState = .idle
-        @Published var selectedVehicle: Vehicle?
+        var cancellable = Set<AnyCancellable>()
+        var networkConnectivity = NetworkConnectivity()
         
-        private var cancellable = Set<AnyCancellable>()
-        private var networkConnectivity = NetworkConnectivity()
-        
-        @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository: VehicleTypeRepositoryProtocol
-        @Injected(\.vehicleRepository) private var repository: VehicleRepositoryProtocol
-        @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository: VehicleMileageRepositoryProtocol
-        
-        init(modelContext: ModelContext) {
-            self.modelContext = modelContext
-            
-            $state
-                .receive(on: RunLoop.main)
-                .sink { [weak self] state in
-                    switch state {
-                    case let .successVehicle(vehicles):
-                        self?.selectedVehicle = vehicles.first
-                        
-                        // TODO: Aqui eu preciso verificar quando tiver o veículo padrão... Atualmente só tô pegando o primeiro
-                        // TODO: SALVAR O ATRIBUTO ISDEFAULT NA ENTIDADE
-                    default:
-                        break
-                    }
-                }.store(in: &cancellable)
+        @Injected(\.vehicleTypeRepository) var vehicleTypeRepository: VehicleTypeRepositoryProtocol
+        @Injected(\.vehicleRepository) var repository: VehicleRepositoryProtocol
+        @Injected(\.vehicleMileageRepository) var vehicleMileageRepository: VehicleMileageRepositoryProtocol
+
+        func setState(_ newState: HomeState) {
+            statePublisher.send(newState)
+        }
+
+        func setVehicle(_ vehicle: Vehicle?) {
+            selectedVehiclePublisher.send(vehicle)
         }
         
+        func store(_ cancellable: AnyCancellable) {
+            self.cancellable.insert(cancellable)
+        }
+    }
+}
+
+extension HomeView {
+    final class ViewModel: ObservableObject, Sendable {
+        let modelContainer: ModelContainer
+        
+        let stateStore = ViewModelState()
+        
+        init(modelContainer: ModelContainer) {
+            self.modelContainer = modelContainer
+            
+            Task {
+                let cancellable = await stateStore.statePublisher
+                    .sink { [weak self] state in
+                        switch state {
+                        case let .successVehicle(vehicles):
+                            Task {
+                                await self?.stateStore.setVehicle(vehicles.first)
+                            }
+                        default:
+                            break
+                        }
+                    }
+
+                await stateStore.store(cancellable)
+            }
+        }
+        
+        @MainActor
         func showEditVehicleView(
             vehicleId: String?,
             isPresented: Binding<Bool>
         ) -> some View {
             return HomeRouter.makeEditVehicleView(
-                modelContext: modelContext,
+                modelContext: modelContainer.mainContext,
                 vehicleId: vehicleId,
                 isPresented: isPresented
             )
@@ -59,32 +80,37 @@ extension HomeView {
         }
         
         func fetchData() async {
-            if networkConnectivity.status != .connected { return }
-            
+            if await stateStore.networkConnectivity.status != .connected { return }
+
             do {
-//                state = .loading
-                
                 var vehicleTypes: [VehicleType] = []
                 var vehicles: [Vehicle] = []
-                var vehicleMileages: [VehicleMileage] = []
-                
-                await withTaskGroup(of: Void.self) { [weak self] group in
-                    vehicleTypes = await self?.vehicleTypeRepository.fetchData() ?? []
-                    
-                    vehicles = await self?.repository.fetchData() ?? []
+
+                await withTaskGroup(of: Void.self) { group in
+                    group.addTask {
+                        vehicleTypes = await self.stateStore.vehicleTypeRepository.fetchData() ?? []
+                    }
+                    group.addTask {
+                        vehicles = await self.stateStore.repository.fetchData() ?? []
+                    }
                 }
-                
-                await withTaskGroup(of: Void.self) { [weak self] group in
+
+                var vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
                     for vehicle in vehicles {
                         if let id = vehicle.id {
                             group.addTask {
-                                let vehicleMileagesByVehicle = await self?.vehicleMileageRepository.fetchData(vehicleId: id)
-                                vehicleMileages.append(contentsOf: vehicleMileagesByVehicle ?? [])
+                                return await self.stateStore.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
                             }
                         }
                     }
+
+                    var collected: [VehicleMileage] = []
+                    for await result in group {
+                        collected.append(contentsOf: result)
+                    }
+                    return collected
                 }
-                
+
                 vehicleTypes = vehicleTypes.map { vehicleType in
                     vehicleType.synced = true
                     return vehicleType
@@ -100,19 +126,15 @@ extension HomeView {
                     return vehicleMileage
                 }
                 
-                for index in 0...50 {
-                    print(index)
-                    try await SwiftDataManager.shared.importData(vehicleTypes)
-                    try await SwiftDataManager.shared.importData(vehicles)
-                    try await SwiftDataManager.shared.importData(vehicleMileages)
-                }
-                
-                await MainActor.run {
-                    state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
-                }
+                await stateStore.setState(vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles))
+
+                try await SwiftDataManager.shared.importData(vehicleTypes)
+                try await SwiftDataManager.shared.importData(vehicles)
+                try await SwiftDataManager.shared.importData(vehicleMileages)
+
             } catch {
                 print(error.localizedDescription)
-                state = .newVehicle
+                await stateStore.setState(.newVehicle)
             }
         }
     }

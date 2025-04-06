@@ -58,7 +58,7 @@ final class SwiftDataManager {
     
     let container: ModelContainer
     let context: ModelContext
-    let previewModelContext: ModelContext
+    let previewModelContainer: ModelContainer
     
     private let actor: SwiftDataActor
     
@@ -72,9 +72,7 @@ final class SwiftDataManager {
             )
             context = ModelContext(container)
             
-            previewModelContext = ModelContext(
-                try! ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
-            )
+            previewModelContainer = try! ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
             
             actor = SwiftDataActor(modelContainer: container)
         } catch {

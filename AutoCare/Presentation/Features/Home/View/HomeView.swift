@@ -12,16 +12,20 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     
     @ObservedObject var viewModel: HomeView.ViewModel
-    @State private var isLoading = true
+    @State private var isLoading = false
     @State private var isNewVehiclePresented = false
     @State private var isPulseConsolePresented = false
+    @State private var selectedVehicle: Vehicle? = nil
     @State private var selectedVehicleMileage: VehicleMileage? = nil
 
     @State private var presentedMileages = NavigationPath()
     
+    @State private var stateStore = HomeView.ViewModel.ViewModelState()
+    @State private var state: HomeState = .idle
+    
     var body: some View {
         TabView {
-            if let selectedVehicle = viewModel.selectedVehicle {
+            if let selectedVehicle = selectedVehicle {
                 HomeRouter.makeMileageListView(
                     modelContext: modelContext,
                     selectedVehicle: selectedVehicle
@@ -41,19 +45,19 @@ struct HomeView: View {
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
         .task {
-            await viewModel.fetchData()
+            await syncData()
         }
-        .onChange(of: viewModel.state, { _, newState in
-            isLoading = newState == .loading
-            
-            isNewVehiclePresented = newState == .newVehicle
+        .onChange(of: state, { _, newValue in
+            isLoading = newValue == .loading
+
+            isNewVehiclePresented = newValue == .newVehicle
         })
         .onShake {
             isPulseConsolePresented = true
         }
         .sheet(isPresented: $isNewVehiclePresented) {
             viewModel.showEditVehicleView(
-                vehicleId: viewModel.selectedVehicle?.id,
+                vehicleId: selectedVehicle?.id,
                 isPresented: $isNewVehiclePresented
             )
         }
@@ -61,8 +65,15 @@ struct HomeView: View {
             viewModel.showPulseUI()
         }
     }
+    
+    func syncData() async {
+        await stateStore.store(await viewModel.stateStore.statePublisher.sink { self.state = $0})
+        await stateStore.store(await viewModel.stateStore.selectedVehiclePublisher.sink { self.selectedVehicle = $0 })
+        
+        await viewModel.fetchData()
+    }
 }
 
 #Preview {
-    HomeView(viewModel: HomeView.ViewModel(modelContext: SwiftDataManager.shared.previewModelContext))
+    HomeView(viewModel: HomeView.ViewModel(modelContainer: SwiftDataManager.shared.previewModelContainer))
 }

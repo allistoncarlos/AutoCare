@@ -10,11 +10,11 @@ import SwiftData
 
 @MainActor
 enum LoginRouter {
-    static func makeHomeView(modelContext: ModelContext) -> some View {
-        return HomeView(viewModel: HomeView.ViewModel(modelContext: modelContext))
+    static func makeHomeView(modelContainer: ModelContainer) -> some View {
+        return HomeView(viewModel: HomeView.ViewModel(modelContainer: modelContainer))
     }
 
-    static func makeLoginView() -> some View {
-        return LoginView(viewModel: LoginViewModel())
+    static func makeLoginView(modelContainer: ModelContainer) -> some View {
+        return LoginView(viewModel: LoginViewModel(), modelContainer: modelContainer)
     }
 }

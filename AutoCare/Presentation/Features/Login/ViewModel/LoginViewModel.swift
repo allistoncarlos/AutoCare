@@ -57,7 +57,7 @@ class LoginViewModel: ObservableObject {
 
 extension LoginViewModel {
     @MainActor
-    func homeView(modelContext: ModelContext) -> some View {
-        return LoginRouter.makeHomeView(modelContext: modelContext)
+    func homeView(modelContainer: ModelContainer) -> some View {
+        return LoginRouter.makeHomeView(modelContainer: modelContainer)
     }
 }

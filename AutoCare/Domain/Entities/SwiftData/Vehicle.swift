@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Vehicle: Syncable {
+final class Vehicle: Syncable, Sendable {
     var id: String?
     var name: String = ""
     var brand: String = ""

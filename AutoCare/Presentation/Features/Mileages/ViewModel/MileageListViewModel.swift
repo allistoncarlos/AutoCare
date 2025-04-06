@@ -19,9 +19,7 @@ extension MileageListView {
 
         private var modelContext: ModelContext
         private var cancellable = Set<AnyCancellable>()
-        
-        @Injected(\.vehicleMileageRepository) private var repository: VehicleMileageRepositoryProtocol
-        
+
         init(
             modelContext: ModelContext,
             selectedVehicle: Vehicle
@@ -58,7 +56,7 @@ extension MileageListView {
             do {
                 await MainActor.run { state = .loading }
                 
-                let result = try SwiftDataManager.shared.fetch<VehicleMileage>(sortBy: [SortDescriptor(\VehicleMileage.date, order: .reverse)])
+                let result: [VehicleMileage] = try SwiftDataManager.shared.fetch(sortBy: [SortDescriptor(\VehicleMileage.date, order: .reverse)])
                 
                 await MainActor.run { state = .successVehicleMileages(result) }
             } catch {

@@ -82,7 +82,7 @@ extension VehicleEditView {
         func fetchData() async {
             do {
                 state = .loading
-                let vehicleTypes: [VehicleType] = try SwiftDataManager.shared.fetch<VehicleType>(sortBy: [])
+                let vehicleTypes: [VehicleType] = try SwiftDataManager.shared.fetch()
                 state = .successVehicleTypes(vehicleTypes)
             } catch {
                 print(error.localizedDescription)

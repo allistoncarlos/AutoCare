@@ -59,13 +59,4 @@ struct AutoCareApp: SwiftUI.App {
             // TODO: SALVAR EM ALGUM LUGAR O TIMESTAMP, ACHO QUE EM USERDEFAULTS (Ver o que fazer com esse TIMESTAMP)
         }
     }
-    
-//    @MainActor
-//    private func resultView() -> AnyView {
-//        return KeychainDataSource.hasValidToken() ?
-//        AnyView(LoginRouter.makeHomeView(modelContext: SwiftDataManager.shared.container.mainContext)) :
-//            AnyView(LoginRouter.makeLoginView())
-//    }
-    
-    
 }

@@ -190,7 +190,7 @@ struct MileageEditView: View {
 #Preview {
     MileageEditView(
         viewModel: MileageEditView.ViewModel(
-            modelContext: SwiftDataManager.shared.previewModelContext,
+            modelContext: SwiftDataManager.shared.previewModelContainer.mainContext,
             vehicleMileage: VehicleMileage(
                 id: "123",
                 date: Date(),
