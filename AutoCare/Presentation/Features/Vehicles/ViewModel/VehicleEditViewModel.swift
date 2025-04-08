@@ -49,6 +49,8 @@ extension VehicleEditView {
         
         @FormField(validator: NonEmptyValidator(message: "Campo Odômetro obrigatório"))
         var odometer: String = "" { didSet { self.triggerValidation()} }
+        
+        let isDefault: Bool = true // TODO: Permitir que o usuário marque um carro como favorito, retirando o favorito dos outros
 
         // MARK: - Validations
         lazy var nameValidation = _name.validation(manager: manager)
@@ -110,6 +112,7 @@ extension VehicleEditView {
                         year: year,
                         licensePlate: licensePlate,
                         odometer: odometer,
+                        isDefault: isDefault,
                         vehicleTypeId: selectedVehicleType
                     )
                 }
@@ -143,6 +146,7 @@ extension VehicleEditView {
                         year: year,
                         licensePlate: licensePlate,
                         odometer: odometer,
+                        isDefault: isDefault,
                         vehicleTypeId: selectedVehicleType
                     )
                 }

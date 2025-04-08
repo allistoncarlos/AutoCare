@@ -15,6 +15,7 @@ struct VehicleResponse: Identifiable, Codable {
     var year: String
     var licensePlate: String
     var odometer: Int
+    var isDefault: Bool
     
     var vehicleType: VehicleTypeResponse
     
@@ -27,6 +28,7 @@ struct VehicleResponse: Identifiable, Codable {
             year: self.year,
             licensePlate: self.licensePlate,
             odometer: self.odometer,
+            isDefault: self.isDefault,
             
             vehicleTypeId: self.vehicleType.id
         )

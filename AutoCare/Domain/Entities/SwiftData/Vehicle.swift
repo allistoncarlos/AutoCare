@@ -17,6 +17,7 @@ final class Vehicle: Syncable, Sendable {
     var year: String = ""
     var licensePlate: String = ""
     var odometer: Int = 0
+    var isDefault: Bool
 
     var vehicleTypeId: String
     
@@ -30,6 +31,8 @@ final class Vehicle: Syncable, Sendable {
         year: String,
         licensePlate: String,
         odometer: Int,
+        isDefault: Bool,
+        
         vehicleTypeId: String,
         
         synced: Bool = false
@@ -41,6 +44,8 @@ final class Vehicle: Syncable, Sendable {
         self.year = year
         self.licensePlate = licensePlate
         self.odometer = odometer
+        self.isDefault = isDefault
+        
         self.vehicleTypeId = vehicleTypeId
         
         self.synced = synced
@@ -55,6 +60,7 @@ final class Vehicle: Syncable, Sendable {
             year: year,
             licensePlate: licensePlate,
             odometer: odometer,
+            isDefault: isDefault,
             vehicleTypeId: vehicleTypeId
         )
     }

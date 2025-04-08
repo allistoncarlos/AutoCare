@@ -112,6 +112,7 @@ struct MileageListView: View {
                 year: "2021",
                 licensePlate: "AAA-1C34",
                 odometer: 0,
+                isDefault: true,
                 vehicleTypeId: "1"
             )
         )

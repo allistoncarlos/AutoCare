@@ -15,6 +15,7 @@ struct VehicleRequest: Identifiable, Codable {
     var year: String
     var licensePlate: String
     var odometer: Int
+    var isDefault: Bool
     var vehicleTypeId: String
 
     enum CodingKeys: String, CodingKey {
@@ -25,6 +26,7 @@ struct VehicleRequest: Identifiable, Codable {
         case year
         case licensePlate
         case odometer
+        case isDefault
         case vehicleTypeId
     }
     
@@ -36,6 +38,7 @@ struct VehicleRequest: Identifiable, Codable {
         year: String,
         licensePlate: String,
         odometer: Int,
+        isDefault: Bool,
         vehicleTypeId: String
     ) {
         self.id = id
@@ -45,6 +48,7 @@ struct VehicleRequest: Identifiable, Codable {
         self.year = year
         self.licensePlate = licensePlate
         self.odometer = odometer
+        self.isDefault = isDefault
         self.vehicleTypeId = vehicleTypeId
     }
 }

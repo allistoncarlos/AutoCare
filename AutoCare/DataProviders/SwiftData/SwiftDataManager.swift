@@ -121,33 +121,7 @@ final class SwiftDataManager {
         await actor.save(id: id, item: item)
     }
     
-//    func importData<T: PersistentModel>(_ data: [T]) throws {
-//        try SwiftDataManager.shared.context.delete(model: T.self)
-//        
-//        data.forEach { item in
-//            SwiftDataManager.shared.context.insert(item)
-//        }
-//    }
     func importData<T: PersistentModel>(_ data: [T]) async throws {
         try await actor.importData(data)
     }
-    
-    // TODO: Será se essa func precisa mesmo? o que ela tá syncando?
-//    func syncData() async throws {
-//        self.schema.entities.forEach { element in
-//            print(element)
-//        }
-//    }
-    
-    
-    
-//    private func createUpdateDescriptor<T: PersistentModel>(for id: String) -> FetchDescriptor<T> {
-//        var descriptor = FetchDescriptor<T>(predicate: #Predicate { item in
-//            item.id == id
-//        })
-//        
-//        descriptor.fetchLimit = 1
-//        
-//        return descriptor
-//    }
 }
