@@ -12,12 +12,12 @@ import SwiftData
 enum MileagesRouter {
     static func makeEditMileageView(
         navigationPath: Binding<NavigationPath>,
-        modelContext: ModelContext,
+        modelContainer: ModelContainer,
         vehicleId: String,
         vehicleMileage: VehicleMileage?
     ) -> some View {
         let viewModel = MileageEditView.ViewModel(
-            modelContext: modelContext,
+            modelContainer: modelContainer,
             vehicleMileage: vehicleMileage,
             vehicleId: vehicleId
         )

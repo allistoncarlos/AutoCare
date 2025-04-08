@@ -7,10 +7,9 @@
 
 import SwiftUI
 import TTProgressHUD
+import SwiftData
 
 struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext
-    
     @ObservedObject var viewModel: HomeView.ViewModel
     @State private var isLoading = false
     @State private var isNewVehiclePresented = false
@@ -23,11 +22,15 @@ struct HomeView: View {
     @State private var stateStore = HomeView.ViewModel.ViewModelState()
     @State private var state: HomeState = .idle
     
+    init(viewModel: HomeView.ViewModel) {
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         TabView {
             if let selectedVehicle = selectedVehicle {
                 HomeRouter.makeMileageListView(
-                    modelContext: modelContext,
+                    modelContainer: viewModel.modelContainer,
                     selectedVehicle: selectedVehicle
                 )
                 .tabItem {
@@ -75,5 +78,7 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeView.ViewModel(modelContainer: SwiftDataManager.shared.previewModelContainer))
+    HomeView(
+        viewModel: HomeView.ViewModel(modelContainer: SwiftDataManager.shared.previewModelContainer),
+    )
 }

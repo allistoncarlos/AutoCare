@@ -20,7 +20,7 @@ extension MileageEditView {
         var previousMileage: VehicleMileage?
         
         private var cancellable = Set<AnyCancellable>()
-        private var modelContext: ModelContext
+        private var modelContainer: ModelContainer
         private var vehicleId: String
         
         @Published var isFormValid = false
@@ -48,11 +48,11 @@ extension MileageEditView {
         lazy var totalCostValidation = _totalCost.validation(manager: manager)
         
         init(
-            modelContext: ModelContext,
+            modelContainer: ModelContainer,
             vehicleMileage: VehicleMileage?,
             vehicleId: String
         ) {
-            self.modelContext = modelContext
+            self.modelContainer = modelContainer
             self.vehicleMileage = vehicleMileage
             self.vehicleId = vehicleId
             
@@ -144,10 +144,7 @@ extension MileageEditView {
                     complete: complete,
                     vehicleId: vehicleId
                 )
-                    
-//                isConnected ?
-//                    await saveRemote(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage) :
-//                    saveLocal(id: resultVehicleMileage.id, vehicleMileage: resultVehicleMileage)
+
                 await SwiftDataManager.shared.save(item: resultVehicleMileage)
                 
                 state = .successSave
@@ -164,12 +161,12 @@ extension MileageEditView {
             }
         }
         
-        private func saveLocal(id: String? = nil, vehicleMileage: VehicleMileage) {
+        private func saveLocal(id: String? = nil, vehicleMileage: VehicleMileage) async {
             do {
                 if let id {
-                    try update(id: id, vehicleMileage: vehicleMileage)
+                    try await update(id: id, vehicleMileage: vehicleMileage)
                 } else {
-                    try insert(vehicleMileage: vehicleMileage)
+                    try await insert(vehicleMileage: vehicleMileage)
                 }
                 
                 state = .successSave
@@ -179,23 +176,25 @@ extension MileageEditView {
             }
         }
         
-        private func update(id: String, vehicleMileage: VehicleMileage) throws {
+        private func update(id: String, vehicleMileage: VehicleMileage) async throws {
             let descriptor = createUpdateDescriptor(for: id)
             
-            let result = try modelContext.fetch(descriptor)
+            // TODO: ORGANIZAR ISSO AQUI, DE ACORDO COM HOMEVIEWMODEL/ACTOR/STATESTORE
+            let result = try await modelContainer.mainContext.fetch(descriptor)
             
             if result.count == 1, let vehicleMileageResult = result.first {
                 vehicleMileageResult.synced = false
-                try modelContext.save()
+                try await modelContainer.mainContext.save()
                 state = .successSave
             } else {
                 state = .error
             }
         }
         
-        private func insert(vehicleMileage: VehicleMileage) throws {
-            modelContext.insert(vehicleMileage)
-            try modelContext.save()
+        private func insert(vehicleMileage: VehicleMileage) async throws {
+            // TODO: ORGANIZAR ISSO AQUI, DE ACORDO COM HOMEVIEWMODEL/ACTOR/STATESTORE
+            await modelContainer.mainContext.insert(vehicleMileage)
+            try await modelContainer.mainContext.save()
             
             state = .successSave
         }

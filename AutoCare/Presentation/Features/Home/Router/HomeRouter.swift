@@ -30,12 +30,12 @@ enum HomeRouter {
     }
     
     static func makeMileageListView(
-        modelContext: ModelContext,
+        modelContainer: ModelContainer,
         selectedVehicle: Vehicle
     ) -> some View {
         return MileageListView(
             viewModel: MileageListView.ViewModel(
-                modelContext: modelContext,
+                modelContainer: modelContainer,
                 selectedVehicle: selectedVehicle
             )
         )

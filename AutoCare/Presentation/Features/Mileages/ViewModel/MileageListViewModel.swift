@@ -11,34 +11,66 @@ import Combine
 import SwiftData
 import Factory
 
-extension MileageListView {
-    class ViewModel: ObservableObject {
-        @Published var state: MileageListState = .idle
-        @Published var vehicleMileages = [VehicleMileage]()
-        @Published var selectedVehicle: Vehicle
+extension MileageListView.ViewModel {
+    actor ViewModelState {
+        let statePublisher = CurrentValueSubject<MileageListState, Never>(.idle)
+        let selectedVehiclePublisher = PassthroughSubject<Vehicle, Never>()
+        let vehicleMileagesPublisher = PassthroughSubject<[VehicleMileage], Never>()
 
-        private var modelContext: ModelContext
-        private var cancellable = Set<AnyCancellable>()
+        var cancellable = Set<AnyCancellable>()
+        var networkConnectivity = NetworkConnectivity()
 
-        init(
-            modelContext: ModelContext,
-            selectedVehicle: Vehicle
-        ) {
-            self.modelContext = modelContext
-            self.selectedVehicle = selectedVehicle
-            
-            $state
-                .receive(on: RunLoop.main)
-                .sink { [weak self] state in
-                    switch state {
-                    case let .successVehicleMileages(vehicleMileages):
-                        self?.vehicleMileages = vehicleMileages
-                    default:
-                        break
-                    }
-                }.store(in: &cancellable)
+        func setState(_ newState: MileageListState) {
+            statePublisher.send(newState)
+        }
+
+        func setVehicle(_ vehicle: Vehicle) {
+            selectedVehiclePublisher.send(vehicle)
         }
         
+        func setVehicleMileages(_ vehicleMileages: [VehicleMileage]) {
+            vehicleMileagesPublisher.send(vehicleMileages)
+        }
+        
+        func store(_ cancellable: AnyCancellable) {
+            self.cancellable.insert(cancellable)
+        }
+    }
+}
+
+extension MileageListView {
+    class ViewModel: ObservableObject {
+        let modelContainer: ModelContainer
+        
+        let stateStore = ViewModelState()
+        
+        private let selectedVehicle: Vehicle
+
+        init(
+            modelContainer: ModelContainer,
+            selectedVehicle: Vehicle
+        ) {
+            self.modelContainer = modelContainer
+            self.selectedVehicle = selectedVehicle
+
+            Task {
+                let cancellable = await stateStore.statePublisher
+                    .sink { [weak self] state in
+                        switch state {
+                        case let .successVehicleMileages(vehicleMileages):
+                            Task {
+                                await self?.stateStore.setVehicleMileages(vehicleMileages)
+                            }
+                        default:
+                            break
+                        }
+                    }
+
+                await stateStore.store(cancellable)
+            }
+        }
+
+        @MainActor
         func editMileageView(
             navigationPath: Binding<NavigationPath>,
             vehicleId: String,
@@ -46,7 +78,7 @@ extension MileageListView {
         ) -> some View {
             return MileagesRouter.makeEditMileageView(
                 navigationPath: navigationPath,
-                modelContext: modelContext,
+                modelContainer: modelContainer,
                 vehicleId: vehicleId,
                 vehicleMileage: vehicleMileage
             )
@@ -54,14 +86,15 @@ extension MileageListView {
         
         func fetchData() async {
             do {
-                await MainActor.run { state = .loading }
+                await stateStore.setState(.loading)
                 
                 let result: [VehicleMileage] = try SwiftDataManager.shared.fetch(sortBy: [SortDescriptor(\VehicleMileage.date, order: .reverse)])
                 
-                await MainActor.run { state = .successVehicleMileages(result) }
+                await stateStore.setState(.successVehicleMileages(result))
+                await self.stateStore.setVehicle(selectedVehicle)
             } catch {
                 print(error.localizedDescription)
-                state = .error
+                await stateStore.setState(.error)
             }
         }
     }

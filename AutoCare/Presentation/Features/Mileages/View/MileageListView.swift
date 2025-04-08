@@ -10,26 +10,31 @@ import TTProgressHUD
 import SwiftData
 
 struct MileageListView: View {
-    @Environment(\.modelContext) private var modelContext
-    
     @ObservedObject var viewModel: ViewModel
     @State private var isLoading = true
     @State private var isNewVehiclePresented = false
 
     @State private var presentedMileages = NavigationPath()
+    @State private var vehicleMileages = [VehicleMileage]()
+    @State private var selectedVehicle: Vehicle?
     
-    @StateObject var networkConnectivity = NetworkConnectivity()
+    @State private var stateStore = MileageListView.ViewModel.ViewModelState()
+    @State private var state: MileageListState = .idle
+    
+    init(viewModel: MileageListView.ViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         NavigationStack(path: $presentedMileages) {
             ScrollView {
-                ForEach(viewModel.vehicleMileages, id: \.id) { vehicleMileage in
+                ForEach(vehicleMileages, id: \.id) { vehicleMileage in
                     NavigationLink(value: vehicleMileage) {
                         MileageListItem(vehicleMileage: vehicleMileage)
                     }
                 }
             }
-            .navigationView(title: viewModel.selectedVehicle.name)
+            .navigationView(title: selectedVehicle?.name ?? "")
             .toolbar {
                 Button(action: {}) {
                     NavigationLink(value: String()) {
@@ -39,12 +44,12 @@ struct MileageListView: View {
                 .disabled(isLoading)
             }
             .navigationDestination(for: String.self) { _ in
-                if let id = viewModel.selectedVehicle.id {
+                if let id = selectedVehicle?.id {
                     navigateToEditMileageView(vehicleId: id)
                 }
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
-                if let id = viewModel.selectedVehicle.id {
+                if let id = selectedVehicle?.id {
                     navigateToEditMileageView(
                         vehicleId: id,
                         vehicleMileage: vehicleMileage
@@ -57,12 +62,12 @@ struct MileageListView: View {
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
         .task {
-            await viewModel.fetchData()
+            await syncData()
         }
-        .onChange(of: viewModel.state, { _, newState in
-            isLoading = newState == .loading
-            
-            isNewVehiclePresented = newState == .newVehicle
+        .onChange(of: state, { _, newValue in
+            isLoading = newValue == .loading
+
+            isNewVehiclePresented = newValue == .newVehicle
         })
         .onChange(of: presentedMileages) {
             oldValue,
@@ -73,6 +78,14 @@ struct MileageListView: View {
                 }
             }
         }
+    }
+    
+    func syncData() async {
+        await stateStore.store(await viewModel.stateStore.statePublisher.sink { self.state = $0})
+        await stateStore.store(await viewModel.stateStore.selectedVehiclePublisher.sink { self.selectedVehicle = $0 })
+        await stateStore.store(await viewModel.stateStore.vehicleMileagesPublisher.sink { self.vehicleMileages = $0 })
+        
+        await viewModel.fetchData()
     }
     
     func navigateToEditMileageView(
@@ -90,7 +103,7 @@ struct MileageListView: View {
 #Preview {
     MileageListView(
         viewModel: MileageListView.ViewModel(
-            modelContext: SwiftDataManager.shared.previewModelContainer.mainContext,
+            modelContainer: SwiftDataManager.shared.previewModelContainer,
             selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",
