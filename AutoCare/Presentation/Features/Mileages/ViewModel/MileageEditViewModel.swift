@@ -94,6 +94,7 @@ extension MileageEditView {
                 )
 
                 let result = try modelContext.fetch(descriptor)
+                let result = try await modelContainer.mainContext.fetch(descriptor)
                 var lastVehicleMileage: VehicleMileage? = nil
                 
                 if let vehicleMileage {

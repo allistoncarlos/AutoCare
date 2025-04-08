@@ -88,7 +88,7 @@ extension MileageListView {
             do {
                 await stateStore.setState(.loading)
                 
-                let result: [VehicleMileage] = try SwiftDataManager.shared.fetch(sortBy: [SortDescriptor(\VehicleMileage.date, order: .reverse)])
+                let result: [VehicleMileage] = try await SwiftDataManager.shared.fetch(sortBy: [SortDescriptor(\VehicleMileage.date, order: .reverse)])
                 
                 await stateStore.setState(.successVehicleMileages(result))
                 await self.stateStore.setVehicle(selectedVehicle)

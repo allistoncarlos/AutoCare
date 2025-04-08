@@ -25,11 +25,19 @@ actor SwiftDataActor {
     }
     
     func importData<T: PersistentModel>(_ data: [T]) throws {
-        try SwiftDataManager.shared.context.delete(model: T.self)
+        try modelContext.delete(model: T.self)
         
         data.forEach { item in
             save(item: item)
         }
+    }
+    
+    func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) throws -> [T] {
+        let descriptor = FetchDescriptor<T>(sortBy: sortBy)
+        
+        let result = try modelContext.fetch(descriptor)
+        
+        return result
     }
     
     private func update<T: PersistentModel>(id: String, item: T) throws {
@@ -44,8 +52,8 @@ actor SwiftDataActor {
     }
     
     private func insert<T: PersistentModel>(item: T) throws {
-        SwiftDataManager.shared.context.insert(item)
-        try SwiftDataManager.shared.context.save()
+        modelContext.insert(item)
+        try modelContext.save()
     }
 }
 
@@ -80,16 +88,12 @@ final class SwiftDataManager {
         }
     }
     
-    func fetch<T: PersistentModel>() throws -> [T] {
-        return try fetch(sortBy: [])
+    func fetch<T: PersistentModel>() async throws -> [T] {
+        return try await fetch(sortBy: [])
     }
     
-    func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) throws -> [T] {
-        let descriptor = FetchDescriptor<T>(sortBy: sortBy)
-        
-        let result = try SwiftDataManager.shared.context.fetch(descriptor)
-        
-        return result
+    func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) async throws -> [T] {
+        try await actor.fetch(sortBy: sortBy)
     }
     
     func fetchUnsyncedEntities() throws -> [any PersistentModel] {
@@ -111,15 +115,6 @@ final class SwiftDataManager {
         unsyncedEntities.append(contentsOf: vehicleMileages)
         
         return unsyncedEntities
-    }
-    
-    // TODO: Testar bem esse get aqui, era pra ter um sortDescriptor, mas tô tentando tirar ele... ver se ele retorna o último ou o primeiro
-    func get<T: PersistentModel>() throws -> T? {
-        let descriptor = FetchDescriptor<T>()
-        
-        let result = try SwiftDataManager.shared.context.fetch(descriptor)
-        
-        return result.first
     }
     
     func save<T: PersistentModel>(id: String? = nil, item: T) async {
