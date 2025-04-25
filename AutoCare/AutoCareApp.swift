@@ -29,6 +29,7 @@ struct AutoCareApp: SwiftUI.App {
         WindowGroup {
             viewModel.resultView()
                 .task {
+                    await viewModel.syncData()
                     await viewModel.scheduleAppSync()
                     
                     do {

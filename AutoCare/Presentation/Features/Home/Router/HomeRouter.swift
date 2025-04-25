@@ -11,13 +11,13 @@ import PulseUI
 
 enum HomeRouter {
     static func makeEditVehicleView(
-        modelContext: ModelContext,
+        modelContainer: ModelContainer,
         vehicleId: String?,
         isPresented: Binding<Bool>
     ) -> some View {
         return VehicleEditView(
             viewModel: VehicleEditView.ViewModel(
-                modelContext: modelContext,
+                modelContainer: modelContainer,
                 vehicleId: vehicleId
             ),
             isPresented: isPresented

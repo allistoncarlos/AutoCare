@@ -73,7 +73,7 @@ extension HomeView {
             isPresented: Binding<Bool>
         ) -> some View {
             return HomeRouter.makeEditVehicleView(
-                modelContext: modelContainer.mainContext,
+                modelContainer: modelContainer,
                 vehicleId: vehicleId,
                 isPresented: isPresented
             )

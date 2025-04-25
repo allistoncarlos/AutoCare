@@ -48,6 +48,7 @@ extension AutoCareApp {
         }
         
         func photoUploadNotification() -> UNNotificationRequest {
+            // TODO: ORGANIZAR A NOTIFICAÇÃO
             let content = UNMutableNotificationContent()
             content.title = "Sync executado"
             content.body = "A data foi \(Date.now)"
@@ -75,11 +76,11 @@ extension AutoCareApp {
                 
                 for model in unsyncedEntities {
                     if let vehicleMileage = model as? VehicleMileage {
-                        await vehicleMileageRepository.save(id: nil, vehicleMileage: vehicleMileage)
+                        await vehicleMileageRepository.save(id: vehicleMileage.id, vehicleMileage: vehicleMileage)
                     }
                     
                     if let vehicle = model as? Vehicle {
-                        await vehicleRepository.save(id: nil, vehicle: vehicle)
+                        await vehicleRepository.save(id: vehicle.id, vehicle: vehicle)
                     }
                 }
                 

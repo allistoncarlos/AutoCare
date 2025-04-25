@@ -93,7 +93,7 @@ extension MileageEditView {
                     sortBy: [SortDescriptor(\.date, order: .reverse)]
                 )
 
-                let result = try modelContext.fetch(descriptor)
+                // TODO: ORGANIZAR ISSO AQUI, DE ACORDO COM HOMEVIEWMODEL/ACTOR/STATESTORE
                 let result = try await modelContainer.mainContext.fetch(descriptor)
                 var lastVehicleMileage: VehicleMileage? = nil
                 
@@ -117,38 +117,43 @@ extension MileageEditView {
         }
         
         func save(isConnected: Bool) async {
-            if manager.triggerValidation() {
-                state = .loading
-                
-                let calculatedMileage = calculateMileage() ?? 0
+            do {
+                if manager.triggerValidation() {
+                    state = .loading
                     
-                guard
-                    let odometer,
-                    let odometer = Int(odometer),
-                    let liters,
-                    let fuelCost,
-                    let fuelCost = Decimal(string: fuelCost)
-                else {
-                    state = .error
-                    return
-                }
-                
-                let resultVehicleMileage = vehicleMileage ?? VehicleMileage(
-                    id: nil,
-                    date: date,
-                    totalCost: Decimal(string: totalCost)!,
-                    odometer: odometer,
-                    odometerDifference: odometerDifference ?? 0,
-                    liters: liters,
-                    fuelCost: fuelCost,
-                    calculatedMileage: calculatedMileage,
-                    complete: complete,
-                    vehicleId: vehicleId
-                )
+                    let calculatedMileage = calculateMileage() ?? 0
+                        
+                    guard
+                        let odometer,
+                        let odometer = Int(odometer),
+                        let liters,
+                        let fuelCost,
+                        let fuelCost = Decimal(string: fuelCost)
+                    else {
+                        state = .error
+                        return
+                    }
+                    
+                    let resultVehicleMileage = vehicleMileage ?? VehicleMileage(
+                        id: nil,
+                        date: date,
+                        totalCost: Decimal(string: totalCost)!,
+                        odometer: odometer,
+                        odometerDifference: odometerDifference ?? 0,
+                        liters: liters,
+                        fuelCost: fuelCost,
+                        calculatedMileage: calculatedMileage,
+                        complete: complete,
+                        vehicleId: vehicleId
+                    )
 
-                await SwiftDataManager.shared.save(item: resultVehicleMileage)
-                
-                state = .successSave
+                    try await SwiftDataManager.shared.save(item: resultVehicleMileage)
+                    
+                    state = .successSave
+                }
+            } catch {
+                print(error.localizedDescription)
+                state = .error
             }
         }
         

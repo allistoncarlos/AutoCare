@@ -10,25 +10,21 @@ import Foundation
 
 @ModelActor
 actor SwiftDataActor {
-    func save<T: PersistentModel>(id: String? = nil, item: T) {
-        do {
-            if let id {
-                try update(id: id, item: item)
-            } else {
-                try insert(item: item)
-            }
-            
-            try? modelContext.save()
-        } catch {
-            print(error.localizedDescription)
+    func save<T: PersistentModel>(id: String? = nil, item: T) throws {
+        if let id {
+            try update(id: id, item: item)
+        } else {
+            try insert(item: item)
         }
+        
+        try modelContext.save()
     }
     
     func importData<T: PersistentModel>(_ data: [T]) throws {
         try modelContext.delete(model: T.self)
         
-        data.forEach { item in
-            save(item: item)
+        try data.forEach { item in
+            try save(item: item)
         }
     }
     
@@ -38,6 +34,18 @@ actor SwiftDataActor {
         let result = try modelContext.fetch(descriptor)
         
         return result
+    }
+    
+    func fetch<T: PersistentModel>(where predicate: Predicate<T>) throws -> [T] {
+        let descriptor = FetchDescriptor<T>(predicate: predicate, sortBy: [])
+        
+        let result = try modelContext.fetch(descriptor)
+        
+        return result
+    }
+    
+    func fetch<T: PersistentModel>(where predicate: Predicate<T>) throws -> T? {
+        return try fetch(where: predicate).first
     }
     
     private func update<T: PersistentModel>(id: String, item: T) throws {
@@ -96,6 +104,14 @@ final class SwiftDataManager {
         try await actor.fetch(sortBy: sortBy)
     }
     
+    func fetch<T: PersistentModel>(where predicate: Predicate<T>) async throws -> [T] {
+        try await actor.fetch(where: predicate)
+    }
+    
+    func fetch<T: PersistentModel>(where predicate: Predicate<T>) async throws -> T? {
+        try await actor.fetch(where: predicate)
+    }
+    
     func fetchUnsyncedEntities() throws -> [any PersistentModel] {
         var unsyncedEntities: [any PersistentModel] = []
         
@@ -117,8 +133,8 @@ final class SwiftDataManager {
         return unsyncedEntities
     }
     
-    func save<T: PersistentModel>(id: String? = nil, item: T) async {
-        await actor.save(id: id, item: item)
+    func save<T: PersistentModel>(id: String? = nil, item: T) async throws {
+        try await actor.save(id: id, item: item)
     }
     
     func importData<T: PersistentModel>(_ data: [T]) async throws {
