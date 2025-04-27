@@ -46,33 +46,16 @@ extension VehicleEditView.ViewModel {
 extension VehicleEditView {
     final class ViewModel: ObservableObject, Sendable {
         let modelContainer: ModelContainer
-        
-        // TODO: REMOVER ESSA GALERA AQUI
-        //@Published var vehicleId: String? = nil
-//        @Published var isFormValid = false
-        
         let stateStore = ViewModelState()
-        
-        var selectedVehicle: Vehicle?
-        
+
         let isDefault: Bool = true // TODO: Permitir que o usuário marque um carro como favorito, retirando o favorito dos outros
 
-        // MARK: - Validations
-//        lazy var nameValidation = _name.validation(manager: manager)
-//        lazy var selectedVehicleTypeValidation = _selectedVehicleType.validation(manager: manager)
-//        lazy var brandValidation = _brand.validation(manager: manager)
-//        lazy var modelValidation = _model.validation(manager: manager)
-//        lazy var yearValidation = _year.validation(manager: manager)
-//        lazy var licensePlateValidation = _licensePlate.validation(manager: manager)
-//        lazy var odometerValidation = _odometer.validation(manager: manager)
-        
         // MARK: - Init
         init(
             modelContainer: ModelContainer,
             vehicleId: String?
         ) {
             self.modelContainer = modelContainer
-//            self.vehicleId = vehicleId
 
             Task {
                 let cancellable = await stateStore.statePublisher
@@ -88,8 +71,6 @@ extension VehicleEditView {
                             }
                         case let .successVehicle(vehicle):
                             Task {
-                                // TODO: CRIAR MÉTODO SETFORMDATA??? OU LEVAR PRO STATESTORE? TALVEZ NA VIEW...
-                                
                                 await self?.stateStore.setVehicle(vehicle)
                             }
                         default:
@@ -121,9 +102,7 @@ extension VehicleEditView {
                 let result: Vehicle? = try await SwiftDataManager.shared.fetch(
                     where: #Predicate<Vehicle> { $0.id == vehicleId }
                 )
-                
-                selectedVehicle = result
-                
+
                 if let result {
                     await stateStore.setState(.successVehicle(result))
                 }
@@ -132,10 +111,6 @@ extension VehicleEditView {
                 await stateStore.setState(.error)
             }
         }
-        
-//        private func triggerValidation() {
-//            isFormValid = manager.triggerValidation()
-//        }
 
         func save(
             odometer: String,
@@ -147,13 +122,12 @@ extension VehicleEditView {
             isDefault: Bool,
             vehicleTypeId: String
         ) async {
-//        func save() async {
             do {
                 await stateStore.setState(.loading)
                 
                 guard let odometer = Int(odometer) else { return }
                 
-                let vehicle = selectedVehicle == nil ?
+                let vehicle =
                     Vehicle(
                         name: name,
                         brand: brand,
@@ -163,9 +137,8 @@ extension VehicleEditView {
                         odometer: odometer,
                         isDefault: isDefault,
                         vehicleTypeId: vehicleTypeId
-                    ) : selectedVehicle // TODO: PRO UPDATE, ATUALIZAR OS VALORES EM SELECTEDVEHICLE??? OU USAR NEWVEHICLE???
+                    )
 
-                guard let vehicle else { return }
                 vehicle.synced = false
 
                 try await SwiftDataManager.shared.save(id: vehicle.id, item: vehicle)

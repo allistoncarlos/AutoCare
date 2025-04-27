@@ -76,10 +76,7 @@ struct VehicleEditView: View {
     }
     
     var title: String {
-        if let name = viewModel.selectedVehicle?.name {
-            return name
-        }
-        
+        // TODO: ORGANIZAR AO FAZER O UPDATE
         return ""
     }
 
