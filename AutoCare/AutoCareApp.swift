@@ -32,6 +32,10 @@ struct AutoCareApp: SwiftUI.App {
                     await viewModel.syncData()
                     await viewModel.scheduleAppSync()
                     
+                    if await !SwiftDataManager.shared.hasFetchedInitialData {
+                        await viewModel.fetchRemote()
+                    }
+                    
                     do {
                         if try await viewModel.requestAuthorizationForNotifications() {
                             await viewModel.notifySyncCompleted()
@@ -51,6 +55,7 @@ struct AutoCareApp: SwiftUI.App {
             await viewModel.scheduleAppSync()
             
             await viewModel.syncData()
+            await viewModel.fetchRemote()
             
             
             

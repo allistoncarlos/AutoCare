@@ -14,6 +14,7 @@ import Factory
 extension AutoCareApp {
     @MainActor
     class ViewModel: ObservableObject {
+        @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository: VehicleTypeRepositoryProtocol
         @Injected(\.vehicleRepository) private var vehicleRepository: VehicleRepositoryProtocol
         @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository: VehicleMileageRepositoryProtocol
         
@@ -86,7 +87,61 @@ extension AutoCareApp {
                 
                 await notifySyncCompleted()
             } catch {
-                print(error.localizedDescription)
+                print(error)
+            }
+        }
+        
+        func fetchRemote() async {
+            var vehicleTypes: [VehicleType] = []
+            var vehicles: [Vehicle] = []
+            
+            await withTaskGroup(of: Void.self) { group in
+                group.addTask {
+                    vehicleTypes = await self.vehicleTypeRepository.fetchData() ?? []
+                }
+                group.addTask {
+                    vehicles = await self.vehicleRepository.fetchData() ?? []
+                }
+            }
+            
+            var vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
+                for vehicle in vehicles {
+                    if let id = vehicle.id {
+                        group.addTask {
+                            return await self.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
+                        }
+                    }
+                }
+                
+                var collected: [VehicleMileage] = []
+                for await result in group {
+                    collected.append(contentsOf: result)
+                }
+                return collected
+            }
+            
+            vehicleTypes = vehicleTypes.map { vehicleType in
+                vehicleType.synced = true
+                return vehicleType
+            }
+            
+            vehicles = vehicles.map { vehicle in
+                vehicle.synced = true
+                return vehicle
+            }
+            
+            vehicleMileages = vehicleMileages.map { vehicleMileage in
+                vehicleMileage.synced = true
+                return vehicleMileage
+            }
+            
+            do {
+                try await SwiftDataManager.shared.importData(vehicleTypes)
+                try await SwiftDataManager.shared.importData(vehicles)
+                try await SwiftDataManager.shared.importData(vehicleMileages)
+            } catch {
+                // TODO: FUTURAMENTE UMA TELA DE LOG DE SYNC, TIPO O SYNCTIME?
+                print(error)
             }
         }
     }

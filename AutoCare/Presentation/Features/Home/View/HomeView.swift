@@ -50,6 +50,13 @@ struct HomeView: View {
         .task {
             await syncData()
         }
+        .onChange(of: isNewVehiclePresented, { _, newValue in
+            if !newValue {
+                Task {
+                    await viewModel.fetchData()
+                }
+            }
+        })
         .onChange(of: state, { _, newValue in
             isLoading = newValue == .loading
 
