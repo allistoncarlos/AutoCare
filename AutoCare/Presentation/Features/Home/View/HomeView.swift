@@ -48,6 +48,7 @@ struct HomeView: View {
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
         .task {
+            await viewModel.requestAuthorizationForNotifications()
             await syncData()
         }
         .onChange(of: isNewVehiclePresented, { _, newValue in

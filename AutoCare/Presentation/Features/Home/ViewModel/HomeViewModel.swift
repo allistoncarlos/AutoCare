@@ -20,7 +20,7 @@ extension HomeView.ViewModel {
         var networkConnectivity = NetworkConnectivity()
         
         @Injected(\.vehicleTypeRepository) var vehicleTypeRepository: VehicleTypeRepositoryProtocol
-        @Injected(\.vehicleRepository) var repository: VehicleRepositoryProtocol
+        @Injected(\.vehicleRepository) var vehicleRepository: VehicleRepositoryProtocol
         @Injected(\.vehicleMileageRepository) var vehicleMileageRepository: VehicleMileageRepositoryProtocol
 
         func setState(_ newState: HomeState) {
@@ -52,7 +52,7 @@ extension HomeView {
                         switch state {
                         case let .successVehicle(vehicles):
                             Task {
-                                if await self?.stateStore.networkConnectivity.status != .connected && vehicles.isEmpty{
+                                if vehicles.isEmpty{
                                     await self?.stateStore.setState(.newVehicle)
                                 } else {
                                     await self?.stateStore.setVehicle(vehicles.first)
@@ -85,15 +85,11 @@ extension HomeView {
         
         func fetchData() async {
             do {
-//                if await stateStore.networkConnectivity.status != .connected {
-//                    try await fetchLocal()
-//                }
-//                else {
-//                    try await fetchRemote()
-//                }
-                
-                
                 await stateStore.setState(.loading)
+                
+                if await !SwiftDataManager.shared.hasFetchedInitialData {
+                    await fetchRemote()
+                }
                 
                 let result: [Vehicle] = try await SwiftDataManager.shared.fetch()
                 
@@ -105,64 +101,74 @@ extension HomeView {
             }
         }
         
-//        private func fetchLocal() async throws {
-//            await stateStore.setState(.loading)
-//            
-//            let result: [Vehicle] = try await SwiftDataManager.shared.fetch()
-//            
-//            await stateStore.setState(.successVehicle(result))
-//        }
+        @discardableResult func requestAuthorizationForNotifications() async -> Bool {
+            let notificationCenter = UNUserNotificationCenter.current()
+            let authorizationOptions: UNAuthorizationOptions = [.alert, .sound]
+
+            do {
+                let authorizationGranted = try await notificationCenter.requestAuthorization(options: authorizationOptions)
+                return authorizationGranted
+            } catch {
+                print(error)
+                
+                return false
+            }
+        }
         
-        // TODO: TIREI O FETCH REMOTE, E ACHO QUE DEVIA LEVAR PRA AUTOCAREVIEWMODEL, PRA FAZER O PRIMEIRO SYNC... NÃO TÁ PEGANDO O QUE PRECISA PRA RODAR O APP
-//        private func fetchRemote() async throws {
-//            var vehicleTypes: [VehicleType] = []
-//            var vehicles: [Vehicle] = []
-//            
-//            await withTaskGroup(of: Void.self) { group in
-//                group.addTask {
-//                    vehicleTypes = await self.stateStore.vehicleTypeRepository.fetchData() ?? []
-//                }
-//                group.addTask {
-//                    vehicles = await self.stateStore.repository.fetchData() ?? []
-//                }
-//            }
-//            
-//            var vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
-//                for vehicle in vehicles {
-//                    if let id = vehicle.id {
-//                        group.addTask {
-//                            return await self.stateStore.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
-//                        }
-//                    }
-//                }
-//                
-//                var collected: [VehicleMileage] = []
-//                for await result in group {
-//                    collected.append(contentsOf: result)
-//                }
-//                return collected
-//            }
-//            
-//            vehicleTypes = vehicleTypes.map { vehicleType in
-//                vehicleType.synced = true
-//                return vehicleType
-//            }
-//            
-//            vehicles = vehicles.map { vehicle in
-//                vehicle.synced = true
-//                return vehicle
-//            }
-//            
-//            vehicleMileages = vehicleMileages.map { vehicleMileage in
-//                vehicleMileage.synced = true
-//                return vehicleMileage
-//            }
-//            
-//            await stateStore.setState(vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles))
-//            
-//            try await SwiftDataManager.shared.importData(vehicleTypes)
-//            try await SwiftDataManager.shared.importData(vehicles)
-//            try await SwiftDataManager.shared.importData(vehicleMileages)
-//        }
+        func fetchRemote() async {
+            var vehicleTypes: [VehicleType] = []
+            var vehicles: [Vehicle] = []
+
+            await withTaskGroup(of: Void.self) { group in
+                group.addTask {
+                    vehicleTypes = await self.stateStore.vehicleTypeRepository.fetchData() ?? []
+                }
+                group.addTask {
+                    vehicles = await self.stateStore.vehicleRepository.fetchData() ?? []
+                }
+            }
+
+            var vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
+                for vehicle in vehicles {
+                    if let id = vehicle.id {
+                        group.addTask {
+                            return await self.stateStore.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
+                        }
+                    }
+                }
+
+                var collected: [VehicleMileage] = []
+                for await result in group {
+                    collected.append(contentsOf: result)
+                }
+                return collected
+            }
+
+            vehicleTypes = vehicleTypes.map { vehicleType in
+                vehicleType.synced = true
+                return vehicleType
+            }
+
+            vehicles = vehicles.map { vehicle in
+                vehicle.synced = true
+                return vehicle
+            }
+
+            vehicleMileages = vehicleMileages.map { vehicleMileage in
+                vehicleMileage.synced = true
+                return vehicleMileage
+            }
+            
+            await stateStore.setState(vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles))
+
+            do {
+                try await SwiftDataManager.shared.importData(vehicleTypes)
+                try await SwiftDataManager.shared.importData(vehicles)
+                try await SwiftDataManager.shared.importData(vehicleMileages)
+            } catch {
+                // TODO: FUTURAMENTE UMA TELA DE LOG DE SYNC, TIPO O SYNCTIME?
+                print(error)
+            }
+        }
     }
 }

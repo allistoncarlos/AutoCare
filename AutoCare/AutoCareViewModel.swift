@@ -36,20 +36,7 @@ extension AutoCareApp {
             print("Done Scheduling")
         }
         
-        func requestAuthorizationForNotifications() async throws -> Bool {
-            let notificationCenter = UNUserNotificationCenter.current()
-            let authorizationOptions: UNAuthorizationOptions = [.alert, .sound]
-
-            do {
-                let authorizationGranted = try await notificationCenter.requestAuthorization(options: authorizationOptions)
-                return authorizationGranted
-            } catch {
-                throw error
-            }
-        }
-        
-        func photoUploadNotification() -> UNNotificationRequest {
-            // TODO: ORGANIZAR A NOTIFICAÇÃO
+        func syncNotification() -> UNNotificationRequest {
             let content = UNMutableNotificationContent()
             content.title = "Sync executado"
             content.body = "A data foi \(Date.now)"
@@ -62,7 +49,7 @@ extension AutoCareApp {
         }
         
         func notifySyncCompleted() async {
-            let notificationRequest = photoUploadNotification()
+            let notificationRequest = syncNotification()
             do {
                 try await UNUserNotificationCenter.current().add(notificationRequest)
             }
@@ -87,60 +74,6 @@ extension AutoCareApp {
                 
                 await notifySyncCompleted()
             } catch {
-                print(error)
-            }
-        }
-        
-        func fetchRemote() async {
-            var vehicleTypes: [VehicleType] = []
-            var vehicles: [Vehicle] = []
-            
-            await withTaskGroup(of: Void.self) { group in
-                group.addTask {
-                    vehicleTypes = await self.vehicleTypeRepository.fetchData() ?? []
-                }
-                group.addTask {
-                    vehicles = await self.vehicleRepository.fetchData() ?? []
-                }
-            }
-            
-            var vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
-                for vehicle in vehicles {
-                    if let id = vehicle.id {
-                        group.addTask {
-                            return await self.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
-                        }
-                    }
-                }
-                
-                var collected: [VehicleMileage] = []
-                for await result in group {
-                    collected.append(contentsOf: result)
-                }
-                return collected
-            }
-            
-            vehicleTypes = vehicleTypes.map { vehicleType in
-                vehicleType.synced = true
-                return vehicleType
-            }
-            
-            vehicles = vehicles.map { vehicle in
-                vehicle.synced = true
-                return vehicle
-            }
-            
-            vehicleMileages = vehicleMileages.map { vehicleMileage in
-                vehicleMileage.synced = true
-                return vehicleMileage
-            }
-            
-            do {
-                try await SwiftDataManager.shared.importData(vehicleTypes)
-                try await SwiftDataManager.shared.importData(vehicles)
-                try await SwiftDataManager.shared.importData(vehicleMileages)
-            } catch {
-                // TODO: FUTURAMENTE UMA TELA DE LOG DE SYNC, TIPO O SYNCTIME?
                 print(error)
             }
         }

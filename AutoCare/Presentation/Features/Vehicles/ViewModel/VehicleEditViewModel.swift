@@ -10,6 +10,7 @@ import Combine
 import FormValidator
 import Factory
 import SwiftData
+import SwiftUICore
 
 extension VehicleEditView.ViewModel {
     actor ViewModelState {
@@ -120,7 +121,9 @@ extension VehicleEditView {
             year: String,
             licensePlate: String,
             isDefault: Bool,
-            vehicleTypeId: String
+            vehicleTypeId: String,
+            
+            isPresented: Binding<Bool>
         ) async {
             do {
                 await stateStore.setState(.loading)
@@ -142,8 +145,12 @@ extension VehicleEditView {
                 vehicle.synced = false
 
                 try await SwiftDataManager.shared.save(id: vehicle.id, item: vehicle)
-                
+
                 await stateStore.setState(.successSavedVehicle)
+                
+                await MainActor.run {
+                    isPresented.wrappedValue = false
+                }
             } catch {
                 print(error.localizedDescription)
                 await stateStore.setState(.error)

@@ -129,7 +129,9 @@ struct VehicleEditView: View {
                                     year: selectedYear,
                                     licensePlate: form.licensePlate,
                                     isDefault: true,
-                                    vehicleTypeId: form.selectedVehicleType
+                                    vehicleTypeId: form.selectedVehicleType,
+                                    
+                                    isPresented: $isPresented
                                 )
                         }
                     }
@@ -147,10 +149,6 @@ struct VehicleEditView: View {
         )
         .onChange(of: state, { _, newState in
             isLoading = newState == .loading
-            
-            if newState == .successSavedVehicle {
-                isPresented = false
-            }
         })
         .onChange(of: selectedYear, { _, newYear in
             form.year = newYear
@@ -161,7 +159,7 @@ struct VehicleEditView: View {
     }
     
     func syncData() async {
-        await stateStore.store(await viewModel.stateStore.statePublisher.sink { self.state = $0})
+        await stateStore.store(await viewModel.stateStore.statePublisher.sink { self.state = $0 })
         await stateStore.store(await viewModel.stateStore.vehicleTypesPublisher.sink { self.vehicleTypes = $0 })
         await stateStore.store(await viewModel.stateStore.selectedVehicleTypePublisher.sink { self.selectedVehicleType = $0.id })
         
