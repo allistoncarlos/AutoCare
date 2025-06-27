@@ -87,9 +87,7 @@ extension HomeView {
             do {
                 await stateStore.setState(.loading)
                 
-                if await !SwiftDataManager.shared.hasFetchedInitialData {
-                    await fetchRemote()
-                }
+                await fetchRemote()
                 
                 let result: [Vehicle] = try await SwiftDataManager.shared.fetch()
                 
@@ -144,21 +142,6 @@ extension HomeView {
                 return collected
             }
 
-            vehicleTypes = vehicleTypes.map { vehicleType in
-                vehicleType.synced = true
-                return vehicleType
-            }
-
-            vehicles = vehicles.map { vehicle in
-                vehicle.synced = true
-                return vehicle
-            }
-
-            vehicleMileages = vehicleMileages.map { vehicleMileage in
-                vehicleMileage.synced = true
-                return vehicleMileage
-            }
-            
             await stateStore.setState(vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles))
 
             do {

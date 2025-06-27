@@ -79,16 +79,7 @@ final class SwiftDataManager {
     private let actor: SwiftDataActor
     
     static let shared = SwiftDataManager()
-    
-    var hasFetchedInitialData: Bool {
-        get async {
-            do {
-                let result: [VehicleType] = try await actor.fetch(sortBy: [])
-                return !result.isEmpty
-            } catch { return false }
-        }
-    }
-    
+
     private init() {
         do {
             container = try ModelContainer(

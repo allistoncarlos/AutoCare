@@ -64,10 +64,12 @@ extension AutoCareApp {
                 
                 for model in unsyncedEntities {
                     if let vehicleMileage = model as? VehicleMileage {
+                        vehicleMileage.synced = true
                         await vehicleMileageRepository.save(id: vehicleMileage.id, vehicleMileage: vehicleMileage)
                     }
                     
                     if let vehicle = model as? Vehicle {
+                        vehicle.synced = true
                         await vehicleRepository.save(id: vehicle.id, vehicle: vehicle)
                     }
                 }
