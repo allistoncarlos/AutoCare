@@ -13,6 +13,7 @@ enum APIConstants {
     static let vehicleTypeResource = "vehicleType"
     static let vehicleResource = "vehicle"
     static let vehicleMileageResource = "vehicleMileage"
+    static let vehicleServiceResource = "vehicleService"
 }
 
 enum AutoCareAPI {
@@ -27,6 +28,9 @@ enum AutoCareAPI {
     case vehicleMileages(vehicleId: String)
     case vehicleMileage(vehicleId: String, id: String)
     case saveVehicleMileage(id: String?, data: VehicleMileageRequest)
+    case vehicleServices(vehicleId: String)
+    case vehicleService(vehicleId: String, id: String)
+    case saveVehicleService(id: String?, data: VehicleServiceRequest)
 
     var baseURL: String {
         switch self {
@@ -66,6 +70,17 @@ enum AutoCareAPI {
             }
 
             return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/"
+            
+        case let .vehicleServices(vehicleId):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)"
+        case let .vehicleService(vehicleId, id):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)/\(id)"
+        case let .saveVehicleService(id, _):
+            if let id = id {
+                return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(id)"
+            }
+
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/"
         }
     }
 
@@ -76,7 +91,10 @@ enum AutoCareAPI {
              .vehicle,
             
              .vehicleMileages,
-             .vehicleMileage:
+             .vehicleMileage,
+            
+             .vehicleServices,
+             .vehicleService:
             return .get
         case .login,
              .refreshToken:
@@ -90,6 +108,13 @@ enum AutoCareAPI {
             return .post
             
         case let .saveVehicleMileage(id, _):
+            if id != nil {
+                return .put
+            }
+
+            return .post
+            
+        case let .saveVehicleService(id, _):
             if id != nil {
                 return .put
             }
@@ -127,12 +152,17 @@ enum AutoCareAPI {
             return try parameterEncoder.encode(model, into: request)
         case let .saveVehicleMileage(_, model):
             return try parameterEncoder.encode(model, into: request)
+        case let .saveVehicleService(_, model):
+            return try parameterEncoder.encode(model, into: request)
         case .vehicleType,
              .vehicles,
              .vehicle,
             
              .vehicleMileages,
-             .vehicleMileage:
+             .vehicleMileage,
+            
+             .vehicleServices,
+             .vehicleService:
             return request
         }
     }

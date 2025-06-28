@@ -12,6 +12,19 @@ enum ServiceListState: Equatable {
     case loading
     case error
     case newVehicle
-    // TODO: REFATORAR EQUATABLE COM OS ENUMS
-//    case successVehicleServices([VehicleService])
+    case successVehicleServices([VehicleService])
+    
+    static func == (lhs: ServiceListState, rhs: ServiceListState) -> Bool {
+        switch (lhs, rhs) {
+        case (.idle, .idle),
+             (.loading, .loading),
+             (.error, .error),
+             (.newVehicle, .newVehicle):
+            return true
+        case (.successVehicleServices(let lhsServices), .successVehicleServices(let rhsServices)):
+            return lhsServices.map { $0.id } == rhsServices.map { $0.id }
+        default:
+            return false
+        }
+    }
 }

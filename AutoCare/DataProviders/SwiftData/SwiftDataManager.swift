@@ -69,7 +69,8 @@ final class SwiftDataManager {
     let schema = Schema([
         VehicleType.self,
         Vehicle.self,
-        VehicleMileage.self
+        VehicleMileage.self,
+        VehicleService.self
     ])
     
     let container: ModelContainer
@@ -127,8 +128,15 @@ final class SwiftDataManager {
         })
         let vehicleMileages = try SwiftDataManager.shared.context.fetch(vehicleMileageDescriptor)
         
+        let vehicleServiceDescriptor =
+            FetchDescriptor<VehicleService>(predicate: #Predicate { vehicleService in
+                !vehicleService.synced
+        })
+        let vehicleServices = try SwiftDataManager.shared.context.fetch(vehicleServiceDescriptor)
+        
         unsyncedEntities.append(contentsOf: vehicles)
         unsyncedEntities.append(contentsOf: vehicleMileages)
+        unsyncedEntities.append(contentsOf: vehicleServices)
         
         return unsyncedEntities
     }

@@ -37,10 +37,13 @@ struct HomeView: View {
                     Label("Dashboard", systemImage: "display")
                 }
                 
-                HomeRouter.makeServiceListView(selectedVehicle: selectedVehicle)
-                    .tabItem {
-                        Label("Serviços", systemImage: "car.badge.gearshape")
-                    }
+                HomeRouter.makeServiceListView(
+                    modelContainer: viewModel.modelContainer,
+                    selectedVehicle: selectedVehicle
+                )
+                .tabItem {
+                    Label("Serviços", systemImage: "car.badge.gearshape")
+                }
             }
         }
         .disabled(isLoading)

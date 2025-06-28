@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwiftData
 
-enum VehicleServiceType: String, CustomStringConvertible {
+enum VehicleServiceType: String, Codable, CustomStringConvertible {
     case wheelsAndTyres
     
     var description : String {
@@ -18,7 +19,7 @@ enum VehicleServiceType: String, CustomStringConvertible {
     }
 }
 
-enum VehicleServiceSubtype: String, CustomStringConvertible {
+enum VehicleServiceSubtype: String, Codable, CustomStringConvertible {
     case calibrate
     case flatTyre
     case newTyres
@@ -33,7 +34,8 @@ enum VehicleServiceSubtype: String, CustomStringConvertible {
     }
 }
 
-final class VehicleService: Identifiable {
+@Model
+final class VehicleService: Syncable, Sendable {
     var id: String
     var date: Date = Date()
     var odometer: Int = 0
@@ -42,6 +44,8 @@ final class VehicleService: Identifiable {
     var totalCost: Decimal = 0
     var comment: String = ""
     var vehicle_id: String
+    
+    var synced: Bool
 
     init(
         id: String,
@@ -51,7 +55,9 @@ final class VehicleService: Identifiable {
         subtype: VehicleServiceSubtype,
         totalCost: Decimal,
         comment: String,
-        vehicle_id: String
+        vehicle_id: String,
+        
+        synced: Bool = false
     ) {
         self.id = id
         self.date = date
@@ -62,5 +68,20 @@ final class VehicleService: Identifiable {
         self.comment = comment
         
         self.vehicle_id = vehicle_id
+        
+        self.synced = synced
+    }
+
+    public func toRequest() -> VehicleServiceRequest {
+        return VehicleServiceRequest(
+            id: id,
+            date: date,
+            odometer: odometer,
+            type: type.rawValue,
+            subtype: subtype.rawValue,
+            totalCost: totalCost,
+            comment: comment,
+            vehicleId: vehicle_id
+        )
     }
 }

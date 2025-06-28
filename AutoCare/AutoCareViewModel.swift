@@ -17,6 +17,7 @@ extension AutoCareApp {
         @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository: VehicleTypeRepositoryProtocol
         @Injected(\.vehicleRepository) private var vehicleRepository: VehicleRepositoryProtocol
         @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository: VehicleMileageRepositoryProtocol
+        @Injected(\.vehicleServiceRepository) private var vehicleServiceRepository: VehicleServiceRepositoryProtocol
         
         func resultView() -> AnyView {
             return KeychainDataSource.hasValidToken() ?
@@ -66,6 +67,11 @@ extension AutoCareApp {
                     if let vehicleMileage = model as? VehicleMileage {
                         vehicleMileage.synced = true
                         await vehicleMileageRepository.save(id: vehicleMileage.id, vehicleMileage: vehicleMileage)
+                    }
+                    
+                    if let vehicleService = model as? VehicleService {
+                        vehicleService.synced = true
+                        await vehicleServiceRepository.save(id: vehicleService.id, vehicleService: vehicleService)
                     }
                     
                     if let vehicle = model as? Vehicle {

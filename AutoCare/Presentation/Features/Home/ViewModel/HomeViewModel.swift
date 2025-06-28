@@ -22,6 +22,7 @@ extension HomeView.ViewModel {
         @Injected(\.vehicleTypeRepository) var vehicleTypeRepository: VehicleTypeRepositoryProtocol
         @Injected(\.vehicleRepository) var vehicleRepository: VehicleRepositoryProtocol
         @Injected(\.vehicleMileageRepository) var vehicleMileageRepository: VehicleMileageRepositoryProtocol
+        @Injected(\.vehicleServiceRepository) var vehicleServiceRepository: VehicleServiceRepositoryProtocol
 
         func setState(_ newState: HomeState) {
             statePublisher.send(newState)
@@ -126,7 +127,7 @@ extension HomeView {
                 }
             }
 
-            var vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
+            let vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
                 for vehicle in vehicles {
                     if let id = vehicle.id {
                         group.addTask {
@@ -141,6 +142,22 @@ extension HomeView {
                 }
                 return collected
             }
+            
+            let vehicleServices: [VehicleService] = await withTaskGroup(of: [VehicleService].self) { group in
+                for vehicle in vehicles {
+                    if let id = vehicle.id {
+                        group.addTask {
+                            return await self.stateStore.vehicleServiceRepository.fetchData(vehicleId: id) ?? []
+                        }
+                    }
+                }
+
+                var collected: [VehicleService] = []
+                for await result in group {
+                    collected.append(contentsOf: result)
+                }
+                return collected
+            }
 
             await stateStore.setState(vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles))
 
@@ -148,6 +165,7 @@ extension HomeView {
                 try await SwiftDataManager.shared.importData(vehicleTypes)
                 try await SwiftDataManager.shared.importData(vehicles)
                 try await SwiftDataManager.shared.importData(vehicleMileages)
+                try await SwiftDataManager.shared.importData(vehicleServices)
             } catch {
                 // TODO: FUTURAMENTE UMA TELA DE LOG DE SYNC, TIPO O SYNCTIME?
                 print(error)

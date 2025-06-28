@@ -41,9 +41,15 @@ enum HomeRouter {
         )
     }
     
-    static func makeServiceListView(selectedVehicle: Vehicle) -> some View {
+    static func makeServiceListView(
+        modelContainer: ModelContainer,
+        selectedVehicle: Vehicle
+    ) -> some View {
         return ServiceListView(
-            viewModel: ServiceListView.ViewModel(selectedVehicle: selectedVehicle)
+            viewModel: ServiceListView.ViewModel(
+                modelContainer: modelContainer,
+                selectedVehicle: selectedVehicle
+            )
         )
     }
 }
