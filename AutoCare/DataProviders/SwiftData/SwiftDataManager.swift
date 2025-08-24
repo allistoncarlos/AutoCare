@@ -20,10 +20,11 @@ actor SwiftDataActor {
         try modelContext.save()
     }
     
-    func importData<T: PersistentModel>(_ data: [T]) throws {
+    func importData<T: Syncable>(_ data: [T]) throws {
         try modelContext.delete(model: T.self)
         
         try data.forEach { item in
+            item.synced = true
             try save(item: item)
         }
     }
@@ -145,7 +146,7 @@ final class SwiftDataManager {
         try await actor.save(id: id, item: item)
     }
     
-    func importData<T: PersistentModel>(_ data: [T]) async throws {
+    func importData<T: Syncable>(_ data: [T]) async throws {
         try await actor.importData(data)
     }
 }

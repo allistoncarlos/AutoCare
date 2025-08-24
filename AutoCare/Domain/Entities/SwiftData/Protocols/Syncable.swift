@@ -7,7 +7,8 @@
 
 
 import Foundation
+import SwiftData
 
-@objc public protocol Syncable: AnyObject {
+public protocol Syncable: PersistentModel {
     var synced: Bool { get set }
 }
