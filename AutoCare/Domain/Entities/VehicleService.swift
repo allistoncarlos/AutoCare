@@ -10,10 +10,12 @@ import SwiftData
 
 enum VehicleServiceType: String, Codable, CustomStringConvertible {
     case wheelsAndTyres
+    case wash
     
     var description : String {
         switch self {
         case .wheelsAndTyres: return "Rodas e Pneus"
+        case .wash: return "Lavagem"
         default: return "Outros"
         }
     }
