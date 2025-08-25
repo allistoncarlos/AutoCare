@@ -149,6 +149,16 @@ struct VehicleEditView: View {
         )
         .onChange(of: state, { _, newState in
             isLoading = newState == .loading
+            
+            if case let VehicleEditState.successVehicle(vehicle) = newState {
+                self.form.selectedVehicleType = vehicle.vehicleTypeId
+                self.form.name = vehicle.name
+                self.form.brand = vehicle.brand
+                self.form.model = vehicle.model
+                self.selectedYear = vehicle.year
+                self.form.licensePlate = vehicle.licensePlate
+                self.form.odometer = String(vehicle.odometer)
+            }
         })
         .onChange(of: selectedYear, { _, newYear in
             form.year = newYear
