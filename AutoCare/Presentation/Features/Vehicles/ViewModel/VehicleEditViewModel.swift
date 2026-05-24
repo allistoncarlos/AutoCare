@@ -10,7 +10,7 @@ import Combine
 import FormValidator
 import Factory
 import SwiftData
-import SwiftUICore
+import SwiftUI
 
 extension VehicleEditView.ViewModel {
     actor ViewModelState {
