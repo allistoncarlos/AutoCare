@@ -50,7 +50,9 @@ final class DefaultRequestInterceptor: RequestInterceptor {
                     if let result = await NetworkManager.shared
                         .performRequest(
                             responseType: RefreshTokenResponse.self,
-                            endpoint: .refreshToken(data: RefreshTokenRequest(accessToken: accessToken, refreshToken: refreshToken))
+                            endpoint: .refreshToken(
+                                data: RefreshTokenRequest(refreshToken: refreshToken)
+                            )
                         ) {
                         let dateFormatter = ISO8601DateFormatter()
                         let formattedExpiresIn = dateFormatter.string(from: result.expiresIn)

@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct VehicleRequest: Identifiable, Codable {
-    var id: String?
+struct VehicleRequest: Codable {
+    var clientId: String
     var name: String
     var brand: String
     var model: String
@@ -18,20 +18,8 @@ struct VehicleRequest: Identifiable, Codable {
     var isDefault: Bool
     var vehicleTypeId: String
 
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case brand
-        case model
-        case year
-        case licensePlate
-        case odometer
-        case isDefault
-        case vehicleTypeId
-    }
-    
-    public init(
-        id: String?,
+    init(
+        clientId: String,
         name: String,
         brand: String,
         model: String,
@@ -41,7 +29,7 @@ struct VehicleRequest: Identifiable, Codable {
         isDefault: Bool,
         vehicleTypeId: String
     ) {
-        self.id = id
+        self.clientId = clientId
         self.name = name
         self.brand = brand
         self.model = model

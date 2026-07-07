@@ -1,40 +1,55 @@
-# AutoCare.API
+# AutoCare API (NestJS)
 
-Backend ASP.NET Core para o app AutoCare, alinhado aos endpoints consumidos pelo cliente iOS (`AutoCareAPI`).
+API REST do AutoCare baseada na arquitetura **FinanceHealth-api**: NestJS 10, MongoDB (Mongoose), autenticação JWT e sincronização incremental offline-first.
 
-## Endpoints
+## Requisitos
+
+- Node.js 20+
+- MongoDB
+
+## Configuração
+
+```bash
+cp .env.example .env
+npm install
+npm run start:dev
+```
+
+Variáveis em `.env`:
+
+| Variável | Descrição |
+|----------|-----------|
+| `PORT` | Porta HTTP (padrão: 3000) |
+| `DATABASE_URL` | Connection string MongoDB |
+| `JWT_SECRET` | Segredo do JWT |
+| `JWT_EXPIRES_IN` | Expiração do access token (ex: `8h`) |
+
+## Credenciais padrão
+
+- **Usuário:** `admin`
+- **Senha:** `admin`
+
+## Endpoints principais
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| POST | `/user/login` | Autenticação |
-| POST | `/user/refresh` | Refresh token |
-| GET | `/autocare/vehicleType` | Tipos de veículo |
-| GET | `/autocare/vehicle` | Lista de veículos |
-| GET | `/autocare/vehicle/{id}` | Veículo por id |
-| POST | `/autocare/vehicle` | Criar veículo |
-| PUT | `/autocare/vehicle/{id}` | Atualizar veículo |
-| GET | `/autocare/vehicleMileage/{vehicleId}` | Abastecimentos |
-| POST | `/autocare/vehicleMileage` | Criar abastecimento |
-| PUT | `/autocare/vehicleMileage/{id}` | Atualizar abastecimento |
-| GET | `/autocare/vehicleService/{vehicleId}` | Serviços |
-| POST | `/autocare/vehicleService` | Criar serviço |
-| PUT | `/autocare/vehicleService/{id}` | Atualizar serviço |
+| POST | `/auth/login` | Login |
+| POST | `/auth/refresh` | Renovar token |
+| GET | `/changes?since=` | Sync incremental |
+| GET | `/vehicle-type` | Tipos de veículo |
+| GET/POST/PUT/DELETE | `/vehicle` | Veículos |
+| GET/POST/PUT/DELETE | `/vehicle-mileage?vehicleId=` | Abastecimentos |
+| GET/POST/PUT/DELETE | `/vehicle-service?vehicleId=` | Serviços |
 
-## Executar localmente
+Documentação Swagger: `http://localhost:3000/api/docs`
+
+## Sincronização
+
+Entidades possuem `clientId`, `createdAt`, `updatedAt`, `deleted` e `deletedAt`. O endpoint `GET /changes?since=<ISO8601>` retorna alterações incrementais para o app iOS.
+
+## Docker
 
 ```bash
-cd AutoCare.API
-dotnet restore
-dotnet run
+docker build -t autocare-api .
+docker run -p 3000:3000 -e DATABASE_URL=mongodb://host.docker.internal:27017/autocare autocare-api
 ```
-
-A API sobe em `http://localhost:5000` (ou porta configurada). Configure `API_PATH` no `Config.xcconfig` do iOS para apontar para essa URL.
-
-## Credenciais de desenvolvimento
-
-- Usuário: `admin`
-- Senha: `admin`
-
-## Armazenamento
-
-A implementação atual usa armazenamento em memória (`AutoCareStore`) para desenvolvimento e testes offline-first. Substitua por MongoDB ou outro provider conforme necessário.

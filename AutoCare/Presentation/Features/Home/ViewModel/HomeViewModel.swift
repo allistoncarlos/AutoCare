@@ -81,7 +81,7 @@ extension HomeView {
         }
 
         func syncData() async {
-            await syncService.pushUnsyncedChanges()
+            await syncService.sync()
         }
 
         @discardableResult
@@ -98,60 +98,7 @@ extension HomeView {
         }
 
         private func fetchRemote() async {
-            var vehicleTypes: [VehicleType] = []
-            var vehicles: [Vehicle] = []
-
-            await withTaskGroup(of: Void.self) { group in
-                group.addTask {
-                    vehicleTypes = await self.vehicleTypeRepository.fetchData() ?? []
-                }
-                group.addTask {
-                    vehicles = await self.vehicleRepository.fetchData() ?? []
-                }
-            }
-
-            let vehicleMileages: [VehicleMileage] = await withTaskGroup(of: [VehicleMileage].self) { group in
-                for vehicle in vehicles {
-                    if let id = vehicle.id {
-                        group.addTask {
-                            await self.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
-                        }
-                    }
-                }
-
-                var collected: [VehicleMileage] = []
-                for await result in group {
-                    collected.append(contentsOf: result)
-                }
-                return collected
-            }
-
-            let vehicleServices: [VehicleService] = await withTaskGroup(of: [VehicleService].self) { group in
-                for vehicle in vehicles {
-                    if let id = vehicle.id {
-                        group.addTask {
-                            await self.vehicleServiceRepository.fetchData(vehicleId: id) ?? []
-                        }
-                    }
-                }
-
-                var collected: [VehicleService] = []
-                for await result in group {
-                    collected.append(contentsOf: result)
-                }
-                return collected
-            }
-
-            do {
-                try syncService.importRemoteData(
-                    vehicleTypes: vehicleTypes,
-                    vehicles: vehicles,
-                    mileages: vehicleMileages,
-                    services: vehicleServices
-                )
-            } catch {
-                print(error)
-            }
+            await syncService.pullRemoteChanges()
         }
     }
 }

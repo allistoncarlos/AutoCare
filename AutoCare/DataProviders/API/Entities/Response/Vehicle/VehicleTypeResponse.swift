@@ -11,18 +11,23 @@ struct VehicleTypeResponse: Codable {
     var id: String
     var name: String
     var emoji: String
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case emoji
-    }
-    
+    var clientId: String?
+    var createdAt: Date?
+    var updatedAt: Date?
+    var deleted: Bool?
+    var deletedAt: Date?
+
     func toVehicleType() -> VehicleType {
-        return VehicleType(
+        VehicleType(
             id: id,
-            name: self.name,
-            emoji: self.emoji
+            name: name,
+            emoji: emoji,
+            clientId: clientId ?? id,
+            synced: true,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deleted: deleted ?? false,
+            deletedAt: deletedAt
         )
     }
 }

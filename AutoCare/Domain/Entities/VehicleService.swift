@@ -11,8 +11,8 @@ import SwiftData
 enum VehicleServiceType: String, Codable, CustomStringConvertible {
     case wheelsAndTyres
     case wash
-    
-    var description : String {
+
+    var description: String {
         switch self {
         case .wheelsAndTyres: return "Rodas e Pneus"
         case .wash: return "Lavagem"
@@ -25,8 +25,8 @@ enum VehicleServiceSubtype: String, Codable, CustomStringConvertible {
     case calibrate
     case flatTyre
     case newTyres
-    
-    var description : String {
+
+    var description: String {
         switch self {
         case .calibrate: return "Calibragem"
         case .flatTyre: return "Pneu Furado"
@@ -46,8 +46,13 @@ final class VehicleService: Syncable, Sendable {
     var totalCost: Decimal = 0
     var comment: String = ""
     var vehicle_id: String
-    
+
     var synced: Bool
+    var clientId: String
+    var createdAt: Date?
+    var updatedAt: Date?
+    var deleted: Bool
+    var deletedAt: Date?
 
     init(
         id: String,
@@ -58,8 +63,12 @@ final class VehicleService: Syncable, Sendable {
         totalCost: Decimal,
         comment: String,
         vehicle_id: String,
-        
-        synced: Bool = false
+        clientId: String? = nil,
+        synced: Bool = false,
+        createdAt: Date? = nil,
+        updatedAt: Date? = nil,
+        deleted: Bool = false,
+        deletedAt: Date? = nil
     ) {
         self.id = id
         self.date = date
@@ -68,15 +77,18 @@ final class VehicleService: Syncable, Sendable {
         self.subtype = subtype
         self.totalCost = totalCost
         self.comment = comment
-        
         self.vehicle_id = vehicle_id
-        
+        self.clientId = SyncDefaults.newClientId(clientId ?? id)
         self.synced = synced
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.deleted = deleted
+        self.deletedAt = deletedAt
     }
 
     public func toRequest() -> VehicleServiceRequest {
-        return VehicleServiceRequest(
-            id: id,
+        VehicleServiceRequest(
+            clientId: clientId,
             date: date,
             odometer: odometer,
             type: type.rawValue,

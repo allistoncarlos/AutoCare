@@ -7,20 +7,23 @@
 
 import Foundation
 
-public struct LoginResponse: Codable {
+public struct LoginUserResponse: Codable {
     public var id: String
+    public var username: String?
     public var firstName: String
     public var lastName: String
+}
+
+public struct LoginResponse: Codable {
     public var accessToken: String
     public var refreshToken: String
     public var expiresIn: Date
+    public var user: LoginUserResponse
 
     enum CodingKeys: String, CodingKey {
-        case id
-        case firstName
-        case lastName
         case accessToken = "access_token"
         case refreshToken = "refresh_token"
         case expiresIn = "expires_in"
+        case user
     }
 }

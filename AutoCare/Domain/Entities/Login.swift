@@ -59,9 +59,9 @@ struct Login: Equatable {
 extension LoginResponse {
     func toLogin() -> Login {
         return Login(
-            id: id,
-            firstName: firstName,
-            lastName: lastName,
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
             accessToken: accessToken,
             refreshToken: refreshToken,
             expiresIn: expiresIn

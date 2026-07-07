@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct VehicleMileageRequest: Identifiable, Codable {
-    var id: String?
+struct VehicleMileageRequest: Codable {
+    var clientId: String
     var date: Date
     var totalCost: Decimal
     var odometer: Int
@@ -20,7 +20,7 @@ struct VehicleMileageRequest: Identifiable, Codable {
     var vehicleId: String
 
     init(
-        id: String?,
+        clientId: String,
         date: Date,
         totalCost: Decimal,
         odometer: Int,
@@ -31,7 +31,7 @@ struct VehicleMileageRequest: Identifiable, Codable {
         complete: Bool,
         vehicleId: String
     ) {
-        self.id = id
+        self.clientId = clientId
         self.date = date
         self.totalCost = totalCost
         self.odometer = odometer
@@ -40,7 +40,6 @@ struct VehicleMileageRequest: Identifiable, Codable {
         self.fuelCost = fuelCost
         self.calculatedMileage = calculatedMileage
         self.complete = complete
-        
         self.vehicleId = vehicleId
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 struct VehicleServiceRequest: Codable {
-    let id: String?
+    let clientId: String
     let date: Date
     let odometer: Int
     let type: String
@@ -17,4 +17,3 @@ struct VehicleServiceRequest: Codable {
     let comment: String
     let vehicleId: String
 }
-

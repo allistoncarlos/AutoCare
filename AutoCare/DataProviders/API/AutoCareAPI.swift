@@ -9,123 +9,92 @@ import Alamofire
 import Foundation
 
 enum APIConstants {
-    static let userResource = "user"
-    static let vehicleTypeResource = "vehicleType"
+    static let authResource = "auth"
+    static let changesResource = "changes"
+    static let vehicleTypeResource = "vehicle-type"
     static let vehicleResource = "vehicle"
-    static let vehicleMileageResource = "vehicleMileage"
-    static let vehicleServiceResource = "vehicleService"
+    static let vehicleMileageResource = "vehicle-mileage"
+    static let vehicleServiceResource = "vehicle-service"
 }
 
 enum AutoCareAPI {
-    private static let apiArea = "autocare"
-    
     case login(data: LoginRequest)
     case refreshToken(data: RefreshTokenRequest)
+    case changes(since: String?)
     case vehicleType
     case vehicles
     case vehicle(id: String)
     case saveVehicle(id: String?, data: VehicleRequest)
     case vehicleMileages(vehicleId: String)
-    case vehicleMileage(vehicleId: String, id: String)
+    case vehicleMileage(id: String)
     case saveVehicleMileage(id: String?, data: VehicleMileageRequest)
     case vehicleServices(vehicleId: String)
-    case vehicleService(vehicleId: String, id: String)
+    case vehicleService(id: String)
     case saveVehicleService(id: String?, data: VehicleServiceRequest)
 
     var baseURL: String {
-        switch self {
-        default:
-            return Config.apiPath
-        }
+        Config.apiPath
     }
 
     var path: String {
         switch self {
         case .login:
-            return "\(APIConstants.userResource)/login"
+            return "\(APIConstants.authResource)/login"
         case .refreshToken:
-            return "\(APIConstants.userResource)/refresh"
-            
+            return "\(APIConstants.authResource)/refresh"
+        case .changes:
+            return APIConstants.changesResource
         case .vehicleType:
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleTypeResource)"
-            
+            return APIConstants.vehicleTypeResource
         case .vehicles:
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)"
+            return APIConstants.vehicleResource
         case let .vehicle(id):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/\(id)"
+            return "\(APIConstants.vehicleResource)/\(id)"
         case let .saveVehicle(id, _):
-            if let id = id {
-                return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/\(id)"
+            if let id {
+                return "\(APIConstants.vehicleResource)/\(id)"
             }
-
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/"
-            
-        case let .vehicleMileages(vehicleId):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)"
-        case let .vehicleMileage(vehicleId, id):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)/\(id)"
+            return "\(APIConstants.vehicleResource)"
+        case .vehicleMileages:
+            return APIConstants.vehicleMileageResource
+        case let .vehicleMileage(id):
+            return "\(APIConstants.vehicleMileageResource)/\(id)"
         case let .saveVehicleMileage(id, _):
-            if let id = id {
-                return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(id)"
+            if let id {
+                return "\(APIConstants.vehicleMileageResource)/\(id)"
             }
-
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/"
-            
-        case let .vehicleServices(vehicleId):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)"
-        case let .vehicleService(vehicleId, id):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)/\(id)"
+            return APIConstants.vehicleMileageResource
+        case .vehicleServices:
+            return APIConstants.vehicleServiceResource
+        case let .vehicleService(id):
+            return "\(APIConstants.vehicleServiceResource)/\(id)"
         case let .saveVehicleService(id, _):
-            if let id = id {
-                return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(id)"
+            if let id {
+                return "\(APIConstants.vehicleServiceResource)/\(id)"
             }
-
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/"
+            return APIConstants.vehicleServiceResource
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .vehicleType,
-             .vehicles,
-             .vehicle,
-            
-             .vehicleMileages,
-             .vehicleMileage,
-            
-             .vehicleServices,
-             .vehicleService:
+        case .vehicleType, .vehicles, .vehicle, .vehicleMileages, .vehicleMileage, .vehicleServices, .vehicleService, .changes:
             return .get
-        case .login,
-             .refreshToken:
+        case .login, .refreshToken:
             return .post
-            
         case let .saveVehicle(id, _):
-            if id != nil {
-                return .put
-            }
-
-            return .post
-            
+            return id == nil ? .post : .put
         case let .saveVehicleMileage(id, _):
-            if id != nil {
-                return .put
-            }
-
-            return .post
-            
+            return id == nil ? .post : .put
         case let .saveVehicleService(id, _):
-            if id != nil {
-                return .put
-            }
-
-            return .post
+            return id == nil ? .post : .put
         }
     }
 
     var parameterEncoder: ParameterEncoder {
         switch method {
-        case .get: return URLEncodedFormParameterEncoder()
+        case .get:
+            return URLEncodedFormParameterEncoder()
         default:
             let encoder = JSONParameterEncoder()
             encoder.encoder.dateEncodingStrategy = .iso8601
@@ -134,12 +103,8 @@ enum AutoCareAPI {
     }
 
     var isRefreshToken: Bool {
-        switch self {
-        case .refreshToken:
-            return true
-        default:
-            return false
-        }
+        if case .refreshToken = self { return true }
+        return false
     }
 
     func encodeParameters(into request: URLRequest) throws -> URLRequest {
@@ -154,29 +119,40 @@ enum AutoCareAPI {
             return try parameterEncoder.encode(model, into: request)
         case let .saveVehicleService(_, model):
             return try parameterEncoder.encode(model, into: request)
-        case .vehicleType,
-             .vehicles,
-             .vehicle,
-            
-             .vehicleMileages,
-             .vehicleMileage,
-            
-             .vehicleServices,
-             .vehicleService:
+        case let .changes(since):
+            guard let since else { return request }
+            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+            components?.queryItems = [URLQueryItem(name: "since", value: since)]
+            guard let url = components?.url else { return request }
+            var updated = request
+            updated.url = url
+            return updated
+        case let .vehicleMileages(vehicleId):
+            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+            components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
+            guard let url = components?.url else { return request }
+            var updated = request
+            updated.url = url
+            return updated
+        case let .vehicleServices(vehicleId):
+            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+            components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
+            guard let url = components?.url else { return request }
+            var updated = request
+            updated.url = url
+            return updated
+        case .vehicleType, .vehicles, .vehicle, .vehicleMileage, .vehicleService:
             return request
         }
     }
-
 }
 
 extension AutoCareAPI: URLRequestConvertible {
     public func asURLRequest() throws -> URLRequest {
         let resultUrl = "\(baseURL)/\(path)"
-
         let url = try resultUrl.asURL()
         var request = URLRequest(url: url)
         request.method = method
-
         return try encodeParameters(into: request)
     }
 }

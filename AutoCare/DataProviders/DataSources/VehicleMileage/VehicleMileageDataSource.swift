@@ -34,7 +34,7 @@ class VehicleMileageDataSource: VehicleMileageDataSourceProtocol {
         if let apiResult = await NetworkManager.shared
             .performRequest(
                 responseType: VehicleMileageResponse.self,
-                endpoint: .vehicleMileage(vehicleId: vehicleId, id: id)
+                endpoint: .vehicleMileage(id: id)
             ) {
             return apiResult.toVehicleMileage()
         }

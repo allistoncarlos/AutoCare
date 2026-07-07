@@ -6,3 +6,9 @@ AutoCare.xcodeproj/xcuserdata/
 # .NET
 **/bin/
 **/obj/
+
+# Node
+node_modules/
+dist/
+*.sqlite
+.env

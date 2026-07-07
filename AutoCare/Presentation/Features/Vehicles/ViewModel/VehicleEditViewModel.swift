@@ -95,7 +95,8 @@ extension VehicleEditView {
                 licensePlate: licensePlate,
                 odometer: odometerValue,
                 isDefault: isDefault,
-                vehicleTypeId: vehicleTypeId
+                vehicleTypeId: vehicleTypeId,
+                clientId: vehicle?.clientId
             )
 
             if networkConnectivity.status == .connected {
@@ -124,6 +125,19 @@ extension VehicleEditView {
             if let saved = await repository.save(id: vehicle.id, vehicle: vehicle) {
                 if let existingId = saved.id,
                    let existing = try? localStore.fetchOne(where: #Predicate<Vehicle> { $0.id == existingId }) {
+                    existing.name = saved.name
+                    existing.brand = saved.brand
+                    existing.model = saved.model
+                    existing.year = saved.year
+                    existing.licensePlate = saved.licensePlate
+                    existing.odometer = saved.odometer
+                    existing.isDefault = saved.isDefault
+                    existing.vehicleTypeId = saved.vehicleTypeId
+                    existing.clientId = saved.clientId
+                    existing.synced = true
+                    try? localStore.save()
+                } else if let existing = try? localStore.fetchOne(where: #Predicate<Vehicle> { $0.clientId == saved.clientId }) {
+                    existing.id = saved.id
                     existing.name = saved.name
                     existing.brand = saved.brand
                     existing.model = saved.model

@@ -35,7 +35,7 @@ class VehicleServiceDataSource: VehicleServiceDataSourceProtocol {
         if let apiResult = await NetworkManager.shared
             .performRequest(
                 responseType: VehicleServiceResponse.self,
-                endpoint: .vehicleService(vehicleId: vehicleId, id: id)
+                endpoint: .vehicleService(id: id)
             ) {
             return apiResult.toVehicleService()
         }

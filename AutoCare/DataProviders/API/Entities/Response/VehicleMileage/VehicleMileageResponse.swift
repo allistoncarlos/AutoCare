@@ -9,6 +9,7 @@ import Foundation
 
 struct VehicleMileageResponse: Identifiable, Codable {
     var id: String
+    var clientId: String?
     var date: Date = Date()
     var totalCost: Decimal = 0
     var odometer: Int = 0
@@ -18,19 +19,29 @@ struct VehicleMileageResponse: Identifiable, Codable {
     var calculatedMileage: Decimal = 0
     var complete: Bool = true
     var vehicleId: String
-    
+    var createdAt: Date?
+    var updatedAt: Date?
+    var deleted: Bool?
+    var deletedAt: Date?
+
     func toVehicleMileage() -> VehicleMileage {
-        return VehicleMileage(
+        VehicleMileage(
             id: id,
-            date: self.date,
-            totalCost: self.totalCost,
-            odometer: self.odometer,
-            odometerDifference: self.odometerDifference,
-            liters: self.liters,
-            fuelCost: self.fuelCost,
-            calculatedMileage: self.calculatedMileage,
-            complete: self.complete,
-            vehicleId: self.vehicleId
+            date: date,
+            totalCost: totalCost,
+            odometer: odometer,
+            odometerDifference: odometerDifference,
+            liters: liters,
+            fuelCost: fuelCost,
+            calculatedMileage: calculatedMileage,
+            complete: complete,
+            vehicleId: vehicleId,
+            clientId: clientId ?? id,
+            synced: true,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deleted: deleted ?? false,
+            deletedAt: deletedAt
         )
     }
 }

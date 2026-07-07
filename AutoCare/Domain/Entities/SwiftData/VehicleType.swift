@@ -13,20 +13,33 @@ final class VehicleType: Syncable, Sendable {
     var id: String
     var name: String
     var emoji: String
-    
+
     var synced: Bool
-    
+    var clientId: String
+    var createdAt: Date?
+    var updatedAt: Date?
+    var deleted: Bool
+    var deletedAt: Date?
+
     init(
         id: String,
         name: String,
         emoji: String,
-        
-        synced: Bool = false
+        clientId: String? = nil,
+        synced: Bool = false,
+        createdAt: Date? = nil,
+        updatedAt: Date? = nil,
+        deleted: Bool = false,
+        deletedAt: Date? = nil
     ) {
         self.id = id
         self.name = name
         self.emoji = emoji
-        
+        self.clientId = SyncDefaults.newClientId(clientId ?? id)
         self.synced = synced
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.deleted = deleted
+        self.deletedAt = deletedAt
     }
 }

@@ -6,16 +6,13 @@
 //
 
 public struct RefreshTokenRequest: Codable, Sendable {
-    public var accessToken: String
     public var refreshToken: String
 
     enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
         case refreshToken = "refresh_token"
     }
-    
-    public init(accessToken: String, refreshToken: String) {
-        self.accessToken = accessToken
+
+    public init(refreshToken: String) {
         self.refreshToken = refreshToken
     }
 }

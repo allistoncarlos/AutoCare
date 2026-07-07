@@ -32,7 +32,7 @@ extension AutoCareApp {
 
         func syncData(modelContext: ModelContext) async {
             let syncService = SyncService(modelContext: modelContext)
-            await syncService.pushUnsyncedChanges()
+            await syncService.sync()
             await notifySyncCompleted()
         }
 
