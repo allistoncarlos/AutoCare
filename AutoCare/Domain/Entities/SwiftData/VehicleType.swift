@@ -9,37 +9,14 @@ import Foundation
 import SwiftData
 
 @Model
-final class VehicleType: Syncable, Sendable {
+final class VehicleType: Sendable {
     var id: String
     var name: String
     var emoji: String
 
-    var synced: Bool
-    var clientId: String
-    var createdAt: Date?
-    var updatedAt: Date?
-    var deleted: Bool
-    var deletedAt: Date?
-
-    init(
-        id: String,
-        name: String,
-        emoji: String,
-        clientId: String? = nil,
-        synced: Bool = false,
-        createdAt: Date? = nil,
-        updatedAt: Date? = nil,
-        deleted: Bool = false,
-        deletedAt: Date? = nil
-    ) {
+    init(id: String, name: String, emoji: String) {
         self.id = id
         self.name = name
         self.emoji = emoji
-        self.clientId = SyncDefaults.newClientId(clientId ?? id)
-        self.synced = synced
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-        self.deleted = deleted
-        self.deletedAt = deletedAt
     }
 }

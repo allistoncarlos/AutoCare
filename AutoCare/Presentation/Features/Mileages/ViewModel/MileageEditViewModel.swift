@@ -20,10 +20,7 @@ extension MileageEditView {
 
         var previousMileage: VehicleMileage?
 
-        private let modelContext: ModelContext
-        private let localStore: LocalDataStore
         private let vehicleId: String
-        private var cancellable = Set<AnyCancellable>()
 
         @Published var isFormValid = false
         @Published var manager = FormManager(validationType: .immediate)
@@ -51,8 +48,6 @@ extension MileageEditView {
             vehicleMileage: VehicleMileage?,
             vehicleId: String
         ) {
-            self.modelContext = modelContext
-            self.localStore = LocalDataStore(modelContext: modelContext)
             self.vehicleMileage = vehicleMileage
             self.vehicleId = vehicleId
         }
@@ -72,33 +67,29 @@ extension MileageEditView {
         }
 
         func fetchPreviousVehicleMileage() async {
-            do {
-                state = .loading
+            state = .loading
 
-                let result = try localStore.fetch(
-                    where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId },
-                    sortBy: [SortDescriptor(\.date, order: .reverse)]
-                )
-
-                var lastVehicleMileage: VehicleMileage?
-
-                if let vehicleMileage, let currentId = vehicleMileage.id {
-                    if let index = result.firstIndex(where: { $0.id == currentId }), index + 1 < result.count {
-                        lastVehicleMileage = result[index + 1]
-                    }
-                } else {
-                    lastVehicleMileage = result.first
-                }
-
-                previousMileage = lastVehicleMileage
-                state = .successPreviousMileage(lastVehicleMileage)
-            } catch {
-                print(error)
+            guard let mileages = await repository.fetchData(vehicleId: vehicleId) else {
                 state = .error
+                return
             }
+
+            let sorted = mileages.sorted { $0.date > $1.date }
+            var lastVehicleMileage: VehicleMileage?
+
+            if let vehicleMileage, let currentId = vehicleMileage.id {
+                if let index = sorted.firstIndex(where: { $0.id == currentId }), index + 1 < sorted.count {
+                    lastVehicleMileage = sorted[index + 1]
+                }
+            } else {
+                lastVehicleMileage = sorted.first
+            }
+
+            previousMileage = lastVehicleMileage
+            state = .successPreviousMileage(lastVehicleMileage)
         }
 
-        func save(isConnected: Bool) async {
+        func save() async {
             guard manager.triggerValidation() else { return }
 
             state = .loading
@@ -129,74 +120,11 @@ extension MileageEditView {
                 vehicleId: vehicleId
             )
 
-            if isConnected {
-                await saveRemote(id: mileage.id, vehicleMileage: mileage)
-            } else {
-                saveLocal(id: mileage.id, vehicleMileage: mileage)
-            }
-        }
-
-        private func saveRemote(id: String?, vehicleMileage: VehicleMileage) async {
-            if let saved = await repository.save(id: id, vehicleMileage: vehicleMileage) {
-                if let existingId = saved.id,
-                   let existing = try? localStore.fetchOne(where: #Predicate<VehicleMileage> { $0.id == existingId }) {
-                    existing.date = saved.date
-                    existing.totalCost = saved.totalCost
-                    existing.odometer = saved.odometer
-                    existing.odometerDifference = saved.odometerDifference
-                    existing.liters = saved.liters
-                    existing.fuelCost = saved.fuelCost
-                    existing.calculatedMileage = saved.calculatedMileage
-                    existing.complete = saved.complete
-                    existing.synced = true
-                    try? localStore.save()
-                } else {
-                    saved.synced = true
-                    try? localStore.insert(saved)
-                }
+            if await repository.save(id: mileage.id, vehicleMileage: mileage) != nil {
                 state = .successSave
             } else {
-                saveLocal(id: id, vehicleMileage: vehicleMileage)
-            }
-        }
-
-        private func saveLocal(id: String?, vehicleMileage: VehicleMileage) {
-            do {
-                if let id {
-                    try update(id: id, vehicleMileage: vehicleMileage)
-                } else {
-                    try insert(vehicleMileage: vehicleMileage)
-                }
-                state = .successSave
-            } catch {
-                print(error.localizedDescription)
                 state = .error
             }
-        }
-
-        private func update(id: String, vehicleMileage: VehicleMileage) throws {
-            guard let existing = try localStore.fetchOne(where: #Predicate<VehicleMileage> { $0.id == id }) else {
-                state = .error
-                return
-            }
-
-            existing.date = vehicleMileage.date
-            existing.totalCost = vehicleMileage.totalCost
-            existing.odometer = vehicleMileage.odometer
-            existing.odometerDifference = vehicleMileage.odometerDifference
-            existing.liters = vehicleMileage.liters
-            existing.fuelCost = vehicleMileage.fuelCost
-            existing.calculatedMileage = vehicleMileage.calculatedMileage
-            existing.complete = vehicleMileage.complete
-            existing.synced = false
-            try localStore.save()
-            state = .successSave
-        }
-
-        private func insert(vehicleMileage: VehicleMileage) throws {
-            vehicleMileage.synced = false
-            try localStore.insert(vehicleMileage)
-            state = .successSave
         }
     }
 }

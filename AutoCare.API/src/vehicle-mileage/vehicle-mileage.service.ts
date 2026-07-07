@@ -92,16 +92,6 @@ export class VehicleMileageService {
     return mileage;
   }
 
-  findChanges(userId: string, since: Date) {
-    return this.vehicleMileageModel
-      .find({
-        userId: new Types.ObjectId(userId),
-        $or: [{ updatedAt: { $gt: since } }, { deletedAt: { $gt: since } }],
-      })
-      .sort({ updatedAt: 1 })
-      .exec();
-  }
-
   toResponse(mileage: VehicleMileageDocument) {
     return {
       id: mileage._id.toString(),

@@ -1,7 +1,6 @@
 import { Controller, Get, HttpStatus, NotFoundException, Param, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/auth.guards';
-import { mapEntityResponse } from '../common/mappers/sync-response.mapper';
 import { VehicleTypeService } from './vehicle-type.service';
 
 @ApiTags('Vehicle Type')
@@ -16,13 +15,11 @@ export class VehicleTypeController {
   @ApiResponse({ status: HttpStatus.OK })
   async findAll() {
     const types = await this.vehicleTypeService.findAll();
-    return types.map((type) =>
-      mapEntityResponse(type.toObject(), {
-        id: type.key,
-        name: type.name,
-        emoji: type.emoji,
-      }),
-    );
+    return types.map((type) => ({
+      id: type.key,
+      name: type.name,
+      emoji: type.emoji,
+    }));
   }
 
   @Get(':id')
@@ -34,10 +31,10 @@ export class VehicleTypeController {
       throw new NotFoundException('Tipo de veículo não encontrado');
     }
 
-    return mapEntityResponse(type.toObject(), {
+    return {
       id: type.key,
       name: type.name,
       emoji: type.emoji,
-    });
+    };
   }
 }

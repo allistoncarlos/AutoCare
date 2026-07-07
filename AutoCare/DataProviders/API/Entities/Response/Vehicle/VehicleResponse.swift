@@ -9,7 +9,6 @@ import Foundation
 
 struct VehicleResponse: Identifiable, Codable {
     var id: String
-    var clientId: String?
     var name: String
     var brand: String
     var model: String
@@ -18,10 +17,6 @@ struct VehicleResponse: Identifiable, Codable {
     var odometer: Int
     var isDefault: Bool
     var vehicleType: VehicleTypeResponse
-    var createdAt: Date?
-    var updatedAt: Date?
-    var deleted: Bool?
-    var deletedAt: Date?
 
     func toVehicle() -> Vehicle {
         Vehicle(
@@ -33,13 +28,7 @@ struct VehicleResponse: Identifiable, Codable {
             licensePlate: licensePlate,
             odometer: odometer,
             isDefault: isDefault,
-            vehicleTypeId: vehicleType.id,
-            clientId: clientId ?? id,
-            synced: true,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            deleted: deleted ?? false,
-            deletedAt: deletedAt
+            vehicleTypeId: vehicleType.id
         )
     }
 }

@@ -33,7 +33,6 @@
 		A55953A52D96C575004DAD6A /* NetworkConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55953A42D96C575004DAD6A /* NetworkConnectivity.swift */; };
 		A55953A82D96D53D004DAD6A /* VehicleTypeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55953A72D96D53D004DAD6A /* VehicleTypeRepository.swift */; };
 		A55953AB2D96D578004DAD6A /* VehicleTypeDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55953AA2D96D578004DAD6A /* VehicleTypeDataSourceProtocol.swift */; };
-		A55953AE2D96D982004DAD6A /* Syncable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55953AD2D96D982004DAD6A /* Syncable.swift */; };
 		A5619DF62E0FF3C400D46700 /* VehicleServiceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5619DF52E0FF3C400D46700 /* VehicleServiceRequest.swift */; };
 		A5619DF92E0FF44A00D46700 /* VehicleServiceRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5619DF82E0FF44A00D46700 /* VehicleServiceRepositoryProtocol.swift */; };
 		A5619DFC2E0FF48800D46700 /* VehicleServiceDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5619DFB2E0FF48800D46700 /* VehicleServiceDataSourceProtocol.swift */; };
@@ -92,11 +91,6 @@
 		A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77B2AED43620038A546 /* VehicleListView.swift */; };
 		A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */; };
 		A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB7842AED43A10038A546 /* MileageListView.swift */; };
-		A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */; };
-		A5ARCH042D9C4CEB0038BEE4 /* LocalDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ARCH022D9C4CEB0038BEE2 /* LocalDataStore.swift */; };
-		A5FH0112E1000010038BEE1 /* SyncTimestampStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0012E1000010038BEE1 /* SyncTimestampStore.swift */; };
-		A5FH0122E1000010038BEE2 /* ChangesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0022E1000010038BEE2 /* ChangesResponse.swift */; };
-		A5FH0132E1000010038BEE3 /* ChangesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */; };
 
 /* Begin PBXFileReference section */
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
@@ -123,7 +117,6 @@
 		A55953A42D96C575004DAD6A /* NetworkConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectivity.swift; sourceTree = "<group>"; };
 		A55953A72D96D53D004DAD6A /* VehicleTypeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTypeRepository.swift; sourceTree = "<group>"; };
 		A55953AA2D96D578004DAD6A /* VehicleTypeDataSourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTypeDataSourceProtocol.swift; sourceTree = "<group>"; };
-		A55953AD2D96D982004DAD6A /* Syncable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Syncable.swift; sourceTree = "<group>"; };
 		A5619DF52E0FF3C400D46700 /* VehicleServiceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleServiceRequest.swift; sourceTree = "<group>"; };
 		A5619DF82E0FF44A00D46700 /* VehicleServiceRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleServiceRepositoryProtocol.swift; sourceTree = "<group>"; };
 		A5619DFB2E0FF48800D46700 /* VehicleServiceDataSourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleServiceDataSourceProtocol.swift; sourceTree = "<group>"; };
@@ -181,11 +174,6 @@
 		A5FCB77B2AED43620038A546 /* VehicleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
 		A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditView.swift; sourceTree = "<group>"; };
 		A5FCB7842AED43A10038A546 /* MileageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListView.swift; sourceTree = "<group>"; };
-		A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
-		A5ARCH022D9C4CEB0038BEE2 /* LocalDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataStore.swift; sourceTree = "<group>"; };
-		A5FH0012E1000010038BEE1 /* SyncTimestampStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncTimestampStore.swift; sourceTree = "<group>"; };
-		A5FH0022E1000010038BEE2 /* ChangesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesResponse.swift; sourceTree = "<group>"; };
-		A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesDataSource.swift; sourceTree = "<group>"; };
 
 /* Begin PBXFrameworksBuildPhase section */
 		A5E333822AEBE48F0089DD81 /* Frameworks */ = {
@@ -340,14 +328,6 @@
 			path = VehicleType;
 			sourceTree = "<group>";
 		};
-		A55953AC2D96D97D004DAD6A /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				A55953AD2D96D982004DAD6A /* Syncable.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
 		A5619DF42E0FF3B600D46700 /* VehicleService */ = {
 			isa = PBXGroup;
 			children = (
@@ -408,7 +388,6 @@
 		A562EE922D93365500D68116 /* DataProviders */ = {
 			isa = PBXGroup;
 			children = (
-				A5ARCH052D9C4CEB0038BEE5 /* Sync */,
 				A5F171342D9C4CE60038BEE6 /* SwiftData */,
 				A55953A32D96C567004DAD6A /* Network */,
 				A562EE932D93365B00D68116 /* Repositories */,
@@ -487,7 +466,6 @@
 				A57F1DBA2D942EF100584AEC /* Vehicle */,
 				A5E8F3032D98A8B2003D8F30 /* VehicleMileage */,
 				A5619DFD2E0FF4F300D46700 /* VehicleService */,
-				A5FH0202E1000010038BEE4 /* Sync */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -501,14 +479,6 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		A5FH0202E1000010038BEE4 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				A5FH0022E1000010038BEE2 /* ChangesResponse.swift */,
-			);
-			path = Sync;
-			sourceTree = "<group>";
-		};
 		A562EEA52D9338D700D68116 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,17 +487,8 @@
 				A57F1DB42D942E3B00584AEC /* Vehicle */,
 				A5E8F2FD2D98A560003D8F30 /* VehicleMileage */,
 				A5619DFA2E0FF46D00D46700 /* VehicleService */,
-				A5FH0212E1000010038BEE5 /* Sync */,
 			);
 			path = DataSources;
-			sourceTree = "<group>";
-		};
-		A5FH0212E1000010038BEE5 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */,
-			);
-			path = Sync;
 			sourceTree = "<group>";
 		};
 		A562EEA62D9338EF00D68116 /* Login */ = {
@@ -620,7 +581,6 @@
 		A5A7A5712D6276AD008608DC /* SwiftData */ = {
 			isa = PBXGroup;
 			children = (
-				A55953AC2D96D97D004DAD6A /* Protocols */,
 				A5A7A5722D6276B4008608DC /* Vehicle.swift */,
 				A5A7A5742D628547008608DC /* VehicleMileage.swift */,
 				A54EB8DE2D948432001AE2A7 /* VehicleType.swift */,
@@ -764,16 +724,6 @@
 				A5E8F3072D98AB6B003D8F30 /* VehicleMileageRepository.swift */,
 			);
 			path = VehicleMileage;
-			sourceTree = "<group>";
-		};
-		A5ARCH052D9C4CEB0038BEE5 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */,
-				A5ARCH022D9C4CEB0038BEE2 /* LocalDataStore.swift */,
-				A5FH0012E1000010038BEE1 /* SyncTimestampStore.swift */,
-			);
-			path = Sync;
 			sourceTree = "<group>";
 		};
 		A5F171342D9C4CE60038BEE6 /* SwiftData */ = {
@@ -972,11 +922,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5A7A5732D6276B8008608DC /* Vehicle.swift in Sources */,
-				A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */,
-				A5ARCH042D9C4CEB0038BEE4 /* LocalDataStore.swift in Sources */,
-				A5FH0112E1000010038BEE1 /* SyncTimestampStore.swift in Sources */,
-				A5FH0122E1000010038BEE2 /* ChangesResponse.swift in Sources */,
-				A5FH0132E1000010038BEE3 /* ChangesDataSource.swift in Sources */,
 				A5F171362D9C4CEB0038BEE6 /* SwiftDataManager.swift in Sources */,
 				A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */,
 				A5E8F3052D98A8C3003D8F30 /* VehicleMileageResponse.swift in Sources */,
@@ -987,7 +932,6 @@
 				A5619DF62E0FF3C400D46700 /* VehicleServiceRequest.swift in Sources */,
 				A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */,
 				A54EB8DF2D948432001AE2A7 /* VehicleType.swift in Sources */,
-				A55953AE2D96D982004DAD6A /* Syncable.swift in Sources */,
 				A562EEB62D933B5100D68116 /* AutoCareAPI.swift in Sources */,
 				A5619DFC2E0FF48800D46700 /* VehicleServiceDataSourceProtocol.swift in Sources */,
 				A50014B52B86626000040E3C /* MainButtonStyle.swift in Sources */,

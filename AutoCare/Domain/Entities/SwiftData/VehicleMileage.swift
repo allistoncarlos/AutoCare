@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @Model
-final class VehicleMileage: Syncable, Sendable {
-    var id: String? = nil
+final class VehicleMileage: Sendable {
+    var id: String?
     var date: Date = Date()
     var totalCost: Decimal = 0
     var odometer: Int = 0
@@ -20,13 +20,6 @@ final class VehicleMileage: Syncable, Sendable {
     var calculatedMileage: Decimal = 0
     var complete: Bool = true
     var vehicleId: String
-
-    var synced: Bool
-    var clientId: String
-    var createdAt: Date?
-    var updatedAt: Date?
-    var deleted: Bool
-    var deletedAt: Date?
 
     init(
         id: String?,
@@ -38,13 +31,7 @@ final class VehicleMileage: Syncable, Sendable {
         fuelCost: Decimal,
         calculatedMileage: Decimal,
         complete: Bool,
-        vehicleId: String,
-        clientId: String? = nil,
-        synced: Bool = false,
-        createdAt: Date? = nil,
-        updatedAt: Date? = nil,
-        deleted: Bool = false,
-        deletedAt: Date? = nil
+        vehicleId: String
     ) {
         self.id = id
         self.date = date
@@ -56,17 +43,11 @@ final class VehicleMileage: Syncable, Sendable {
         self.calculatedMileage = calculatedMileage
         self.complete = complete
         self.vehicleId = vehicleId
-        self.clientId = SyncDefaults.newClientId(clientId ?? id)
-        self.synced = synced
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-        self.deleted = deleted
-        self.deletedAt = deletedAt
     }
 
-    public func toRequest() -> VehicleMileageRequest {
+    func toRequest() -> VehicleMileageRequest {
         VehicleMileageRequest(
-            clientId: clientId,
+            clientId: id ?? UUID().uuidString,
             date: date,
             totalCost: totalCost,
             odometer: odometer,

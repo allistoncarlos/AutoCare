@@ -37,7 +37,7 @@ enum VehicleServiceSubtype: String, Codable, CustomStringConvertible {
 }
 
 @Model
-final class VehicleService: Syncable, Sendable {
+final class VehicleService: Sendable {
     var id: String
     var date: Date = Date()
     var odometer: Int = 0
@@ -47,13 +47,6 @@ final class VehicleService: Syncable, Sendable {
     var comment: String = ""
     var vehicle_id: String
 
-    var synced: Bool
-    var clientId: String
-    var createdAt: Date?
-    var updatedAt: Date?
-    var deleted: Bool
-    var deletedAt: Date?
-
     init(
         id: String,
         date: Date,
@@ -62,13 +55,7 @@ final class VehicleService: Syncable, Sendable {
         subtype: VehicleServiceSubtype,
         totalCost: Decimal,
         comment: String,
-        vehicle_id: String,
-        clientId: String? = nil,
-        synced: Bool = false,
-        createdAt: Date? = nil,
-        updatedAt: Date? = nil,
-        deleted: Bool = false,
-        deletedAt: Date? = nil
+        vehicle_id: String
     ) {
         self.id = id
         self.date = date
@@ -78,17 +65,11 @@ final class VehicleService: Syncable, Sendable {
         self.totalCost = totalCost
         self.comment = comment
         self.vehicle_id = vehicle_id
-        self.clientId = SyncDefaults.newClientId(clientId ?? id)
-        self.synced = synced
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-        self.deleted = deleted
-        self.deletedAt = deletedAt
     }
 
-    public func toRequest() -> VehicleServiceRequest {
+    func toRequest() -> VehicleServiceRequest {
         VehicleServiceRequest(
-            clientId: clientId,
+            clientId: id,
             date: date,
             odometer: odometer,
             type: type.rawValue,

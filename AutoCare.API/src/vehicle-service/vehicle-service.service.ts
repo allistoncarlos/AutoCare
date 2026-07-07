@@ -92,16 +92,6 @@ export class VehicleServiceService {
     return service;
   }
 
-  findChanges(userId: string, since: Date) {
-    return this.vehicleServiceModel
-      .find({
-        userId: new Types.ObjectId(userId),
-        $or: [{ updatedAt: { $gt: since } }, { deletedAt: { $gt: since } }],
-      })
-      .sort({ updatedAt: 1 })
-      .exec();
-  }
-
   toResponse(service: VehicleServiceDocument) {
     return {
       id: service._id.toString(),

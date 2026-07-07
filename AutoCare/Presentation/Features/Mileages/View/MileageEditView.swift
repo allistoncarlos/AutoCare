@@ -22,8 +22,6 @@ struct MileageEditView: View {
     @State private var liters = 0
     @State private var isComplete = true
     
-    @StateObject var networkConnectivity = NetworkConnectivity()
-    
     var currencyFormatter: NumberFormatterProtocol
     var decimalFormatter: NumberFormatterProtocol
     var integerFormatter: NumberFormatterProtocol
@@ -133,7 +131,7 @@ struct MileageEditView: View {
         .toolbar {
             Button("Salvar") {
                 Task {
-                    await viewModel.save(isConnected: networkConnectivity.status == .connected)
+                    await viewModel.save()
                 }
             }
         }

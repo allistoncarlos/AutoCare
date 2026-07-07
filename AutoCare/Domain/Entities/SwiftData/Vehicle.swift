@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Vehicle: Syncable, Sendable {
+final class Vehicle: Sendable {
     var id: String?
     var name: String = ""
     var brand: String = ""
@@ -18,15 +18,7 @@ final class Vehicle: Syncable, Sendable {
     var licensePlate: String = ""
     var odometer: Int = 0
     var isDefault: Bool
-
     var vehicleTypeId: String
-
-    var synced: Bool
-    var clientId: String
-    var createdAt: Date?
-    var updatedAt: Date?
-    var deleted: Bool
-    var deletedAt: Date?
 
     init(
         id: String? = nil,
@@ -37,13 +29,7 @@ final class Vehicle: Syncable, Sendable {
         licensePlate: String,
         odometer: Int,
         isDefault: Bool,
-        vehicleTypeId: String,
-        clientId: String? = nil,
-        synced: Bool = false,
-        createdAt: Date? = nil,
-        updatedAt: Date? = nil,
-        deleted: Bool = false,
-        deletedAt: Date? = nil
+        vehicleTypeId: String
     ) {
         self.id = id
         self.name = name
@@ -54,17 +40,11 @@ final class Vehicle: Syncable, Sendable {
         self.odometer = odometer
         self.isDefault = isDefault
         self.vehicleTypeId = vehicleTypeId
-        self.clientId = SyncDefaults.newClientId(clientId ?? id)
-        self.synced = synced
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-        self.deleted = deleted
-        self.deletedAt = deletedAt
     }
 
-    public func toRequest() -> VehicleRequest {
+    func toRequest() -> VehicleRequest {
         VehicleRequest(
-            clientId: clientId,
+            clientId: id ?? UUID().uuidString,
             name: name,
             brand: brand,
             model: model,

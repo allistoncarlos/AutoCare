@@ -10,7 +10,6 @@ import Foundation
 
 enum APIConstants {
     static let authResource = "auth"
-    static let changesResource = "changes"
     static let vehicleTypeResource = "vehicle-type"
     static let vehicleResource = "vehicle"
     static let vehicleMileageResource = "vehicle-mileage"
@@ -20,7 +19,6 @@ enum APIConstants {
 enum AutoCareAPI {
     case login(data: LoginRequest)
     case refreshToken(data: RefreshTokenRequest)
-    case changes(since: String?)
     case vehicleType
     case vehicles
     case vehicle(id: String)
@@ -42,8 +40,6 @@ enum AutoCareAPI {
             return "\(APIConstants.authResource)/login"
         case .refreshToken:
             return "\(APIConstants.authResource)/refresh"
-        case .changes:
-            return APIConstants.changesResource
         case .vehicleType:
             return APIConstants.vehicleTypeResource
         case .vehicles:
@@ -54,7 +50,7 @@ enum AutoCareAPI {
             if let id {
                 return "\(APIConstants.vehicleResource)/\(id)"
             }
-            return "\(APIConstants.vehicleResource)"
+            return APIConstants.vehicleResource
         case .vehicleMileages:
             return APIConstants.vehicleMileageResource
         case let .vehicleMileage(id):
@@ -78,7 +74,7 @@ enum AutoCareAPI {
 
     var method: HTTPMethod {
         switch self {
-        case .vehicleType, .vehicles, .vehicle, .vehicleMileages, .vehicleMileage, .vehicleServices, .vehicleService, .changes:
+        case .vehicleType, .vehicles, .vehicle, .vehicleMileages, .vehicleMileage, .vehicleServices, .vehicleService:
             return .get
         case .login, .refreshToken:
             return .post
@@ -119,14 +115,6 @@ enum AutoCareAPI {
             return try parameterEncoder.encode(model, into: request)
         case let .saveVehicleService(_, model):
             return try parameterEncoder.encode(model, into: request)
-        case let .changes(since):
-            guard let since else { return request }
-            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
-            components?.queryItems = [URLQueryItem(name: "since", value: since)]
-            guard let url = components?.url else { return request }
-            var updated = request
-            updated.url = url
-            return updated
         case let .vehicleMileages(vehicleId):
             var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
             components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
