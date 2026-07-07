@@ -8,7 +8,6 @@
 import Combine
 import Factory
 import Foundation
-import SwiftData
 import SwiftUI
 
 extension MileageListView {
@@ -17,16 +16,13 @@ extension MileageListView {
         @Published private(set) var state: MileageListState = .idle
         @Published private(set) var vehicleMileages: [VehicleMileage] = []
 
-        let modelContext: ModelContext
-        private let localStore: LocalDataStore
         let selectedVehicle: Vehicle
         private let networkConnectivity = NetworkConnectivity()
 
+        @Injected(\.swiftDataManager) private var swiftDataManager
         @Injected(\.vehicleMileageRepository) private var repository
 
-        init(modelContext: ModelContext, selectedVehicle: Vehicle) {
-            self.modelContext = modelContext
-            self.localStore = LocalDataStore(modelContext: modelContext)
+        init(selectedVehicle: Vehicle) {
             self.selectedVehicle = selectedVehicle
         }
 
@@ -37,7 +33,6 @@ extension MileageListView {
         ) -> some View {
             MileagesRouter.makeEditMileageView(
                 navigationPath: navigationPath,
-                modelContext: modelContext,
                 vehicleId: vehicleId,
                 vehicleMileage: vehicleMileage
             )
@@ -50,37 +45,30 @@ extension MileageListView {
                 await fetchRemoteData(vehicleId: vehicleId)
             }
 
-            fetchLocalData()
+            await fetchLocalData()
         }
 
         private func fetchRemoteData(vehicleId: String) async {
             guard let result = await repository.fetchData(vehicleId: vehicleId) else { return }
 
             do {
-                let existing = try localStore.fetch(
+                try await swiftDataManager.replaceAll(
+                    result,
                     where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId }
                 )
-                existing.forEach { modelContext.delete($0) }
-
-                result.forEach { mileage in
-                    mileage.synced = true
-                    modelContext.insert(mileage)
-                }
-
-                try localStore.save()
             } catch {
                 print(error)
             }
         }
 
-        private func fetchLocalData() {
+        private func fetchLocalData() async {
             do {
                 guard let vehicleId = selectedVehicle.id else {
                     state = .error
                     return
                 }
 
-                vehicleMileages = try localStore.fetch(
+                vehicleMileages = try await swiftDataManager.fetch(
                     where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId },
                     sortBy: [SortDescriptor(\.date, order: .reverse)]
                 )

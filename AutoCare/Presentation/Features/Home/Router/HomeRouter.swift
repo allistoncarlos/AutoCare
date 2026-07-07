@@ -6,20 +6,15 @@
 //
 
 import PulseUI
-import SwiftData
 import SwiftUI
 
 enum HomeRouter {
     static func makeEditVehicleView(
-        modelContext: ModelContext,
         vehicleId: String?,
         isPresented: Binding<Bool>
     ) -> some View {
         VehicleEditView(
-            viewModel: VehicleEditView.ViewModel(
-                modelContext: modelContext,
-                vehicleId: vehicleId
-            ),
+            viewModel: VehicleEditView.ViewModel(vehicleId: vehicleId),
             isPresented: isPresented
         )
         .interactiveDismissDisabled()
@@ -29,27 +24,15 @@ enum HomeRouter {
         NavigationView { ConsoleView() }
     }
 
-    static func makeMileageListView(
-        modelContext: ModelContext,
-        selectedVehicle: Vehicle
-    ) -> some View {
+    static func makeMileageListView(selectedVehicle: Vehicle) -> some View {
         MileageListView(
-            viewModel: MileageListView.ViewModel(
-                modelContext: modelContext,
-                selectedVehicle: selectedVehicle
-            )
+            viewModel: MileageListView.ViewModel(selectedVehicle: selectedVehicle)
         )
     }
 
-    static func makeServiceListView(
-        modelContext: ModelContext,
-        selectedVehicle: Vehicle
-    ) -> some View {
+    static func makeServiceListView(selectedVehicle: Vehicle) -> some View {
         ServiceListView(
-            viewModel: ServiceListView.ViewModel(
-                modelContext: modelContext,
-                selectedVehicle: selectedVehicle
-            )
+            viewModel: ServiceListView.ViewModel(selectedVehicle: selectedVehicle)
         )
     }
 }

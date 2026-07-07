@@ -8,16 +8,17 @@
 import BackgroundTasks
 import Factory
 import Foundation
-import SwiftData
 import SwiftUI
 import UserNotifications
 
 extension AutoCareApp {
     @MainActor
     final class ViewModel: ObservableObject {
-        func resultView(modelContext: ModelContext) -> AnyView {
+        @Injected(\.syncService) private var syncService
+
+        func resultView() -> AnyView {
             KeychainDataSource.hasValidToken()
-                ? AnyView(LoginRouter.makeHomeView(modelContext: modelContext))
+                ? AnyView(LoginRouter.makeHomeView())
                 : AnyView(LoginRouter.makeLoginView())
         }
 
@@ -30,8 +31,7 @@ extension AutoCareApp {
             try? BGTaskScheduler.shared.submit(request)
         }
 
-        func syncData(modelContext: ModelContext) async {
-            let syncService = SyncService(modelContext: modelContext)
+        func syncData() async {
             await syncService.sync()
             await notifySyncCompleted()
         }

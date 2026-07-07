@@ -10,8 +10,6 @@ import SwiftUI
 import TTProgressHUD
 
 struct LoginView: View {
-    @Environment(\.modelContext) private var modelContext
-
     @State var username: String = ""
     @State var password: String = ""
     @State var isLoading = false
@@ -25,7 +23,7 @@ struct LoginView: View {
     var body: some View {
         ZStack {
             if case .success = viewModel.state {
-                viewModel.homeView(modelContext: modelContext)
+                viewModel.homeView()
             } else {
                 NavigationView {
                     Form {
@@ -89,5 +87,5 @@ struct LoginView: View {
 
 #Preview {
     LoginView(viewModel: LoginViewModel())
-        .modelContainer(for: Vehicle.self, inMemory: true)
+        .modelContainer(SwiftDataManager.shared.previewModelContainer)
 }

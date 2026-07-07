@@ -159,14 +159,9 @@ struct VehicleEditView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Vehicle.self, VehicleType.self, configurations: config)
-
-    return VehicleEditView(
-        viewModel: VehicleEditView.ViewModel(
-            modelContext: container.mainContext,
-            vehicleId: nil
-        ),
+    VehicleEditView(
+        viewModel: VehicleEditView.ViewModel(vehicleId: nil),
         isPresented: .constant(true)
     )
+    .modelContainer(SwiftDataManager.shared.previewModelContainer)
 }

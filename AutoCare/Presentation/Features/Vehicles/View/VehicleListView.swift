@@ -5,12 +5,11 @@
 //  Created by Alliston Aleixo on 28/10/23.
 //
 
+import SwiftData
 import SwiftUI
 import TTProgressHUD
-import SwiftData
 
 struct VehicleListView: View {
-    @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: ViewModel
     @State var isLoading = true
     
@@ -60,12 +59,6 @@ struct VehicleListView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Vehicle.self, configurations: config)
-
-    return VehicleListView(
-        viewModel: VehicleListView.ViewModel(
-            modelContext: container.mainContext
-        )
-    )
+    VehicleListView(viewModel: VehicleListView.ViewModel())
+        .modelContainer(SwiftDataManager.shared.previewModelContainer)
 }

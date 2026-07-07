@@ -8,7 +8,6 @@
 import Combine
 import Factory
 import Foundation
-import SwiftData
 import SwiftUI
 
 extension VehicleEditView {
@@ -18,17 +17,14 @@ extension VehicleEditView {
         @Published private(set) var vehicleTypes: [VehicleType] = []
         @Published private(set) var vehicle: Vehicle?
 
-        private let modelContext: ModelContext
-        private let localStore: LocalDataStore
         private let vehicleId: String?
         private let networkConnectivity = NetworkConnectivity()
 
+        @Injected(\.swiftDataManager) private var swiftDataManager
         @Injected(\.vehicleRepository) private var repository
         @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository
 
-        init(modelContext: ModelContext, vehicleId: String?) {
-            self.modelContext = modelContext
-            self.localStore = LocalDataStore(modelContext: modelContext)
+        init(vehicleId: String?) {
             self.vehicleId = vehicleId
         }
 
@@ -40,7 +36,7 @@ extension VehicleEditView {
             }
 
             do {
-                vehicleTypes = try localStore.fetch(sortBy: [SortDescriptor(\.name)])
+                vehicleTypes = try await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)])
                 state = .successVehicleTypes(vehicleTypes)
 
                 if let vehicleId {
@@ -56,7 +52,7 @@ extension VehicleEditView {
             state = .loading
 
             do {
-                if let result: Vehicle = try localStore.fetchOne(where: #Predicate { $0.id == vehicleId }) {
+                if let result: Vehicle = try await swiftDataManager.fetchOne(where: #Predicate { $0.id == vehicleId }) {
                     vehicle = result
                     state = .successVehicle(result)
                 } else {
@@ -102,7 +98,7 @@ extension VehicleEditView {
             if networkConnectivity.status == .connected {
                 await saveRemote(vehicle: vehicleToSave, isPresented: isPresented)
             } else {
-                saveLocal(vehicle: vehicleToSave, isPresented: isPresented)
+                await saveLocal(vehicle: vehicleToSave, isPresented: isPresented)
             }
         }
 
@@ -110,12 +106,7 @@ extension VehicleEditView {
             guard let remoteTypes = await vehicleTypeRepository.fetchData() else { return }
 
             do {
-                try modelContext.delete(model: VehicleType.self)
-                remoteTypes.forEach { type in
-                    type.synced = true
-                    modelContext.insert(type)
-                }
-                try localStore.save()
+                try await swiftDataManager.importData(remoteTypes)
             } catch {
                 print(error)
             }
@@ -124,7 +115,7 @@ extension VehicleEditView {
         private func saveRemote(vehicle: Vehicle, isPresented: Binding<Bool>) async {
             if let saved = await repository.save(id: vehicle.id, vehicle: vehicle) {
                 if let existingId = saved.id,
-                   let existing = try? localStore.fetchOne(where: #Predicate<Vehicle> { $0.id == existingId }) {
+                   let existing = try? await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.id == existingId }) {
                     existing.name = saved.name
                     existing.brand = saved.brand
                     existing.model = saved.model
@@ -135,8 +126,8 @@ extension VehicleEditView {
                     existing.vehicleTypeId = saved.vehicleTypeId
                     existing.clientId = saved.clientId
                     existing.synced = true
-                    try? localStore.save()
-                } else if let existing = try? localStore.fetchOne(where: #Predicate<Vehicle> { $0.clientId == saved.clientId }) {
+                    try? await swiftDataManager.save()
+                } else if let existing = try? await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.clientId == saved.clientId }) {
                     existing.id = saved.id
                     existing.name = saved.name
                     existing.brand = saved.brand
@@ -147,23 +138,22 @@ extension VehicleEditView {
                     existing.isDefault = saved.isDefault
                     existing.vehicleTypeId = saved.vehicleTypeId
                     existing.synced = true
-                    try? localStore.save()
+                    try? await swiftDataManager.save()
                 } else {
                     saved.synced = true
-                    modelContext.insert(saved)
-                    try? localStore.save()
+                    try? await swiftDataManager.insert(saved)
                 }
                 state = .successSavedVehicle
                 isPresented.wrappedValue = false
             } else {
-                saveLocal(vehicle: vehicle, isPresented: isPresented)
+                await saveLocal(vehicle: vehicle, isPresented: isPresented)
             }
         }
 
-        private func saveLocal(vehicle: Vehicle, isPresented: Binding<Bool>) {
+        private func saveLocal(vehicle: Vehicle, isPresented: Binding<Bool>) async {
             do {
                 if let id = vehicle.id,
-                   let existing = try localStore.fetchOne(where: #Predicate<Vehicle> { $0.id == id }) {
+                   let existing = try await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.id == id }) {
                     existing.name = vehicle.name
                     existing.brand = vehicle.brand
                     existing.model = vehicle.model
@@ -175,10 +165,10 @@ extension VehicleEditView {
                     existing.synced = false
                 } else {
                     vehicle.synced = false
-                    modelContext.insert(vehicle)
+                    try await swiftDataManager.insert(vehicle)
                 }
 
-                try localStore.save()
+                try await swiftDataManager.save()
                 state = .successSavedVehicle
                 isPresented.wrappedValue = false
             } catch {

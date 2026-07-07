@@ -5,13 +5,11 @@
 //  Created by Alliston Aleixo on 28/06/25.
 //
 
-import SwiftData
 import SwiftUI
 
 enum ServicesRouter {
     static func makeEditServiceView(
         navigationPath: Binding<NavigationPath>,
-        modelContext: ModelContext,
         vehicleId: String,
         vehicleService: VehicleService?
     ) -> some View {

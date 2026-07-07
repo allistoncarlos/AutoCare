@@ -22,18 +22,12 @@ struct HomeView: View {
     var body: some View {
         TabView {
             if let selectedVehicle = viewModel.selectedVehicle {
-                HomeRouter.makeMileageListView(
-                    modelContext: viewModel.modelContext,
-                    selectedVehicle: selectedVehicle
-                )
+                HomeRouter.makeMileageListView(selectedVehicle: selectedVehicle)
                 .tabItem {
                     Label("Dashboard", systemImage: "display")
                 }
 
-                HomeRouter.makeServiceListView(
-                    modelContext: viewModel.modelContext,
-                    selectedVehicle: selectedVehicle
-                )
+                HomeRouter.makeServiceListView(selectedVehicle: selectedVehicle)
                 .tabItem {
                     Label("Serviços", systemImage: "car.badge.gearshape")
                 }
@@ -72,11 +66,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(
-        for: Vehicle.self, VehicleType.self, VehicleMileage.self, VehicleService.self,
-        configurations: config
-    )
-
-    return HomeView(viewModel: HomeView.ViewModel(modelContext: container.mainContext))
+    HomeView(viewModel: HomeView.ViewModel())
+        .modelContainer(SwiftDataManager.shared.previewModelContainer)
 }

@@ -79,12 +79,8 @@ struct ServiceListView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: VehicleService.self, configurations: config)
-
-    return ServiceListView(
+    ServiceListView(
         viewModel: ServiceListView.ViewModel(
-            modelContext: container.mainContext,
             selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",
@@ -98,4 +94,5 @@ struct ServiceListView: View {
             )
         )
     )
+    .modelContainer(SwiftDataManager.shared.previewModelContainer)
 }

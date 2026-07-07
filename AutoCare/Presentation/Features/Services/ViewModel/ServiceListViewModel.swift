@@ -8,7 +8,6 @@
 import Combine
 import Factory
 import Foundation
-import SwiftData
 import SwiftUI
 
 extension ServiceListView {
@@ -17,16 +16,13 @@ extension ServiceListView {
         @Published private(set) var state: ServiceListState = .idle
         @Published private(set) var vehicleServices: [VehicleService] = []
 
-        let modelContext: ModelContext
-        private let localStore: LocalDataStore
         let selectedVehicle: Vehicle
         private let networkConnectivity = NetworkConnectivity()
 
+        @Injected(\.swiftDataManager) private var swiftDataManager
         @Injected(\.vehicleServiceRepository) private var repository
 
-        init(modelContext: ModelContext, selectedVehicle: Vehicle) {
-            self.modelContext = modelContext
-            self.localStore = LocalDataStore(modelContext: modelContext)
+        init(selectedVehicle: Vehicle) {
             self.selectedVehicle = selectedVehicle
         }
 
@@ -37,7 +33,6 @@ extension ServiceListView {
         ) -> some View {
             ServicesRouter.makeEditServiceView(
                 navigationPath: navigationPath,
-                modelContext: modelContext,
                 vehicleId: vehicleId,
                 vehicleService: vehicleService
             )
@@ -50,37 +45,30 @@ extension ServiceListView {
                 await fetchRemoteData(vehicleId: vehicleId)
             }
 
-            fetchLocalData()
+            await fetchLocalData()
         }
 
         private func fetchRemoteData(vehicleId: String) async {
             guard let result = await repository.fetchData(vehicleId: vehicleId) else { return }
 
             do {
-                let existing = try localStore.fetch(
+                try await swiftDataManager.replaceAll(
+                    result,
                     where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId }
                 )
-                existing.forEach { modelContext.delete($0) }
-
-                result.forEach { service in
-                    service.synced = true
-                    modelContext.insert(service)
-                }
-
-                try localStore.save()
             } catch {
                 print(error)
             }
         }
 
-        private func fetchLocalData() {
+        private func fetchLocalData() async {
             do {
                 guard let vehicleId = selectedVehicle.id else {
                     state = .error
                     return
                 }
 
-                vehicleServices = try localStore.fetch(
+                vehicleServices = try await swiftDataManager.fetch(
                     where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId },
                     sortBy: [SortDescriptor(\.date, order: .reverse)]
                 )

@@ -188,12 +188,8 @@ struct MileageEditView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: VehicleMileage.self, configurations: config)
-
-    return MileageEditView(
+    MileageEditView(
         viewModel: MileageEditView.ViewModel(
-            modelContext: container.mainContext,
             vehicleMileage: VehicleMileage(
                 id: "123",
                 date: Date(),
@@ -218,4 +214,5 @@ struct MileageEditView: View {
         integerFormatter:
             PreviewNumberFormatter(locale: Locale(identifier: "pt_BR"))
     )
+    .modelContainer(SwiftDataManager.shared.previewModelContainer)
 }

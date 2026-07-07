@@ -9,7 +9,6 @@ import Combine
 import Factory
 import FormValidator
 import Foundation
-import SwiftData
 import SwiftUI
 
 extension MileageEditView {
@@ -20,15 +19,14 @@ extension MileageEditView {
 
         var previousMileage: VehicleMileage?
 
-        private let modelContext: ModelContext
-        private let localStore: LocalDataStore
         private let vehicleId: String
         private var cancellable = Set<AnyCancellable>()
 
+        @Injected(\.swiftDataManager) private var swiftDataManager
+        @Injected(\.vehicleMileageRepository) private var repository
+
         @Published var isFormValid = false
         @Published var manager = FormManager(validationType: .immediate)
-
-        @Injected(\.vehicleMileageRepository) private var repository
 
         @FormField(validator: DateValidator(message: "Informe uma data válida"))
         var date: Date = Date()
@@ -46,13 +44,7 @@ extension MileageEditView {
         lazy var dateValidation = _date.validation(manager: manager)
         lazy var totalCostValidation = _totalCost.validation(manager: manager)
 
-        init(
-            modelContext: ModelContext,
-            vehicleMileage: VehicleMileage?,
-            vehicleId: String
-        ) {
-            self.modelContext = modelContext
-            self.localStore = LocalDataStore(modelContext: modelContext)
+        init(vehicleMileage: VehicleMileage?, vehicleId: String) {
             self.vehicleMileage = vehicleMileage
             self.vehicleId = vehicleId
         }
@@ -75,7 +67,7 @@ extension MileageEditView {
             do {
                 state = .loading
 
-                let result = try localStore.fetch(
+                let result = try await swiftDataManager.fetch(
                     where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId },
                     sortBy: [SortDescriptor(\.date, order: .reverse)]
                 )
@@ -132,14 +124,14 @@ extension MileageEditView {
             if isConnected {
                 await saveRemote(id: mileage.id, vehicleMileage: mileage)
             } else {
-                saveLocal(id: mileage.id, vehicleMileage: mileage)
+                await saveLocal(id: mileage.id, vehicleMileage: mileage)
             }
         }
 
         private func saveRemote(id: String?, vehicleMileage: VehicleMileage) async {
             if let saved = await repository.save(id: id, vehicleMileage: vehicleMileage) {
                 if let existingId = saved.id,
-                   let existing = try? localStore.fetchOne(where: #Predicate<VehicleMileage> { $0.id == existingId }) {
+                   let existing = try? await swiftDataManager.fetchOne(where: #Predicate<VehicleMileage> { $0.id == existingId }) {
                     existing.date = saved.date
                     existing.totalCost = saved.totalCost
                     existing.odometer = saved.odometer
@@ -149,23 +141,23 @@ extension MileageEditView {
                     existing.calculatedMileage = saved.calculatedMileage
                     existing.complete = saved.complete
                     existing.synced = true
-                    try? localStore.save()
+                    try? await swiftDataManager.save()
                 } else {
                     saved.synced = true
-                    try? localStore.insert(saved)
+                    try? await swiftDataManager.insert(saved)
                 }
                 state = .successSave
             } else {
-                saveLocal(id: id, vehicleMileage: vehicleMileage)
+                await saveLocal(id: id, vehicleMileage: vehicleMileage)
             }
         }
 
-        private func saveLocal(id: String?, vehicleMileage: VehicleMileage) {
+        private func saveLocal(id: String?, vehicleMileage: VehicleMileage) async {
             do {
                 if let id {
-                    try update(id: id, vehicleMileage: vehicleMileage)
+                    try await update(id: id, vehicleMileage: vehicleMileage)
                 } else {
-                    try insert(vehicleMileage: vehicleMileage)
+                    try await insert(vehicleMileage: vehicleMileage)
                 }
                 state = .successSave
             } catch {
@@ -174,8 +166,8 @@ extension MileageEditView {
             }
         }
 
-        private func update(id: String, vehicleMileage: VehicleMileage) throws {
-            guard let existing = try localStore.fetchOne(where: #Predicate<VehicleMileage> { $0.id == id }) else {
+        private func update(id: String, vehicleMileage: VehicleMileage) async throws {
+            guard let existing = try await swiftDataManager.fetchOne(where: #Predicate<VehicleMileage> { $0.id == id }) else {
                 state = .error
                 return
             }
@@ -189,13 +181,13 @@ extension MileageEditView {
             existing.calculatedMileage = vehicleMileage.calculatedMileage
             existing.complete = vehicleMileage.complete
             existing.synced = false
-            try localStore.save()
+            try await swiftDataManager.save()
             state = .successSave
         }
 
-        private func insert(vehicleMileage: VehicleMileage) throws {
+        private func insert(vehicleMileage: VehicleMileage) async throws {
             vehicleMileage.synced = false
-            try localStore.insert(vehicleMileage)
+            try await swiftDataManager.insert(vehicleMileage)
             state = .successSave
         }
     }

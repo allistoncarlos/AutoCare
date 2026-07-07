@@ -5,18 +5,15 @@
 //  Created by Alliston Aleixo on 17/03/24.
 //
 
-import SwiftData
 import SwiftUI
 
 enum MileagesRouter {
     static func makeEditMileageView(
         navigationPath: Binding<NavigationPath>,
-        modelContext: ModelContext,
         vehicleId: String,
         vehicleMileage: VehicleMileage?
     ) -> some View {
         let viewModel = MileageEditView.ViewModel(
-            modelContext: modelContext,
             vehicleMileage: vehicleMileage,
             vehicleId: vehicleId
         )

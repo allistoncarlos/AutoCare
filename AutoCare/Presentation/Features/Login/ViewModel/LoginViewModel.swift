@@ -8,7 +8,6 @@
 import Combine
 import Factory
 import Foundation
-import SwiftData
 import SwiftUI
 
 enum LoginError: Error, Equatable {
@@ -33,8 +32,8 @@ class LoginViewModel: ObservableObject {
         }
     }
 
-    func homeView(modelContext: ModelContext) -> some View {
-        LoginRouter.makeHomeView(modelContext: modelContext)
+    func homeView() -> some View {
+        LoginRouter.makeHomeView()
     }
 
     private func saveToken(response: Login?) {

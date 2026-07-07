@@ -26,35 +26,18 @@ struct AutoCareApp: App {
 
     @ObservedObject private var viewModel = ViewModel()
 
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            VehicleType.self,
-            Vehicle.self,
-            VehicleMileage.self,
-            VehicleService.self
-        ])
-
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     var body: some Scene {
         WindowGroup {
-            viewModel.resultView(modelContext: sharedModelContainer.mainContext)
+            viewModel.resultView()
                 .task {
-                    await viewModel.syncData(modelContext: sharedModelContainer.mainContext)
+                    await viewModel.syncData()
                     await viewModel.scheduleAppSync()
                 }
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(SwiftDataManager.shared.container)
         .backgroundTask(.appRefresh(AutoCareApp.syncTask)) {
             await viewModel.scheduleAppSync()
-            await viewModel.syncData(modelContext: sharedModelContainer.mainContext)
+            await viewModel.syncData()
         }
     }
 }

@@ -8,7 +8,6 @@
 import Combine
 import Factory
 import Foundation
-import SwiftData
 import SwiftUI
 
 extension HomeView {
@@ -17,22 +16,17 @@ extension HomeView {
         @Published private(set) var state: HomeState = .idle
         @Published private(set) var selectedVehicle: Vehicle?
 
-        let modelContext: ModelContext
-        private let localStore: LocalDataStore
-        private let syncService: SyncService
         private let networkConnectivity = NetworkConnectivity()
         private var cancellables = Set<AnyCancellable>()
 
+        @Injected(\.swiftDataManager) private var swiftDataManager
+        @Injected(\.syncService) private var syncService
         @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository
         @Injected(\.vehicleRepository) private var vehicleRepository
         @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository
         @Injected(\.vehicleServiceRepository) private var vehicleServiceRepository
 
-        init(modelContext: ModelContext) {
-            self.modelContext = modelContext
-            self.localStore = LocalDataStore(modelContext: modelContext)
-            self.syncService = SyncService(modelContext: modelContext)
-
+        init() {
             networkConnectivity.$status
                 .receive(on: RunLoop.main)
                 .sink { [weak self] status in
@@ -47,7 +41,6 @@ extension HomeView {
             isPresented: Binding<Bool>
         ) -> some View {
             HomeRouter.makeEditVehicleView(
-                modelContext: modelContext,
                 vehicleId: vehicleId,
                 isPresented: isPresented
             )
@@ -66,7 +59,7 @@ extension HomeView {
             }
 
             do {
-                let vehicles: [Vehicle] = try localStore.fetch(sortBy: [SortDescriptor(\.name)])
+                let vehicles: [Vehicle] = try await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)])
                 state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
 
                 if vehicles.isEmpty {
