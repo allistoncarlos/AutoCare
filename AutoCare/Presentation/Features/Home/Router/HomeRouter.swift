@@ -5,49 +5,49 @@
 //  Created by Alliston Aleixo on 09/11/24.
 //
 
-import SwiftUI
-import SwiftData
 import PulseUI
+import SwiftData
+import SwiftUI
 
 enum HomeRouter {
     static func makeEditVehicleView(
-        modelContainer: ModelContainer,
+        modelContext: ModelContext,
         vehicleId: String?,
         isPresented: Binding<Bool>
     ) -> some View {
-        return VehicleEditView(
+        VehicleEditView(
             viewModel: VehicleEditView.ViewModel(
-                modelContainer: modelContainer,
+                modelContext: modelContext,
                 vehicleId: vehicleId
             ),
             isPresented: isPresented
         )
         .interactiveDismissDisabled()
     }
-    
+
     static func makePulseUI() -> some View {
-        return NavigationView { ConsoleView() }
+        NavigationView { ConsoleView() }
     }
-    
+
     static func makeMileageListView(
-        modelContainer: ModelContainer,
+        modelContext: ModelContext,
         selectedVehicle: Vehicle
     ) -> some View {
-        return MileageListView(
+        MileageListView(
             viewModel: MileageListView.ViewModel(
-                modelContainer: modelContainer,
+                modelContext: modelContext,
                 selectedVehicle: selectedVehicle
             )
         )
     }
-    
+
     static func makeServiceListView(
-        modelContainer: ModelContainer,
+        modelContext: ModelContext,
         selectedVehicle: Vehicle
     ) -> some View {
-        return ServiceListView(
+        ServiceListView(
             viewModel: ServiceListView.ViewModel(
-                modelContainer: modelContainer,
+                modelContext: modelContext,
                 selectedVehicle: selectedVehicle
             )
         )

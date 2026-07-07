@@ -5,40 +5,33 @@
 //  Created by Alliston Aleixo on 09/11/24.
 //
 
+import SwiftData
 import SwiftUI
 import TTProgressHUD
-import SwiftData
 
 struct HomeView: View {
     @ObservedObject var viewModel: HomeView.ViewModel
     @State private var isLoading = false
     @State private var isNewVehiclePresented = false
     @State private var isPulseConsolePresented = false
-    @State private var selectedVehicle: Vehicle? = nil
-    @State private var selectedVehicleMileage: VehicleMileage? = nil
 
-    @State private var presentedMileages = NavigationPath()
-    
-    @State private var stateStore = HomeView.ViewModel.ViewModelState()
-    @State private var state: HomeState = .idle
-    
     init(viewModel: HomeView.ViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         TabView {
-            if let selectedVehicle = selectedVehicle {
+            if let selectedVehicle = viewModel.selectedVehicle {
                 HomeRouter.makeMileageListView(
-                    modelContainer: viewModel.modelContainer,
+                    modelContext: viewModel.modelContext,
                     selectedVehicle: selectedVehicle
                 )
                 .tabItem {
                     Label("Dashboard", systemImage: "display")
                 }
-                
+
                 HomeRouter.makeServiceListView(
-                    modelContainer: viewModel.modelContainer,
+                    modelContext: viewModel.modelContext,
                     selectedVehicle: selectedVehicle
                 )
                 .tabItem {
@@ -52,26 +45,23 @@ struct HomeView: View {
         )
         .task {
             await viewModel.requestAuthorizationForNotifications()
-            await syncData()
+            await viewModel.fetchData()
         }
-        .onChange(of: isNewVehiclePresented, { _, newValue in
+        .onChange(of: isNewVehiclePresented) { _, newValue in
             if !newValue {
-                Task {
-                    await viewModel.fetchData()
-                }
+                Task { await viewModel.fetchData() }
             }
-        })
-        .onChange(of: state, { _, newValue in
+        }
+        .onChange(of: viewModel.state) { _, newValue in
             isLoading = newValue == .loading
-
             isNewVehiclePresented = newValue == .newVehicle
-        })
+        }
         .onShake {
             isPulseConsolePresented = true
         }
         .sheet(isPresented: $isNewVehiclePresented) {
             viewModel.showEditVehicleView(
-                vehicleId: selectedVehicle?.id,
+                vehicleId: viewModel.selectedVehicle?.id,
                 isPresented: $isNewVehiclePresented
             )
         }
@@ -79,17 +69,14 @@ struct HomeView: View {
             viewModel.showPulseUI()
         }
     }
-    
-    func syncData() async {
-        await stateStore.store(await viewModel.stateStore.statePublisher.sink { self.state = $0})
-        await stateStore.store(await viewModel.stateStore.selectedVehiclePublisher.sink { self.selectedVehicle = $0 })
-        
-        await viewModel.fetchData()
-    }
 }
 
 #Preview {
-    HomeView(
-        viewModel: HomeView.ViewModel(modelContainer: SwiftDataManager.shared.previewModelContainer),
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(
+        for: Vehicle.self, VehicleType.self, VehicleMileage.self, VehicleService.self,
+        configurations: config
     )
+
+    return HomeView(viewModel: HomeView.ViewModel(modelContext: container.mainContext))
 }

@@ -92,8 +92,8 @@
 		A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77B2AED43620038A546 /* VehicleListView.swift */; };
 		A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */; };
 		A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB7842AED43A10038A546 /* MileageListView.swift */; };
-		A5FCB78D2AED49380038A546 /* MileageListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */; };
-/* End PBXBuildFile section */
+		A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */; };
+		A5ARCH042D9C4CEB0038BEE4 /* LocalDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ARCH022D9C4CEB0038BEE2 /* LocalDataStore.swift */; };
 
 /* Begin PBXFileReference section */
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
@@ -178,8 +178,8 @@
 		A5FCB77B2AED43620038A546 /* VehicleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
 		A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditView.swift; sourceTree = "<group>"; };
 		A5FCB7842AED43A10038A546 /* MileageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListView.swift; sourceTree = "<group>"; };
-		A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListViewModel.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+		A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
+		A5ARCH022D9C4CEB0038BEE2 /* LocalDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataStore.swift; sourceTree = "<group>"; };
 
 /* Begin PBXFrameworksBuildPhase section */
 		A5E333822AEBE48F0089DD81 /* Frameworks */ = {
@@ -402,6 +402,7 @@
 		A562EE922D93365500D68116 /* DataProviders */ = {
 			isa = PBXGroup;
 			children = (
+				A5ARCH052D9C4CEB0038BEE5 /* Sync */,
 				A5F171342D9C4CE60038BEE6 /* SwiftData */,
 				A55953A32D96C567004DAD6A /* Network */,
 				A562EE932D93365B00D68116 /* Repositories */,
@@ -741,6 +742,15 @@
 			path = VehicleMileage;
 			sourceTree = "<group>";
 		};
+		A5ARCH052D9C4CEB0038BEE5 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */,
+				A5ARCH022D9C4CEB0038BEE2 /* LocalDataStore.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
 		A5F171342D9C4CE60038BEE6 /* SwiftData */ = {
 			isa = PBXGroup;
 			children = (
@@ -937,6 +947,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5A7A5732D6276B8008608DC /* Vehicle.swift in Sources */,
+				A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */,
+				A5ARCH042D9C4CEB0038BEE4 /* LocalDataStore.swift in Sources */,
 				A5F171362D9C4CEB0038BEE6 /* SwiftDataManager.swift in Sources */,
 				A55918E12BA9C53D00EB3ED3 /* Date+Extensions.swift in Sources */,
 				A5E8F3052D98A8C3003D8F30 /* VehicleMileageResponse.swift in Sources */,

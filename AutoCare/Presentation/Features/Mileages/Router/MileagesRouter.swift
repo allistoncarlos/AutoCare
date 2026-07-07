@@ -5,23 +5,22 @@
 //  Created by Alliston Aleixo on 17/03/24.
 //
 
-import Foundation
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 enum MileagesRouter {
     static func makeEditMileageView(
         navigationPath: Binding<NavigationPath>,
-        modelContainer: ModelContainer,
+        modelContext: ModelContext,
         vehicleId: String,
         vehicleMileage: VehicleMileage?
     ) -> some View {
         let viewModel = MileageEditView.ViewModel(
-            modelContainer: modelContainer,
+            modelContext: modelContext,
             vehicleMileage: vehicleMileage,
             vehicleId: vehicleId
         )
-        
+
         let currencyFormatter = NumberFormatter()
         currencyFormatter.numberStyle = .currency
         currencyFormatter.maximumFractionDigits = 2

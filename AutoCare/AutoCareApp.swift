@@ -5,51 +5,56 @@
 //  Created by Alliston Aleixo on 27/10/23.
 //
 
+import BackgroundTasks
+import SwiftData
 import SwiftUI
 import TTProgressHUD
-import BackgroundTasks
 
 @main
-struct AutoCareApp: SwiftUI.App {
+struct AutoCareApp: App {
     static let dateTimeFormat = "dd/MM/yyyy HH:mm"
     static let dateFormat = "dd/MM/yyyy"
     static let shortDateFormat = "dd/MM"
     static let timeFormat = "HH:mm"
-    
+
     static let syncTask = "AutoCare.SyncTask"
-    
+
     static let hudConfig = TTProgressHUDConfig(
         title: "Carregando",
         caption: "Por favor aguarde..."
     )
-    
-    @ObservedObject var viewModel = AutoCareApp.ViewModel()
+
+    @ObservedObject private var viewModel = ViewModel()
+
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            VehicleType.self,
+            Vehicle.self,
+            VehicleMileage.self,
+            VehicleService.self
+        ])
+
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
 
     var body: some Scene {
         WindowGroup {
-            viewModel.resultView()
+            viewModel.resultView(modelContext: sharedModelContainer.mainContext)
                 .task {
-                    await viewModel.syncData()
+                    await viewModel.syncData(modelContext: sharedModelContainer.mainContext)
                     await viewModel.scheduleAppSync()
-                    
-                    // TODO: https://stackoverflow.com/questions/77494254/background-task-backgroundtask-doesnt-work-in-swiftui
-                    // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"SyncTask"]
-                    
-                    // TODO: VER ONDE PEÇO PERMISSÃO PRA NOTIFICATION (É SÓ TESTE)
                 }
         }
-        .modelContainer(SwiftDataManager.shared.container)
+        .modelContainer(sharedModelContainer)
         .backgroundTask(.appRefresh(AutoCareApp.syncTask)) {
             await viewModel.scheduleAppSync()
-            
-            await viewModel.syncData()
-            
-            
-            
-            // https://www.youtube.com/watch?v=JDw4Cs1Hbpo
-            // TODO: VERIFICAR AQUI SE PRECISA DE PERMISSÃO PRA BACKGROUND TASK
-            // TODO: FAZER AQUI A CHAMADA PRO SAVE DE CADA REPOSITORY
-            // TODO: SALVAR EM ALGUM LUGAR O TIMESTAMP, ACHO QUE EM USERDEFAULTS (Ver o que fazer com esse TIMESTAMP)
+            await viewModel.syncData(modelContext: sharedModelContainer.mainContext)
         }
     }
 }

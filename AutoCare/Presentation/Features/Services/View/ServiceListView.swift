@@ -5,51 +5,43 @@
 //  Created by Alliston Aleixo on 13/02/25.
 //
 
+import SwiftData
 import SwiftUI
 import TTProgressHUD
-import SwiftData
 
 struct ServiceListView: View {
     @ObservedObject var viewModel: ViewModel
-    @State private var isLoading = true
-    @State private var isNewVehiclePresented = false
-
     @State private var presentedServices = NavigationPath()
-    @State private var vehicleServices = [VehicleService]()
-    @State private var selectedVehicle: Vehicle?
-    
-    @State private var stateStore = ServiceListView.ViewModel.ViewModelState()
-    @State private var state: ServiceListState = .idle
-    
+
     init(viewModel: ServiceListView.ViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         NavigationStack(path: $presentedServices) {
             ScrollView {
-                ForEach(vehicleServices, id: \.id) { vehicleService in
+                ForEach(viewModel.vehicleServices, id: \.id) { vehicleService in
                     NavigationLink(value: vehicleService) {
                         ServiceListItem(vehicleService: vehicleService)
                     }
                 }
             }
-            .navigationView(title: selectedVehicle?.name ?? "")
+            .navigationView(title: viewModel.selectedVehicle.name)
             .toolbar {
                 Button(action: {}) {
                     NavigationLink(value: String()) {
                         Image(systemName: "plus")
                     }
                 }
-                .disabled(isLoading)
+                .disabled(viewModel.state == .loading)
             }
             .navigationDestination(for: String.self) { _ in
-                if let id = selectedVehicle?.id {
+                if let id = viewModel.selectedVehicle.id {
                     navigateToEditServiceView(vehicleId: id)
                 }
             }
             .navigationDestination(for: VehicleService.self) { vehicleService in
-                if let id = selectedVehicle?.id {
+                if let id = viewModel.selectedVehicle.id {
                     navigateToEditServiceView(
                         vehicleId: id,
                         vehicleService: vehicleService
@@ -57,42 +49,28 @@ struct ServiceListView: View {
                 }
             }
         }
-        .disabled(isLoading)
+        .disabled(viewModel.state == .loading)
         .overlay(
-            TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
+            TTProgressHUD(
+                .constant(viewModel.state == .loading),
+                config: AutoCareApp.hudConfig
+            )
         )
         .task {
-            await syncData()
+            await viewModel.fetchData()
         }
-        .onChange(of: state, { _, newValue in
-            isLoading = newValue == .loading
-
-            isNewVehiclePresented = newValue == .newVehicle
-        })
-        .onChange(of: presentedServices) {
-            oldValue,
-            newValue in
+        .onChange(of: presentedServices) { _, newValue in
             if newValue.isEmpty {
-                Task {
-                    await viewModel.fetchData()
-                }
+                Task { await viewModel.fetchData() }
             }
         }
     }
-    
-    func syncData() async {
-        await stateStore.store(await viewModel.stateStore.statePublisher.sink { self.state = $0})
-        await stateStore.store(await viewModel.stateStore.selectedVehiclePublisher.sink { self.selectedVehicle = $0 })
-        await stateStore.store(await viewModel.stateStore.vehicleServicesPublisher.sink { self.vehicleServices = $0 })
-        
-        await viewModel.fetchData()
-    }
-    
+
     func navigateToEditServiceView(
         vehicleId: String,
         vehicleService: VehicleService? = nil
     ) -> some View {
-        return viewModel.editServiceView(
+        viewModel.editServiceView(
             navigationPath: $presentedServices,
             vehicleId: vehicleId,
             vehicleService: vehicleService
@@ -101,9 +79,12 @@ struct ServiceListView: View {
 }
 
 #Preview {
-    ServiceListView(
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: VehicleService.self, configurations: config)
+
+    return ServiceListView(
         viewModel: ServiceListView.ViewModel(
-            modelContainer: SwiftDataManager.shared.previewModelContainer,
+            modelContext: container.mainContext,
             selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",

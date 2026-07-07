@@ -60,9 +60,12 @@ struct VehicleListView: View {
 }
 
 #Preview {
-    VehicleListView(
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Vehicle.self, configurations: config)
+
+    return VehicleListView(
         viewModel: VehicleListView.ViewModel(
-            modelContext: SwiftDataManager.shared.previewModelContainer.mainContext
+            modelContext: container.mainContext
         )
     )
 }

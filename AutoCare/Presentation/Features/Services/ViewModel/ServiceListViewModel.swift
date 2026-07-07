@@ -5,96 +5,89 @@
 //  Created by Alliston Aleixo on 13/02/25.
 //
 
-import Foundation
-import SwiftUI
 import Combine
-import SwiftData
 import Factory
-
-extension ServiceListView.ViewModel {
-    actor ViewModelState {
-        let statePublisher = CurrentValueSubject<ServiceListState, Never>(.idle)
-        let selectedVehiclePublisher = PassthroughSubject<Vehicle, Never>()
-        let vehicleServicesPublisher = PassthroughSubject<[VehicleService], Never>()
-
-        var cancellable = Set<AnyCancellable>()
-        var networkConnectivity = NetworkConnectivity()
-
-        func setState(_ newState: ServiceListState) {
-            statePublisher.send(newState)
-        }
-
-        func setVehicle(_ vehicle: Vehicle) {
-            selectedVehiclePublisher.send(vehicle)
-        }
-        
-        func setVehicleServices(_ vehicleServices: [VehicleService]) {
-            vehicleServicesPublisher.send(vehicleServices)
-        }
-        
-        func store(_ cancellable: AnyCancellable) {
-            self.cancellable.insert(cancellable)
-        }
-    }
-}
+import Foundation
+import SwiftData
+import SwiftUI
 
 extension ServiceListView {
+    @MainActor
     class ViewModel: ObservableObject {
-        let modelContainer: ModelContainer
-        
-        let stateStore = ViewModelState()
-        
-        private let selectedVehicle: Vehicle
+        @Published private(set) var state: ServiceListState = .idle
+        @Published private(set) var vehicleServices: [VehicleService] = []
 
-        init(
-            modelContainer: ModelContainer,
-            selectedVehicle: Vehicle
-        ) {
-            self.modelContainer = modelContainer
+        let modelContext: ModelContext
+        private let localStore: LocalDataStore
+        let selectedVehicle: Vehicle
+        private let networkConnectivity = NetworkConnectivity()
+
+        @Injected(\.vehicleServiceRepository) private var repository
+
+        init(modelContext: ModelContext, selectedVehicle: Vehicle) {
+            self.modelContext = modelContext
+            self.localStore = LocalDataStore(modelContext: modelContext)
             self.selectedVehicle = selectedVehicle
-
-            Task {
-                let cancellable = await stateStore.statePublisher
-                    .sink { [weak self] state in
-                        switch state {
-                        case let .successVehicleServices(vehicleServices):
-                            Task {
-                                await self?.stateStore.setVehicleServices(vehicleServices)
-                            }
-                        default:
-                            break
-                        }
-                    }
-
-                await stateStore.store(cancellable)
-            }
         }
 
-        @MainActor
         func editServiceView(
             navigationPath: Binding<NavigationPath>,
             vehicleId: String,
             vehicleService: VehicleService? = nil
         ) -> some View {
-            return ServicesRouter.makeEditServiceView(
+            ServicesRouter.makeEditServiceView(
                 navigationPath: navigationPath,
-                modelContainer: modelContainer,
+                modelContext: modelContext,
                 vehicleId: vehicleId,
                 vehicleService: vehicleService
             )
         }
-        
+
         func fetchData() async {
+            state = .loading
+
+            if networkConnectivity.status == .connected, let vehicleId = selectedVehicle.id {
+                await fetchRemoteData(vehicleId: vehicleId)
+            }
+
+            fetchLocalData()
+        }
+
+        private func fetchRemoteData(vehicleId: String) async {
+            guard let result = await repository.fetchData(vehicleId: vehicleId) else { return }
+
             do {
-                await stateStore.setState(.loading)
-                
-                let result: [VehicleService] = try await SwiftDataManager.shared.fetch(sortBy: [SortDescriptor(\VehicleService.date, order: .reverse)])
-                
-                await stateStore.setState(.successVehicleServices(result))
-                await self.stateStore.setVehicle(selectedVehicle)
+                let existing = try localStore.fetch(
+                    where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId }
+                )
+                existing.forEach { modelContext.delete($0) }
+
+                result.forEach { service in
+                    service.synced = true
+                    modelContext.insert(service)
+                }
+
+                try localStore.save()
+            } catch {
+                print(error)
+            }
+        }
+
+        private func fetchLocalData() {
+            do {
+                guard let vehicleId = selectedVehicle.id else {
+                    state = .error
+                    return
+                }
+
+                vehicleServices = try localStore.fetch(
+                    where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId },
+                    sortBy: [SortDescriptor(\.date, order: .reverse)]
+                )
+                state = .successVehicleServices(vehicleServices)
             } catch {
                 print(error.localizedDescription)
-                await stateStore.setState(.error)
+                state = .error
             }
         }
     }

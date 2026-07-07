@@ -188,9 +188,12 @@ struct MileageEditView: View {
 }
 
 #Preview {
-    MileageEditView(
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: VehicleMileage.self, configurations: config)
+
+    return MileageEditView(
         viewModel: MileageEditView.ViewModel(
-            modelContainer: SwiftDataManager.shared.previewModelContainer,
+            modelContext: container.mainContext,
             vehicleMileage: VehicleMileage(
                 id: "123",
                 date: Date(),

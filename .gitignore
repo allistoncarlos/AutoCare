@@ -2,3 +2,7 @@
 AutoCare.xcodeproj/xcuserdata/
 
 *.xcconfig
+
+# .NET
+**/bin/
+**/obj/

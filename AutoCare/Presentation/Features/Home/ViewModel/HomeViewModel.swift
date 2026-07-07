@@ -5,125 +5,108 @@
 //  Created by Alliston Aleixo on 13/02/25.
 //
 
-import Foundation
 import Combine
 import Factory
+import Foundation
 import SwiftData
 import SwiftUI
 
-extension HomeView.ViewModel {
-    actor ViewModelState {
-        let statePublisher = CurrentValueSubject<HomeState, Never>(.idle)
-        let selectedVehiclePublisher = PassthroughSubject<Vehicle?, Never>()
-        
-        var cancellable = Set<AnyCancellable>()
-        var networkConnectivity = NetworkConnectivity()
-        
-        @Injected(\.vehicleTypeRepository) var vehicleTypeRepository: VehicleTypeRepositoryProtocol
-        @Injected(\.vehicleRepository) var vehicleRepository: VehicleRepositoryProtocol
-        @Injected(\.vehicleMileageRepository) var vehicleMileageRepository: VehicleMileageRepositoryProtocol
-        @Injected(\.vehicleServiceRepository) var vehicleServiceRepository: VehicleServiceRepositoryProtocol
-
-        func setState(_ newState: HomeState) {
-            statePublisher.send(newState)
-        }
-
-        func setVehicle(_ vehicle: Vehicle?) {
-            selectedVehiclePublisher.send(vehicle)
-        }
-        
-        func store(_ cancellable: AnyCancellable) {
-            self.cancellable.insert(cancellable)
-        }
-    }
-}
-
 extension HomeView {
-    final class ViewModel: ObservableObject, Sendable {
-        let modelContainer: ModelContainer
-        
-        let stateStore = ViewModelState()
-        
-        init(modelContainer: ModelContainer) {
-            self.modelContainer = modelContainer
-            
-            Task {
-                let cancellable = await stateStore.statePublisher
-                    .sink { [weak self] state in
-                        switch state {
-                        case let .successVehicle(vehicles):
-                            Task {
-                                if vehicles.isEmpty{
-                                    await self?.stateStore.setState(.newVehicle)
-                                } else {
-                                    await self?.stateStore.setVehicle(vehicles.first)
-                                }
-                            }
-                        default:
-                            break
-                        }
-                    }
+    @MainActor
+    final class ViewModel: ObservableObject {
+        @Published private(set) var state: HomeState = .idle
+        @Published private(set) var selectedVehicle: Vehicle?
 
-                await stateStore.store(cancellable)
-            }
+        let modelContext: ModelContext
+        private let localStore: LocalDataStore
+        private let syncService: SyncService
+        private let networkConnectivity = NetworkConnectivity()
+        private var cancellables = Set<AnyCancellable>()
+
+        @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository
+        @Injected(\.vehicleRepository) private var vehicleRepository
+        @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository
+        @Injected(\.vehicleServiceRepository) private var vehicleServiceRepository
+
+        init(modelContext: ModelContext) {
+            self.modelContext = modelContext
+            self.localStore = LocalDataStore(modelContext: modelContext)
+            self.syncService = SyncService(modelContext: modelContext)
+
+            networkConnectivity.$status
+                .receive(on: RunLoop.main)
+                .sink { [weak self] status in
+                    guard status == .connected else { return }
+                    Task { await self?.syncData() }
+                }
+                .store(in: &cancellables)
         }
-        
-        @MainActor
+
         func showEditVehicleView(
             vehicleId: String?,
             isPresented: Binding<Bool>
         ) -> some View {
-            return HomeRouter.makeEditVehicleView(
-                modelContainer: modelContainer,
+            HomeRouter.makeEditVehicleView(
+                modelContext: modelContext,
                 vehicleId: vehicleId,
                 isPresented: isPresented
             )
         }
-        
+
         func showPulseUI() -> some View {
-            return HomeRouter.makePulseUI()
+            HomeRouter.makePulseUI()
         }
-        
+
         func fetchData() async {
-            do {
-                await stateStore.setState(.loading)
-                
+            state = .loading
+
+            let isConnected = networkConnectivity.status == .connected
+            if isConnected {
                 await fetchRemote()
-                
-                let result: [Vehicle] = try await SwiftDataManager.shared.fetch()
-                
-                await stateStore.setState(.successVehicle(result))
-                
+            }
+
+            do {
+                let vehicles: [Vehicle] = try localStore.fetch(sortBy: [SortDescriptor(\.name)])
+                state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
+
+                if vehicles.isEmpty {
+                    selectedVehicle = nil
+                } else if selectedVehicle == nil {
+                    selectedVehicle = vehicles.first(where: \.isDefault) ?? vehicles.first
+                }
             } catch {
                 print(error.localizedDescription)
-                await stateStore.setState(.error)
+                state = .error
             }
         }
-        
-        @discardableResult func requestAuthorizationForNotifications() async -> Bool {
+
+        func syncData() async {
+            await syncService.pushUnsyncedChanges()
+        }
+
+        @discardableResult
+        func requestAuthorizationForNotifications() async -> Bool {
             let notificationCenter = UNUserNotificationCenter.current()
             let authorizationOptions: UNAuthorizationOptions = [.alert, .sound]
 
             do {
-                let authorizationGranted = try await notificationCenter.requestAuthorization(options: authorizationOptions)
-                return authorizationGranted
+                return try await notificationCenter.requestAuthorization(options: authorizationOptions)
             } catch {
                 print(error)
-                
                 return false
             }
         }
-        
-        func fetchRemote() async {
+
+        private func fetchRemote() async {
             var vehicleTypes: [VehicleType] = []
             var vehicles: [Vehicle] = []
 
             await withTaskGroup(of: Void.self) { group in
                 group.addTask {
-                    vehicleTypes = await self.stateStore.vehicleTypeRepository.fetchData() ?? []
+                    vehicleTypes = await self.vehicleTypeRepository.fetchData() ?? []
                 }
                 group.addTask {
-                    vehicles = await self.stateStore.vehicleRepository.fetchData() ?? []
+                    vehicles = await self.vehicleRepository.fetchData() ?? []
                 }
             }
 
@@ -131,7 +114,7 @@ extension HomeView {
                 for vehicle in vehicles {
                     if let id = vehicle.id {
                         group.addTask {
-                            return await self.stateStore.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
+                            await self.vehicleMileageRepository.fetchData(vehicleId: id) ?? []
                         }
                     }
                 }
@@ -142,12 +125,12 @@ extension HomeView {
                 }
                 return collected
             }
-            
+
             let vehicleServices: [VehicleService] = await withTaskGroup(of: [VehicleService].self) { group in
                 for vehicle in vehicles {
                     if let id = vehicle.id {
                         group.addTask {
-                            return await self.stateStore.vehicleServiceRepository.fetchData(vehicleId: id) ?? []
+                            await self.vehicleServiceRepository.fetchData(vehicleId: id) ?? []
                         }
                     }
                 }
@@ -159,15 +142,14 @@ extension HomeView {
                 return collected
             }
 
-            await stateStore.setState(vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles))
-
             do {
-                try await SwiftDataManager.shared.importData(vehicleTypes)
-                try await SwiftDataManager.shared.importData(vehicles)
-                try await SwiftDataManager.shared.importData(vehicleMileages)
-                try await SwiftDataManager.shared.importData(vehicleServices)
+                try syncService.importRemoteData(
+                    vehicleTypes: vehicleTypes,
+                    vehicles: vehicles,
+                    mileages: vehicleMileages,
+                    services: vehicleServices
+                )
             } catch {
-                // TODO: FUTURAMENTE UMA TELA DE LOG DE SYNC, TIPO O SYNCTIME?
                 print(error)
             }
         }

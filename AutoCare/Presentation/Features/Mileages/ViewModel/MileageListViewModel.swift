@@ -5,96 +5,89 @@
 //  Created by Alliston Aleixo on 28/10/23.
 //
 
-import Foundation
-import SwiftUI
 import Combine
-import SwiftData
 import Factory
-
-extension MileageListView.ViewModel {
-    actor ViewModelState {
-        let statePublisher = CurrentValueSubject<MileageListState, Never>(.idle)
-        let selectedVehiclePublisher = PassthroughSubject<Vehicle, Never>()
-        let vehicleMileagesPublisher = PassthroughSubject<[VehicleMileage], Never>()
-
-        var cancellable = Set<AnyCancellable>()
-        var networkConnectivity = NetworkConnectivity()
-
-        func setState(_ newState: MileageListState) {
-            statePublisher.send(newState)
-        }
-
-        func setVehicle(_ vehicle: Vehicle) {
-            selectedVehiclePublisher.send(vehicle)
-        }
-        
-        func setVehicleMileages(_ vehicleMileages: [VehicleMileage]) {
-            vehicleMileagesPublisher.send(vehicleMileages)
-        }
-        
-        func store(_ cancellable: AnyCancellable) {
-            self.cancellable.insert(cancellable)
-        }
-    }
-}
+import Foundation
+import SwiftData
+import SwiftUI
 
 extension MileageListView {
+    @MainActor
     class ViewModel: ObservableObject {
-        let modelContainer: ModelContainer
-        
-        let stateStore = ViewModelState()
-        
-        private let selectedVehicle: Vehicle
+        @Published private(set) var state: MileageListState = .idle
+        @Published private(set) var vehicleMileages: [VehicleMileage] = []
 
-        init(
-            modelContainer: ModelContainer,
-            selectedVehicle: Vehicle
-        ) {
-            self.modelContainer = modelContainer
+        let modelContext: ModelContext
+        private let localStore: LocalDataStore
+        let selectedVehicle: Vehicle
+        private let networkConnectivity = NetworkConnectivity()
+
+        @Injected(\.vehicleMileageRepository) private var repository
+
+        init(modelContext: ModelContext, selectedVehicle: Vehicle) {
+            self.modelContext = modelContext
+            self.localStore = LocalDataStore(modelContext: modelContext)
             self.selectedVehicle = selectedVehicle
-
-            Task {
-                let cancellable = await stateStore.statePublisher
-                    .sink { [weak self] state in
-                        switch state {
-                        case let .successVehicleMileages(vehicleMileages):
-                            Task {
-                                await self?.stateStore.setVehicleMileages(vehicleMileages)
-                            }
-                        default:
-                            break
-                        }
-                    }
-
-                await stateStore.store(cancellable)
-            }
         }
 
-        @MainActor
         func editMileageView(
             navigationPath: Binding<NavigationPath>,
             vehicleId: String,
             vehicleMileage: VehicleMileage? = nil
         ) -> some View {
-            return MileagesRouter.makeEditMileageView(
+            MileagesRouter.makeEditMileageView(
                 navigationPath: navigationPath,
-                modelContainer: modelContainer,
+                modelContext: modelContext,
                 vehicleId: vehicleId,
                 vehicleMileage: vehicleMileage
             )
         }
-        
+
         func fetchData() async {
+            state = .loading
+
+            if networkConnectivity.status == .connected, let vehicleId = selectedVehicle.id {
+                await fetchRemoteData(vehicleId: vehicleId)
+            }
+
+            fetchLocalData()
+        }
+
+        private func fetchRemoteData(vehicleId: String) async {
+            guard let result = await repository.fetchData(vehicleId: vehicleId) else { return }
+
             do {
-                await stateStore.setState(.loading)
-                
-                let result: [VehicleMileage] = try await SwiftDataManager.shared.fetch(sortBy: [SortDescriptor(\VehicleMileage.date, order: .reverse)])
-                
-                await stateStore.setState(.successVehicleMileages(result))
-                await self.stateStore.setVehicle(selectedVehicle)
+                let existing = try localStore.fetch(
+                    where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId }
+                )
+                existing.forEach { modelContext.delete($0) }
+
+                result.forEach { mileage in
+                    mileage.synced = true
+                    modelContext.insert(mileage)
+                }
+
+                try localStore.save()
+            } catch {
+                print(error)
+            }
+        }
+
+        private func fetchLocalData() {
+            do {
+                guard let vehicleId = selectedVehicle.id else {
+                    state = .error
+                    return
+                }
+
+                vehicleMileages = try localStore.fetch(
+                    where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId },
+                    sortBy: [SortDescriptor(\.date, order: .reverse)]
+                )
+                state = .successVehicleMileages(vehicleMileages)
             } catch {
                 print(error.localizedDescription)
-                await stateStore.setState(.error)
+                state = .error
             }
         }
     }

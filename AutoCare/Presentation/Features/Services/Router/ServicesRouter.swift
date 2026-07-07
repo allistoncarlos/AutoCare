@@ -5,19 +5,17 @@
 //  Created by Alliston Aleixo on 28/06/25.
 //
 
-import Foundation
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 enum ServicesRouter {
     static func makeEditServiceView(
         navigationPath: Binding<NavigationPath>,
-        modelContainer: ModelContainer,
+        modelContext: ModelContext,
         vehicleId: String,
         vehicleService: VehicleService?
     ) -> some View {
-        // Por enquanto, retorna uma view simples até que a ServiceEditView seja implementada
-        return Text("Editar Serviço - Em desenvolvimento")
+        Text("Editar Serviço - Em desenvolvimento")
             .navigationTitle("Editar Serviço")
     }
 
@@ -25,4 +23,3 @@ enum ServicesRouter {
         navigationPath.wrappedValue.removeLast()
     }
 }
-

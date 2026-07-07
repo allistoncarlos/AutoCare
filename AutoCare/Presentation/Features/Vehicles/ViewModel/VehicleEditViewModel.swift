@@ -5,111 +5,66 @@
 //  Created by Alliston Aleixo on 30/10/23.
 //
 
-import Foundation
 import Combine
-import FormValidator
 import Factory
+import Foundation
 import SwiftData
 import SwiftUI
 
-extension VehicleEditView.ViewModel {
-    actor ViewModelState {
-        let statePublisher = CurrentValueSubject<VehicleEditState, Never>(.idle)
-        let vehicleTypesPublisher = PassthroughSubject<[VehicleType], Never>()
-        let selectedVehicleTypePublisher = PassthroughSubject<VehicleType, Never>()
-        let vehiclePublisher = PassthroughSubject<Vehicle, Never>()
-        
-        var cancellable = Set<AnyCancellable>()
-        var networkConnectivity = NetworkConnectivity()
-        
-        func setState(_ newState: VehicleEditState) {
-            statePublisher.send(newState)
-        }
-
-        func setVehicleTypes(_ vehicleTypes: [VehicleType]) {
-            vehicleTypesPublisher.send(vehicleTypes)
-        }
-        
-        func setSelectedVehicleType(_ vehicleType: VehicleType) {
-            selectedVehicleTypePublisher.send(vehicleType)
-        }
-        
-        func setVehicle(_ vehicle: Vehicle) {
-            vehiclePublisher.send(vehicle)
-        }
-        
-        func store(_ cancellable: AnyCancellable) {
-            self.cancellable.insert(cancellable)
-        }
-    }
-}
-
 extension VehicleEditView {
-    final class ViewModel: ObservableObject, Sendable {
-        let modelContainer: ModelContainer
-        let stateStore = ViewModelState()
+    @MainActor
+    final class ViewModel: ObservableObject {
+        @Published private(set) var state: VehicleEditState = .idle
+        @Published private(set) var vehicleTypes: [VehicleType] = []
+        @Published private(set) var vehicle: Vehicle?
 
-        let isDefault: Bool = true // TODO: Permitir que o usuário marque um carro como favorito, retirando o favorito dos outros
+        private let modelContext: ModelContext
+        private let localStore: LocalDataStore
+        private let vehicleId: String?
+        private let networkConnectivity = NetworkConnectivity()
 
-        // MARK: - Init
-        init(
-            modelContainer: ModelContainer,
-            vehicleId: String?
-        ) {
-            self.modelContainer = modelContainer
+        @Injected(\.vehicleRepository) private var repository
+        @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository
 
-            Task {
-                let cancellable = await stateStore.statePublisher
-                    .sink { [weak self] state in
-                        switch state {
-                        case let .successVehicleTypes(vehicleTypes):
-                            Task {
-                                await self?.stateStore.setVehicleTypes(vehicleTypes)
-                                
-                                if let vehicleId {
-                                    await self?.fetchVehicle(vehicleId: vehicleId)
-                                }
-                            }
-                        case let .successVehicle(vehicle):
-                            Task {
-                                await self?.stateStore.setVehicle(vehicle)
-                            }
-                        default:
-                            break
-                        }
-                    }
-
-                await stateStore.store(cancellable)
-            }
+        init(modelContext: ModelContext, vehicleId: String?) {
+            self.modelContext = modelContext
+            self.localStore = LocalDataStore(modelContext: modelContext)
+            self.vehicleId = vehicleId
         }
 
         func fetchData() async {
-            do {
-                await stateStore.setState(.loading)
-                
-                let result: [VehicleType] = try await SwiftDataManager.shared.fetch()
-                
-                await stateStore.setState(.successVehicleTypes(result))
-            } catch {
-                print(error.localizedDescription)
-                await stateStore.setState(.error)
+            state = .loading
+
+            if networkConnectivity.status == .connected {
+                await fetchRemoteVehicleTypes()
             }
-        }
-        
-        func fetchVehicle(vehicleId: String) async {
+
             do {
-                await stateStore.setState(.loading)
+                vehicleTypes = try localStore.fetch(sortBy: [SortDescriptor(\.name)])
+                state = .successVehicleTypes(vehicleTypes)
 
-                let result: Vehicle? = try await SwiftDataManager.shared.fetch(
-                    where: #Predicate<Vehicle> { $0.id == vehicleId }
-                )
-
-                if let result {
-                    await stateStore.setState(.successVehicle(result))
+                if let vehicleId {
+                    await fetchVehicle(vehicleId: vehicleId)
                 }
             } catch {
                 print(error.localizedDescription)
-                await stateStore.setState(.error)
+                state = .error
+            }
+        }
+
+        func fetchVehicle(vehicleId: String) async {
+            state = .loading
+
+            do {
+                if let result: Vehicle = try localStore.fetchOne(where: #Predicate { $0.id == vehicleId }) {
+                    vehicle = result
+                    state = .successVehicle(result)
+                } else {
+                    state = .error
+                }
+            } catch {
+                print(error.localizedDescription)
+                state = .error
             }
         }
 
@@ -122,38 +77,99 @@ extension VehicleEditView {
             licensePlate: String,
             isDefault: Bool,
             vehicleTypeId: String,
-            
             isPresented: Binding<Bool>
         ) async {
+            state = .loading
+
+            guard let odometerValue = Int(odometer) else {
+                state = .error
+                return
+            }
+
+            let vehicleToSave = Vehicle(
+                id: vehicle?.id,
+                name: name,
+                brand: brand,
+                model: model,
+                year: year,
+                licensePlate: licensePlate,
+                odometer: odometerValue,
+                isDefault: isDefault,
+                vehicleTypeId: vehicleTypeId
+            )
+
+            if networkConnectivity.status == .connected {
+                await saveRemote(vehicle: vehicleToSave, isPresented: isPresented)
+            } else {
+                saveLocal(vehicle: vehicleToSave, isPresented: isPresented)
+            }
+        }
+
+        private func fetchRemoteVehicleTypes() async {
+            guard let remoteTypes = await vehicleTypeRepository.fetchData() else { return }
+
             do {
-                await stateStore.setState(.loading)
-                
-                guard let odometer = Int(odometer) else { return }
-                
-                let vehicle =
-                    Vehicle(
-                        name: name,
-                        brand: brand,
-                        model: model,
-                        year: year,
-                        licensePlate: licensePlate,
-                        odometer: odometer,
-                        isDefault: isDefault,
-                        vehicleTypeId: vehicleTypeId
-                    )
-
-                vehicle.synced = false
-
-                try await SwiftDataManager.shared.save(id: vehicle.id, item: vehicle)
-
-                await stateStore.setState(.successSavedVehicle)
-                
-                await MainActor.run {
-                    isPresented.wrappedValue = false
+                try modelContext.delete(model: VehicleType.self)
+                remoteTypes.forEach { type in
+                    type.synced = true
+                    modelContext.insert(type)
                 }
+                try localStore.save()
+            } catch {
+                print(error)
+            }
+        }
+
+        private func saveRemote(vehicle: Vehicle, isPresented: Binding<Bool>) async {
+            if let saved = await repository.save(id: vehicle.id, vehicle: vehicle) {
+                if let existingId = saved.id,
+                   let existing = try? localStore.fetchOne(where: #Predicate<Vehicle> { $0.id == existingId }) {
+                    existing.name = saved.name
+                    existing.brand = saved.brand
+                    existing.model = saved.model
+                    existing.year = saved.year
+                    existing.licensePlate = saved.licensePlate
+                    existing.odometer = saved.odometer
+                    existing.isDefault = saved.isDefault
+                    existing.vehicleTypeId = saved.vehicleTypeId
+                    existing.synced = true
+                    try? localStore.save()
+                } else {
+                    saved.synced = true
+                    modelContext.insert(saved)
+                    try? localStore.save()
+                }
+                state = .successSavedVehicle
+                isPresented.wrappedValue = false
+            } else {
+                saveLocal(vehicle: vehicle, isPresented: isPresented)
+            }
+        }
+
+        private func saveLocal(vehicle: Vehicle, isPresented: Binding<Bool>) {
+            do {
+                if let id = vehicle.id,
+                   let existing = try localStore.fetchOne(where: #Predicate<Vehicle> { $0.id == id }) {
+                    existing.name = vehicle.name
+                    existing.brand = vehicle.brand
+                    existing.model = vehicle.model
+                    existing.year = vehicle.year
+                    existing.licensePlate = vehicle.licensePlate
+                    existing.odometer = vehicle.odometer
+                    existing.isDefault = vehicle.isDefault
+                    existing.vehicleTypeId = vehicle.vehicleTypeId
+                    existing.synced = false
+                } else {
+                    vehicle.synced = false
+                    modelContext.insert(vehicle)
+                }
+
+                try localStore.save()
+                state = .successSavedVehicle
+                isPresented.wrappedValue = false
             } catch {
                 print(error.localizedDescription)
-                await stateStore.setState(.error)
+                state = .error
             }
         }
     }

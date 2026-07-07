@@ -5,27 +5,27 @@
 //  Created by Alliston Aleixo on 19/02/24.
 //
 
+import SwiftData
 import SwiftUI
 import TTProgressHUD
-import SwiftData
 
 struct LoginView: View {
+    @Environment(\.modelContext) private var modelContext
+
     @State var username: String = ""
     @State var password: String = ""
     @State var isLoading = false
 
     @ObservedObject var viewModel: LoginViewModel
-    private var modelContainer: ModelContainer
-    
-    init(viewModel: LoginViewModel, modelContainer: ModelContainer) {
+
+    init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
-        self.modelContainer = modelContainer
     }
 
     var body: some View {
         ZStack {
             if case .success = viewModel.state {
-                viewModel.homeView(modelContainer: modelContainer)
+                viewModel.homeView(modelContext: modelContext)
             } else {
                 NavigationView {
                     Form {
@@ -53,9 +53,9 @@ struct LoginView: View {
                     .overlay(
                         TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
                     )
-                    .onChange(of: viewModel.state, { _, newState in
+                    .onChange(of: viewModel.state) { _, newState in
                         isLoading = newState == .loading
-                    })
+                    }
                     .navigationTitle("Login")
                 }
                 .navigationViewStyle(.stack)
@@ -85,9 +85,9 @@ struct LoginView: View {
             }
         )
     }
-
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel(), modelContainer: SwiftDataManager.shared.previewModelContainer)
+    LoginView(viewModel: LoginViewModel())
+        .modelContainer(for: Vehicle.self, inMemory: true)
 }

@@ -9,7 +9,7 @@ import Foundation
 import KeychainAccess
 
 class Constants {
-    static let keychainIdentifier = "gamenet.azurewebsites.net"
+    static let keychainIdentifier = "autocare.api"
 }
 
 public enum KeychainDataSource: String {
