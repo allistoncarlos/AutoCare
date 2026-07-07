@@ -90,11 +90,22 @@ export class VehicleService {
     return vehicle;
   }
 
+  findChanges(userId: string, since: Date) {
+    return this.vehicleModel
+      .find({
+        userId: new Types.ObjectId(userId),
+        $or: [{ updatedAt: { $gt: since } }, { deletedAt: { $gt: since } }],
+      })
+      .sort({ updatedAt: 1 })
+      .exec();
+  }
+
   async toResponse(vehicle: VehicleDocument) {
     const vehicleType = await this.vehicleTypeService.findOneByKey(vehicle.vehicleTypeId);
 
     return {
       id: vehicle._id.toString(),
+      clientId: vehicle.clientId,
       name: vehicle.name,
       brand: vehicle.brand,
       model: vehicle.model,
@@ -114,6 +125,11 @@ export class VehicleService {
             name: vehicle.vehicleTypeId,
             emoji: '🚗',
           },
+      userId: vehicle.userId.toString(),
+      createdAt: vehicle.createdAt,
+      updatedAt: vehicle.updatedAt,
+      deleted: vehicle.deleted,
+      deletedAt: vehicle.deletedAt,
     };
   }
 

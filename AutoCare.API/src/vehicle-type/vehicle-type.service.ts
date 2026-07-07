@@ -31,4 +31,13 @@ export class VehicleTypeService implements OnModuleInit {
   findOneByKey(key: string) {
     return this.vehicleTypeModel.findOne({ key, deleted: { $ne: true } }).exec();
   }
+
+  findChanges(since: Date) {
+    return this.vehicleTypeModel
+      .find({
+        $or: [{ updatedAt: { $gt: since } }, { deletedAt: { $gt: since } }],
+      })
+      .sort({ updatedAt: 1 })
+      .exec();
+  }
 }

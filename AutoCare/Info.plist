@@ -4,5 +4,14 @@
 <dict>
 	<key>API_PATH</key>
 	<string>$(API_PATH)</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>AutoCare.SyncTask</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 </dict>
 </plist>

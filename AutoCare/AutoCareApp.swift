@@ -5,6 +5,7 @@
 //  Created by Alliston Aleixo on 27/10/23.
 //
 
+import BackgroundTasks
 import SwiftData
 import SwiftUI
 import TTProgressHUD
@@ -15,6 +16,8 @@ struct AutoCareApp: App {
     static let dateFormat = "dd/MM/yyyy"
     static let shortDateFormat = "dd/MM"
     static let timeFormat = "HH:mm"
+
+    static let syncTask = "AutoCare.SyncTask"
 
     static let hudConfig = TTProgressHUDConfig(
         title: "Carregando",
@@ -43,7 +46,15 @@ struct AutoCareApp: App {
     var body: some Scene {
         WindowGroup {
             viewModel.resultView(modelContext: sharedModelContainer.mainContext)
+                .task {
+                    await viewModel.syncData(modelContext: sharedModelContainer.mainContext)
+                    await viewModel.scheduleAppSync()
+                }
         }
         .modelContainer(sharedModelContainer)
+        .backgroundTask(.appRefresh(AutoCareApp.syncTask)) {
+            await viewModel.scheduleAppSync()
+            await viewModel.syncData(modelContext: sharedModelContainer.mainContext)
+        }
     }
 }

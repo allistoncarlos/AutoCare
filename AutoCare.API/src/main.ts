@@ -19,7 +19,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('AutoCare API')
-    .setDescription('API REST para gestão de veículos')
+    .setDescription('API para gestão de veículos com sincronização offline-first')
     .setVersion('1.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', name: 'JWT', in: 'header' },

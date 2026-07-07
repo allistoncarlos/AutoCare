@@ -1,11 +1,12 @@
 # AutoCare.Network
 
-Pacote SPM com a camada de rede do AutoCare, seguindo o mesmo padrão do [GameNet.Network](https://github.com/allistoncarlos/GameNet.Network).
+Pacote SPM com a camada de rede e entidades SwiftData do AutoCare, seguindo o mesmo padrão do [GameNet.Network](https://github.com/allistoncarlos/GameNet.Network).
 
 ## Conteúdo previsto
 
 - `DataProviders/API` — `NetworkManager`, `AutoCareAPI`, DTOs
-- `Domain/Entities` — modelos de domínio
+- `Domain/Entities` — modelos `@Model` (`Vehicle`, `VehicleMileage`, etc.)
+- `Domain/Protocols` — `Syncable`
 - `Keychain` — `KeychainDataSource`
 
 ## Integração no Xcode

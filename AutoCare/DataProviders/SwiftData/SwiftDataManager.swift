@@ -5,34 +5,64 @@
 //  Created by Alliston Aleixo on 01/04/25.
 //
 
-import Foundation
 import SwiftData
+import Foundation
 
 @ModelActor
 actor SwiftDataActor {
-    func save<T: PersistentModel>(item: T) throws {
-        modelContext.insert(item)
+    func save<T: PersistentModel>(id: String? = nil, item: T) throws {
+        if let id {
+            try update(id: id, item: item)
+        } else {
+            try insert(item: item)
+        }
+        
         try modelContext.save()
     }
-
-    func importData<T: PersistentModel>(_ data: [T]) throws {
+    
+    func importData<T: Syncable>(_ data: [T]) throws {
         try modelContext.delete(model: T.self)
-        data.forEach { modelContext.insert($0) }
-        try modelContext.save()
+        
+        try data.forEach { item in
+            item.synced = true
+            try save(item: item)
+        }
     }
-
+    
     func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) throws -> [T] {
         let descriptor = FetchDescriptor<T>(sortBy: sortBy)
-        return try modelContext.fetch(descriptor)
+        
+        let result = try modelContext.fetch(descriptor)
+        
+        return result
     }
-
+    
     func fetch<T: PersistentModel>(where predicate: Predicate<T>) throws -> [T] {
         let descriptor = FetchDescriptor<T>(predicate: predicate, sortBy: [])
-        return try modelContext.fetch(descriptor)
+        
+        let result = try modelContext.fetch(descriptor)
+        
+        return result
     }
-
+    
     func fetch<T: PersistentModel>(where predicate: Predicate<T>) throws -> T? {
-        try fetch(where: predicate).first
+        return try fetch(where: predicate).first
+    }
+    
+    private func update<T: PersistentModel>(id: String, item: T) throws {
+//        let descriptor = createUpdateDescriptor(for: id)
+//
+//        let result = try SwiftDataManager.shared.context.fetch(descriptor)
+//
+//        if result.count == 1, let itemsResult = result.first {
+//            vehicleMileageResult.synced = false
+//            try SwiftDataManager.shared.context.save()
+//        }
+    }
+    
+    private func insert<T: PersistentModel>(item: T) throws {
+        modelContext.insert(item)
+        try modelContext.save()
     }
 }
 
@@ -43,13 +73,13 @@ final class SwiftDataManager {
         VehicleMileage.self,
         VehicleService.self
     ])
-
+    
     let container: ModelContainer
     let context: ModelContext
     let previewModelContainer: ModelContainer
-
+    
     private let actor: SwiftDataActor
-
+    
     static let shared = SwiftDataManager()
 
     private init() {
@@ -59,37 +89,64 @@ final class SwiftDataManager {
                 configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
             )
             context = ModelContext(container)
-            previewModelContainer = try! ModelContainer(
-                for: schema,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-            )
+            
+            previewModelContainer = try! ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+            
             actor = SwiftDataActor(modelContainer: container)
         } catch {
             fatalError(error.localizedDescription)
         }
     }
-
+    
     func fetch<T: PersistentModel>() async throws -> [T] {
-        try await fetch(sortBy: [])
+        return try await fetch(sortBy: [])
     }
-
+    
     func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) async throws -> [T] {
         try await actor.fetch(sortBy: sortBy)
     }
-
+    
     func fetch<T: PersistentModel>(where predicate: Predicate<T>) async throws -> [T] {
         try await actor.fetch(where: predicate)
     }
-
+    
     func fetch<T: PersistentModel>(where predicate: Predicate<T>) async throws -> T? {
         try await actor.fetch(where: predicate)
     }
-
-    func save<T: PersistentModel>(item: T) async throws {
-        try await actor.save(item: item)
+    
+    func fetchUnsyncedEntities() throws -> [any PersistentModel] {
+        var unsyncedEntities: [any PersistentModel] = []
+        
+        let vehicleDescriptor =
+            FetchDescriptor<Vehicle>(predicate: #Predicate { vehicle in
+                !vehicle.synced
+        })
+        let vehicles = try SwiftDataManager.shared.context.fetch(vehicleDescriptor)
+        
+        let vehicleMileageDescriptor =
+            FetchDescriptor<VehicleMileage>(predicate: #Predicate { vehicleMileage in
+                !vehicleMileage.synced
+        })
+        let vehicleMileages = try SwiftDataManager.shared.context.fetch(vehicleMileageDescriptor)
+        
+        let vehicleServiceDescriptor =
+            FetchDescriptor<VehicleService>(predicate: #Predicate { vehicleService in
+                !vehicleService.synced
+        })
+        let vehicleServices = try SwiftDataManager.shared.context.fetch(vehicleServiceDescriptor)
+        
+        unsyncedEntities.append(contentsOf: vehicles)
+        unsyncedEntities.append(contentsOf: vehicleMileages)
+        unsyncedEntities.append(contentsOf: vehicleServices)
+        
+        return unsyncedEntities
     }
-
-    func importData<T: PersistentModel>(_ data: [T]) async throws {
+    
+    func save<T: PersistentModel>(id: String? = nil, item: T) async throws {
+        try await actor.save(id: id, item: item)
+    }
+    
+    func importData<T: Syncable>(_ data: [T]) async throws {
         try await actor.importData(data)
     }
 }

@@ -18,11 +18,28 @@ extension HomeView {
         @Published private(set) var selectedVehicle: Vehicle?
 
         let modelContext: ModelContext
+        private let localStore: LocalDataStore
+        private let syncService: SyncService
+        private let networkConnectivity = NetworkConnectivity()
+        private var cancellables = Set<AnyCancellable>()
 
+        @Injected(\.vehicleTypeRepository) private var vehicleTypeRepository
         @Injected(\.vehicleRepository) private var vehicleRepository
+        @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository
+        @Injected(\.vehicleServiceRepository) private var vehicleServiceRepository
 
         init(modelContext: ModelContext) {
             self.modelContext = modelContext
+            self.localStore = LocalDataStore(modelContext: modelContext)
+            self.syncService = SyncService(modelContext: modelContext)
+
+            networkConnectivity.$status
+                .receive(on: RunLoop.main)
+                .sink { [weak self] status in
+                    guard status == .connected else { return }
+                    Task { await self?.syncData() }
+                }
+                .store(in: &cancellables)
         }
 
         func showEditVehicleView(
@@ -43,19 +60,28 @@ extension HomeView {
         func fetchData() async {
             state = .loading
 
-            guard let vehicles = await vehicleRepository.fetchData() else {
+            let isConnected = networkConnectivity.status == .connected
+            if isConnected {
+                await fetchRemote()
+            }
+
+            do {
+                let vehicles: [Vehicle] = try localStore.fetch(sortBy: [SortDescriptor(\.name)])
+                state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
+
+                if vehicles.isEmpty {
+                    selectedVehicle = nil
+                } else if selectedVehicle == nil {
+                    selectedVehicle = vehicles.first(where: \.isDefault) ?? vehicles.first
+                }
+            } catch {
+                print(error.localizedDescription)
                 state = .error
-                return
             }
+        }
 
-            cacheVehicles(vehicles)
-            state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
-
-            if vehicles.isEmpty {
-                selectedVehicle = nil
-            } else if selectedVehicle == nil {
-                selectedVehicle = vehicles.first(where: \.isDefault) ?? vehicles.first
-            }
+        func syncData() async {
+            await syncService.sync()
         }
 
         @discardableResult
@@ -71,14 +97,8 @@ extension HomeView {
             }
         }
 
-        private func cacheVehicles(_ vehicles: [Vehicle]) {
-            do {
-                try modelContext.delete(model: Vehicle.self)
-                vehicles.forEach { modelContext.insert($0) }
-                try modelContext.save()
-            } catch {
-                print(error)
-            }
+        private func fetchRemote() async {
+            await syncService.pullRemoteChanges()
         }
     }
 }

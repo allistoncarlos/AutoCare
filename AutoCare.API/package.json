@@ -1,7 +1,7 @@
 {
   "name": "autocare-api",
   "version": "1.0.0",
-  "description": "AutoCare REST API com NestJS e MongoDB",
+  "description": "AutoCare REST API baseada na arquitetura FinanceHealth-api",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

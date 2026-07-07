@@ -1,6 +1,6 @@
 # AutoCare API (NestJS)
 
-API REST do AutoCare com NestJS 10, MongoDB (Mongoose) e autenticação JWT.
+API REST do AutoCare baseada na arquitetura **FinanceHealth-api**: NestJS 10, MongoDB (Mongoose), autenticação JWT e sincronização incremental offline-first.
 
 ## Requisitos
 
@@ -35,12 +35,17 @@ Variáveis em `.env`:
 |--------|------|-----------|
 | POST | `/auth/login` | Login |
 | POST | `/auth/refresh` | Renovar token |
+| GET | `/changes?since=` | Sync incremental |
 | GET | `/vehicle-type` | Tipos de veículo |
 | GET/POST/PUT/DELETE | `/vehicle` | Veículos |
 | GET/POST/PUT/DELETE | `/vehicle-mileage?vehicleId=` | Abastecimentos |
 | GET/POST/PUT/DELETE | `/vehicle-service?vehicleId=` | Serviços |
 
 Documentação Swagger: `http://localhost:3000/api/docs`
+
+## Sincronização
+
+Entidades possuem `clientId`, `createdAt`, `updatedAt`, `deleted` e `deletedAt`. O endpoint `GET /changes?since=<ISO8601>` retorna alterações incrementais para o app iOS.
 
 ## Docker
 

@@ -9,6 +9,7 @@ import Foundation
 
 struct VehicleServiceResponse: Identifiable, Codable {
     var id: String
+    var clientId: String?
     var date: Date = Date()
     var odometer: Int = 0
     var type: String = ""
@@ -16,6 +17,10 @@ struct VehicleServiceResponse: Identifiable, Codable {
     var totalCost: Decimal = 0
     var comment: String = ""
     var vehicleId: String
+    var createdAt: Date?
+    var updatedAt: Date?
+    var deleted: Bool?
+    var deletedAt: Date?
 
     func toVehicleService() -> VehicleService {
         VehicleService(
@@ -26,7 +31,13 @@ struct VehicleServiceResponse: Identifiable, Codable {
             subtype: VehicleServiceSubtype(rawValue: subtype) ?? .calibrate,
             totalCost: totalCost,
             comment: comment,
-            vehicle_id: vehicleId
+            vehicle_id: vehicleId,
+            clientId: clientId ?? id,
+            synced: true,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            deleted: deleted ?? false,
+            deletedAt: deletedAt
         )
     }
 }

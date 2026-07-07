@@ -18,12 +18,15 @@ extension ServiceListView {
         @Published private(set) var vehicleServices: [VehicleService] = []
 
         let modelContext: ModelContext
+        private let localStore: LocalDataStore
         let selectedVehicle: Vehicle
+        private let networkConnectivity = NetworkConnectivity()
 
         @Injected(\.vehicleServiceRepository) private var repository
 
         init(modelContext: ModelContext, selectedVehicle: Vehicle) {
             self.modelContext = modelContext
+            self.localStore = LocalDataStore(modelContext: modelContext)
             self.selectedVehicle = selectedVehicle
         }
 
@@ -43,18 +46,49 @@ extension ServiceListView {
         func fetchData() async {
             state = .loading
 
-            guard let vehicleId = selectedVehicle.id else {
-                state = .error
-                return
+            if networkConnectivity.status == .connected, let vehicleId = selectedVehicle.id {
+                await fetchRemoteData(vehicleId: vehicleId)
             }
 
-            guard let result = await repository.fetchData(vehicleId: vehicleId) else {
-                state = .error
-                return
-            }
+            fetchLocalData()
+        }
 
-            vehicleServices = result
-            state = .successVehicleServices(result)
+        private func fetchRemoteData(vehicleId: String) async {
+            guard let result = await repository.fetchData(vehicleId: vehicleId) else { return }
+
+            do {
+                let existing = try localStore.fetch(
+                    where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId }
+                )
+                existing.forEach { modelContext.delete($0) }
+
+                result.forEach { service in
+                    service.synced = true
+                    modelContext.insert(service)
+                }
+
+                try localStore.save()
+            } catch {
+                print(error)
+            }
+        }
+
+        private func fetchLocalData() {
+            do {
+                guard let vehicleId = selectedVehicle.id else {
+                    state = .error
+                    return
+                }
+
+                vehicleServices = try localStore.fetch(
+                    where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId },
+                    sortBy: [SortDescriptor(\.date, order: .reverse)]
+                )
+                state = .successVehicleServices(vehicleServices)
+            } catch {
+                print(error.localizedDescription)
+                state = .error
+            }
         }
     }
 }
