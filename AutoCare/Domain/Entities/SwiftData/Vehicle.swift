@@ -21,11 +21,11 @@ final class Vehicle: Syncable {
 
     var vehicleTypeId: String
 
-    var synced: Bool
-    var clientId: String
+    var synced: Bool = false
+    var clientId: String = ""
     var createdAt: Date?
     var updatedAt: Date?
-    var deleted: Bool
+    var deleted: Bool = false
     var deletedAt: Date?
 
     init(
@@ -54,7 +54,7 @@ final class Vehicle: Syncable {
         self.odometer = odometer
         self.isDefault = isDefault
         self.vehicleTypeId = vehicleTypeId
-        self.clientId = SyncDefaults.newClientId(clientId ?? id)
+        self.clientId = SyncDefaults.resolveClientId(clientId, id: id)
         self.synced = synced
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -63,7 +63,9 @@ final class Vehicle: Syncable {
     }
 
     public func toRequest() -> VehicleRequest {
-        VehicleRequest(
+        ensureClientId(from: id)
+
+        return VehicleRequest(
             clientId: clientId,
             name: name,
             brand: brand,

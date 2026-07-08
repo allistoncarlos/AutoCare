@@ -1,17 +1,30 @@
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import { resolveClientId } from './resolveClientId.helper';
 
 export function addSyncFieldsHooks(schema: Schema): void {
   schema.pre('save', function (next) {
     const now = new Date();
-    if (this.isNew) {
-      if (!this.createdAt) {
-        this.createdAt = now;
+    const document = this as {
+      clientId?: string;
+      _id?: Types.ObjectId;
+      isNew: boolean;
+      createdAt?: Date;
+      updatedAt?: Date;
+      deleted?: boolean;
+      deletedAt?: Date | null;
+    };
+
+    document.clientId = resolveClientId(document.clientId, document._id?.toString());
+
+    if (document.isNew) {
+      if (!document.createdAt) {
+        document.createdAt = now;
       }
-      this.updatedAt = now;
-      this.deleted = this.deleted ?? false;
-      this.deletedAt = this.deleted === true ? this.deletedAt ?? now : null;
+      document.updatedAt = now;
+      document.deleted = document.deleted ?? false;
+      document.deletedAt = document.deleted === true ? document.deletedAt ?? now : null;
     } else {
-      this.updatedAt = now;
+      document.updatedAt = now;
     }
     next();
   });

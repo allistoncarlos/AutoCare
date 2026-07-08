@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { resolveClientId } from '../common/validators/resolveClientId.helper';
 import { VehicleTypeService } from '../vehicle-type/vehicle-type.service';
 import { CreateVehicleDto, UpdateVehicleDto } from './dto/vehicle.dto';
 import { Vehicle, VehicleDocument } from './schemas/vehicle.schema';
@@ -13,9 +14,10 @@ export class VehicleService {
   ) {}
 
   async create(dto: CreateVehicleDto, userId: string) {
+    const clientId = resolveClientId(dto.clientId);
     const existing = await this.vehicleModel
       .findOne({
-        clientId: dto.clientId,
+        clientId,
         userId: new Types.ObjectId(userId),
       })
       .exec();
@@ -26,6 +28,7 @@ export class VehicleService {
 
     const vehicle = new this.vehicleModel({
       ...dto,
+      clientId,
       userId: new Types.ObjectId(userId),
     });
 
@@ -105,7 +108,7 @@ export class VehicleService {
 
     return {
       id: vehicle._id.toString(),
-      clientId: vehicle.clientId,
+      clientId: resolveClientId(vehicle.clientId, vehicle._id.toString()),
       name: vehicle.name,
       brand: vehicle.brand,
       model: vehicle.model,

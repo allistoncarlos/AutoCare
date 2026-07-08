@@ -14,11 +14,11 @@ final class VehicleType: Syncable {
     var name: String
     var emoji: String
 
-    var synced: Bool
-    var clientId: String
+    var synced: Bool = false
+    var clientId: String = ""
     var createdAt: Date?
     var updatedAt: Date?
-    var deleted: Bool
+    var deleted: Bool = false
     var deletedAt: Date?
 
     init(
@@ -35,7 +35,7 @@ final class VehicleType: Syncable {
         self.id = id
         self.name = name
         self.emoji = emoji
-        self.clientId = SyncDefaults.newClientId(clientId ?? id)
+        self.clientId = SyncDefaults.resolveClientId(clientId, id: id)
         self.synced = synced
         self.createdAt = createdAt
         self.updatedAt = updatedAt

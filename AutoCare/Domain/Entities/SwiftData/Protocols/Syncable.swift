@@ -18,7 +18,27 @@ public protocol Syncable: PersistentModel {
 }
 
 enum SyncDefaults {
+    static func resolveClientId(_ clientId: String?, id: String?) -> String {
+        if let clientId, !clientId.isEmpty {
+            return clientId
+        }
+
+        if let id, !id.isEmpty {
+            return id
+        }
+
+        return UUID().uuidString
+    }
+
     static func newClientId(_ value: String? = nil) -> String {
-        value ?? UUID().uuidString
+        resolveClientId(value, id: nil)
+    }
+}
+
+extension Syncable {
+    func ensureClientId(from id: String?) {
+        if clientId.isEmpty {
+            clientId = SyncDefaults.resolveClientId(nil, id: id)
+        }
     }
 }

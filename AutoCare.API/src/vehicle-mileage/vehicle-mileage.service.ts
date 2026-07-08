@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { resolveClientId } from '../common/validators/resolveClientId.helper';
 import { CreateVehicleMileageDto, UpdateVehicleMileageDto } from './dto/vehicle-mileage.dto';
 import { VehicleMileage, VehicleMileageDocument } from './schemas/vehicle-mileage.schema';
 
@@ -12,9 +13,10 @@ export class VehicleMileageService {
   ) {}
 
   async create(dto: CreateVehicleMileageDto, userId: string) {
+    const clientId = resolveClientId(dto.clientId);
     const existing = await this.vehicleMileageModel
       .findOne({
-        clientId: dto.clientId,
+        clientId,
         userId: new Types.ObjectId(userId),
       })
       .exec();
@@ -25,6 +27,7 @@ export class VehicleMileageService {
 
     const mileage = new this.vehicleMileageModel({
       ...dto,
+      clientId,
       userId: new Types.ObjectId(userId),
     });
 
@@ -105,7 +108,7 @@ export class VehicleMileageService {
   toResponse(mileage: VehicleMileageDocument) {
     return {
       id: mileage._id.toString(),
-      clientId: mileage.clientId,
+      clientId: resolveClientId(mileage.clientId, mileage._id.toString()),
       date: mileage.date,
       totalCost: mileage.totalCost,
       odometer: mileage.odometer,

@@ -21,11 +21,11 @@ final class VehicleMileage: Syncable {
     var complete: Bool = true
     var vehicleId: String
 
-    var synced: Bool
-    var clientId: String
+    var synced: Bool = false
+    var clientId: String = ""
     var createdAt: Date?
     var updatedAt: Date?
-    var deleted: Bool
+    var deleted: Bool = false
     var deletedAt: Date?
 
     init(
@@ -56,7 +56,7 @@ final class VehicleMileage: Syncable {
         self.calculatedMileage = calculatedMileage
         self.complete = complete
         self.vehicleId = vehicleId
-        self.clientId = SyncDefaults.newClientId(clientId ?? id)
+        self.clientId = SyncDefaults.resolveClientId(clientId, id: id)
         self.synced = synced
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -65,7 +65,9 @@ final class VehicleMileage: Syncable {
     }
 
     public func toRequest() -> VehicleMileageRequest {
-        VehicleMileageRequest(
+        ensureClientId(from: id)
+
+        return VehicleMileageRequest(
             clientId: clientId,
             date: date,
             totalCost: totalCost,

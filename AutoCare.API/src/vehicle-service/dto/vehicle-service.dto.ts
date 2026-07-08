@@ -3,10 +3,10 @@ import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateVehicleServiceDto {
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  clientId: string;
+  clientId?: string;
 
   @ApiProperty()
   @Type(() => Date)

@@ -89,7 +89,44 @@ actor SwiftDataActor {
         applyVehicles(changes.vehicles ?? [])
         applyMileages(changes.vehicleMileages ?? [])
         applyServices(changes.vehicleServices ?? [])
+        try backfillClientIds()
         try modelContext.save()
+    }
+
+    func backfillClientIds() throws {
+        var didChange = false
+
+        let vehicles = try fetch(Vehicle.self)
+        for vehicle in vehicles where vehicle.clientId.isEmpty {
+            vehicle.ensureClientId(from: vehicle.id)
+            vehicle.synced = false
+            didChange = true
+        }
+
+        let mileages = try fetch(VehicleMileage.self)
+        for mileage in mileages where mileage.clientId.isEmpty {
+            mileage.ensureClientId(from: mileage.id)
+            mileage.synced = false
+            didChange = true
+        }
+
+        let services = try fetch(VehicleService.self)
+        for service in services where service.clientId.isEmpty {
+            service.ensureClientId(from: service.id)
+            service.synced = false
+            didChange = true
+        }
+
+        let types = try fetch(VehicleType.self)
+        for type in types where type.clientId.isEmpty {
+            type.ensureClientId(from: type.id)
+            type.synced = false
+            didChange = true
+        }
+
+        if didChange {
+            try modelContext.save()
+        }
     }
 
     private func applyVehicleTypes(_ changes: [SyncChangeResponse]) {
@@ -340,9 +377,14 @@ final class SwiftDataManager {
                 configurations: ModelConfiguration(isStoredInMemoryOnly: true)
             )
             actor = SwiftDataActor(modelContainer: container)
+            Task { try? await self.backfillClientIds() }
         } catch {
             fatalError(error.localizedDescription)
         }
+    }
+
+    func backfillClientIds() async throws {
+        try await actor.backfillClientIds()
     }
 
     func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) async throws -> [T] {

@@ -1,3 +1,5 @@
+import { resolveClientId } from '../validators/resolveClientId.helper';
+
 export function mapDocToChange(doc: unknown): Record<string, unknown> {
   const obj = doc as Record<string, unknown>;
 
@@ -30,7 +32,7 @@ export function mapDocToChange(doc: unknown): Record<string, unknown> {
 
   const change: Record<string, unknown> = {
     id: remoteId,
-    clientId: obj.clientId,
+    clientId: resolveClientId(obj.clientId as string | undefined, remoteId),
     updatedAt: updatedAtISO,
     deleted,
     deletedAt: deletedAtValue,
@@ -53,7 +55,7 @@ export function mapEntityResponse(entity: unknown, extra?: Record<string, unknow
 
   return {
     id,
-    clientId: record.clientId,
+    clientId: resolveClientId(record.clientId as string | undefined, id),
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
     deleted: record.deleted ?? false,
