@@ -92,6 +92,7 @@
 		A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77B2AED43620038A546 /* VehicleListView.swift */; };
 		A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */; };
 		A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB7842AED43A10038A546 /* MileageListView.swift */; };
+		A5FCB78D2AED49380038A546 /* MileageListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */; };
 		A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */; };
 		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
 		A5FH0112E1000010038BEE1 /* SyncTimestampStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0012E1000010038BEE1 /* SyncTimestampStore.swift */; };
@@ -181,6 +182,7 @@
 		A5FCB77B2AED43620038A546 /* VehicleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
 		A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditView.swift; sourceTree = "<group>"; };
 		A5FCB7842AED43A10038A546 /* MileageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListView.swift; sourceTree = "<group>"; };
+		A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListViewModel.swift; sourceTree = "<group>"; };
 		A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
 		A5FH0012E1000010038BEE1 /* SyncTimestampStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncTimestampStore.swift; sourceTree = "<group>"; };

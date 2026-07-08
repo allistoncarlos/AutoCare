@@ -156,7 +156,7 @@ extension VehicleEditView {
         }
 
         private func fetchVehicle(byClientId clientId: String) async -> Vehicle? {
-            guard let vehicles = try? await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)]) else {
+            guard let vehicles = try? await swiftDataManager.fetch(sortBy: [SortDescriptor(\Vehicle.name)]) else {
                 return nil
             }
 
