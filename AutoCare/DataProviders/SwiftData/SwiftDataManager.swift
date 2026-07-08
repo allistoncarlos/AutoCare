@@ -96,28 +96,28 @@ actor SwiftDataActor {
     func backfillClientIds() throws {
         var didChange = false
 
-        let vehicles = try fetch(Vehicle.self)
+        let vehicles: [Vehicle] = try fetch(sortBy: [])
         for vehicle in vehicles where vehicle.clientId.isEmpty {
             vehicle.ensureClientId(from: vehicle.id)
             vehicle.synced = false
             didChange = true
         }
 
-        let mileages = try fetch(VehicleMileage.self)
+        let mileages: [VehicleMileage] = try fetch(sortBy: [])
         for mileage in mileages where mileage.clientId.isEmpty {
             mileage.ensureClientId(from: mileage.id)
             mileage.synced = false
             didChange = true
         }
 
-        let services = try fetch(VehicleService.self)
+        let services: [VehicleService] = try fetch(sortBy: [])
         for service in services where service.clientId.isEmpty {
             service.ensureClientId(from: service.id)
             service.synced = false
             didChange = true
         }
 
-        let types = try fetch(VehicleType.self)
+        let types: [VehicleType] = try fetch(sortBy: [])
         for type in types where type.clientId.isEmpty {
             type.ensureClientId(from: type.id)
             type.synced = false

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HomeState: Equatable, Sendable {
+enum HomeState: Equatable {
     case idle
     case loading
     case error

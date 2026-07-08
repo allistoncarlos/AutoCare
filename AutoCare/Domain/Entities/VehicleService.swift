@@ -16,7 +16,6 @@ enum VehicleServiceType: String, Codable, CustomStringConvertible {
         switch self {
         case .wheelsAndTyres: return "Rodas e Pneus"
         case .wash: return "Lavagem"
-        default: return "Outros"
         }
     }
 }
@@ -31,7 +30,6 @@ enum VehicleServiceSubtype: String, Codable, CustomStringConvertible {
         case .calibrate: return "Calibragem"
         case .flatTyre: return "Pneu Furado"
         case .newTyres: return "Novos Pneus"
-        default: return "Outros"
         }
     }
 }
