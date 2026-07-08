@@ -8,6 +8,7 @@
 import PulseUI
 import SwiftUI
 
+@MainActor
 enum HomeRouter {
     static func makeEditVehicleView(
         vehicleId: String?,
@@ -26,7 +27,7 @@ enum HomeRouter {
 
     static func makeMileageListView(selectedVehicle: Vehicle) -> some View {
         MileageListView(
-            viewModel: MileageListView.ViewModel(selectedVehicle: selectedVehicle)
+            viewModel: MileageListViewModel(selectedVehicle: selectedVehicle)
         )
     }
 

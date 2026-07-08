@@ -8,6 +8,7 @@
 import Combine
 import Factory
 import Foundation
+import SwiftData
 import SwiftUI
 
 extension HomeView {

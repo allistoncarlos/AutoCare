@@ -10,10 +10,10 @@ import SwiftUI
 import TTProgressHUD
 
 struct MileageListView: View {
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var viewModel: MileageListViewModel
     @State private var presentedMileages = NavigationPath()
 
-    init(viewModel: MileageListView.ViewModel) {
+    init(viewModel: MileageListViewModel) {
         self.viewModel = viewModel
     }
 
@@ -80,7 +80,7 @@ struct MileageListView: View {
 
 #Preview {
     MileageListView(
-        viewModel: MileageListView.ViewModel(
+        viewModel: MileageListViewModel(
             selectedVehicle: Vehicle(
                 id: "1",
                 name: "Fiat Argo 2021",

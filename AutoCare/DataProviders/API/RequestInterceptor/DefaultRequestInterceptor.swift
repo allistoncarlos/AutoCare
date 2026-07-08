@@ -44,8 +44,7 @@ final class DefaultRequestInterceptor: RequestInterceptor {
         } else if let statusCode = response?.statusCode,
                   statusCode == 401,
                   request.retryCount < retryLimit {
-            if let accessToken = KeychainDataSource.accessToken.get(),
-               let refreshToken = KeychainDataSource.refreshToken.get() {
+            if let refreshToken = KeychainDataSource.refreshToken.get() {
                 Task {
                     if let result = await NetworkManager.shared
                         .performRequest(
@@ -61,9 +60,13 @@ final class DefaultRequestInterceptor: RequestInterceptor {
                         KeychainDataSource.refreshToken.set(result.refreshToken)
                         KeychainDataSource.expiresIn.set(formattedExpiresIn)
 
-                        return completion(.retryWithDelay(retryDelay))
+                        completion(.retryWithDelay(retryDelay))
+                    } else {
+                        completion(.doNotRetry)
                     }
                 }
+            } else {
+                completion(.doNotRetry)
             }
 
         } else {

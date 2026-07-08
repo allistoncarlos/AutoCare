@@ -8,6 +8,7 @@
 import Combine
 import Factory
 import Foundation
+import SwiftData
 import SwiftUI
 
 extension VehicleEditView {
@@ -115,7 +116,7 @@ extension VehicleEditView {
         private func saveRemote(vehicle: Vehicle, isPresented: Binding<Bool>) async {
             if let saved = await repository.save(id: vehicle.id, vehicle: vehicle) {
                 if let existingId = saved.id,
-                   let existing = try? await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.id == existingId }) {
+                   let existing = await fetchVehicle(byId: existingId) {
                     existing.name = saved.name
                     existing.brand = saved.brand
                     existing.model = saved.model
@@ -127,7 +128,7 @@ extension VehicleEditView {
                     existing.clientId = saved.clientId
                     existing.synced = true
                     try? await swiftDataManager.save()
-                } else if let existing = try? await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.clientId == saved.clientId }) {
+                } else if let existing = await fetchVehicle(byClientId: saved.clientId) {
                     existing.id = saved.id
                     existing.name = saved.name
                     existing.brand = saved.brand
@@ -148,6 +149,18 @@ extension VehicleEditView {
             } else {
                 await saveLocal(vehicle: vehicle, isPresented: isPresented)
             }
+        }
+
+        private func fetchVehicle(byId id: String) async -> Vehicle? {
+            try? await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.id == id })
+        }
+
+        private func fetchVehicle(byClientId clientId: String) async -> Vehicle? {
+            guard let vehicles = try? await swiftDataManager.fetch(sortBy: [SortDescriptor(\Vehicle.name)]) else {
+                return nil
+            }
+
+            return vehicles.first { $0.clientId == clientId }
         }
 
         private func saveLocal(vehicle: Vehicle, isPresented: Binding<Bool>) async {

@@ -37,7 +37,7 @@ enum VehicleServiceSubtype: String, Codable, CustomStringConvertible {
 }
 
 @Model
-final class VehicleService: Syncable, Sendable {
+final class VehicleService: Syncable {
     var id: String
     var date: Date = Date()
     var odometer: Int = 0
