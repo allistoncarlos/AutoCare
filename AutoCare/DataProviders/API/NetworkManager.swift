@@ -53,7 +53,7 @@ public class NetworkManager {
     public static let shared = NetworkManager()
 
     @discardableResult
-    public func performRequest<T: Decodable>(
+    func performRequest<T: Decodable>(
         responseType: T.Type,
         endpoint: AutoCareAPI,
         cache: Bool = false,
@@ -131,14 +131,13 @@ public class NetworkManager {
     private let retryDelay: TimeInterval = 10
 
     private func refreshTokens() async -> Bool {
-        guard let accessToken = KeychainDataSource.accessToken.get(),
-              let refreshToken = KeychainDataSource.refreshToken.get() else {
+        guard let refreshToken = KeychainDataSource.refreshToken.get() else {
             return false
         }
 
         guard let result = await performRequest(
             responseType: RefreshTokenResponse.self,
-            endpoint: .refreshToken(data: RefreshTokenRequest(accessToken: accessToken, refreshToken: refreshToken))
+            endpoint: .refreshToken(data: RefreshTokenRequest(refreshToken: refreshToken))
         ) else {
             return false
         }

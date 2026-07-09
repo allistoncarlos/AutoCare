@@ -257,7 +257,7 @@ enum AutoCareAPI {
 // MARK: URLRequestConvertible
 
 extension AutoCareAPI: URLRequestConvertible {
-    public func asURLRequest() throws -> URLRequest {
+    func asURLRequest() throws -> URLRequest {
         let resultUrl = "\(baseURL)/\(path)"
         let url = try resultUrl.asURL()
         var request = URLRequest(url: url)
