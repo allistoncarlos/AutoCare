@@ -5,8 +5,102 @@
 //  Created by Alliston Aleixo on 25/03/25.
 //
 
-import Alamofire
 import Foundation
+
+// MARK: - HTTPMethod
+
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+}
+
+// MARK: - ParameterEncoder
+
+protocol ParameterEncoder {
+    func encode<Parameters: Encodable>(_ parameters: Parameters, into request: URLRequest) throws -> URLRequest
+}
+
+class JSONParameterEncoder: ParameterEncoder {
+    let encoder: JSONEncoder
+
+    init() {
+        self.encoder = JSONEncoder()
+        self.encoder.dateEncodingStrategy = .iso8601
+    }
+
+    func encode<Parameters: Encodable>(_ parameters: Parameters, into request: URLRequest) throws -> URLRequest {
+        var urlRequest = request
+
+        let data = try encoder.encode(parameters)
+        urlRequest.httpBody = data
+
+        if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+
+        return urlRequest
+    }
+}
+
+class URLEncodedFormParameterEncoder: ParameterEncoder {
+    init() {}
+
+    func encode<Parameters: Encodable>(_ parameters: Parameters, into request: URLRequest) throws -> URLRequest {
+        var urlRequest = request
+
+        if request.httpMethod != "GET" {
+            let data = try JSONEncoder().encode(parameters)
+            let dictionary = try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
+
+            let formData = dictionary.compactMap { key, value -> String? in
+                guard let encodedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                      let encodedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+                    return nil
+                }
+                return "\(encodedKey)=\(encodedValue)"
+            }.joined(separator: "&")
+
+            urlRequest.httpBody = formData.data(using: .utf8)
+
+            if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
+                urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            }
+        }
+
+        return urlRequest
+    }
+}
+
+// MARK: - URLRequestConvertible
+
+protocol URLRequestConvertible {
+    func asURLRequest() throws -> URLRequest
+}
+
+extension String {
+    func asURL() throws -> URL {
+        guard let url = URL(string: self) else {
+            throw URLError(.badURL)
+        }
+        return url
+    }
+}
+
+extension URLRequest {
+    var method: HTTPMethod? {
+        get {
+            guard let httpMethod = httpMethod else { return nil }
+            return HTTPMethod(rawValue: httpMethod)
+        }
+        set {
+            httpMethod = newValue?.rawValue
+        }
+    }
+}
+
+// MARK: - APIConstants
 
 enum APIConstants {
     static let authResource = "auth"
@@ -17,7 +111,11 @@ enum APIConstants {
     static let vehicleServiceResource = "vehicle-service"
 }
 
+// MARK: - AutoCareAPI
+
 enum AutoCareAPI {
+    private static let apiArea = "autocare"
+
     case login(data: LoginRequest)
     case refreshToken(data: RefreshTokenRequest)
     case changes(since: String?)
@@ -41,11 +139,11 @@ enum AutoCareAPI {
         case .login:
             return "\(APIConstants.authResource)/login"
         case .refreshToken:
-            return "\(APIConstants.authResource)/refresh"
-        case .changes:
-            return APIConstants.changesResource
+            return "\(APIConstants.userResource)/refresh"
+
         case .vehicleType:
-            return APIConstants.vehicleTypeResource
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleTypeResource)"
+
         case .vehicles:
             return APIConstants.vehicleResource
         case let .vehicle(id):
@@ -54,20 +152,24 @@ enum AutoCareAPI {
             if let id {
                 return "\(APIConstants.vehicleResource)/\(id)"
             }
-            return "\(APIConstants.vehicleResource)"
-        case .vehicleMileages:
-            return APIConstants.vehicleMileageResource
-        case let .vehicleMileage(id):
-            return "\(APIConstants.vehicleMileageResource)/\(id)"
+
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/"
+
+        case let .vehicleMileages(vehicleId):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)"
+        case let .vehicleMileage(vehicleId, id):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)/\(id)"
         case let .saveVehicleMileage(id, _):
             if let id {
                 return "\(APIConstants.vehicleMileageResource)/\(id)"
             }
-            return APIConstants.vehicleMileageResource
-        case .vehicleServices:
-            return APIConstants.vehicleServiceResource
-        case let .vehicleService(id):
-            return "\(APIConstants.vehicleServiceResource)/\(id)"
+
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/"
+
+        case let .vehicleServices(vehicleId):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)"
+        case let .vehicleService(vehicleId, id):
+            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)/\(id)"
         case let .saveVehicleService(id, _):
             if let id {
                 return "\(APIConstants.vehicleServiceResource)/\(id)"
@@ -78,14 +180,33 @@ enum AutoCareAPI {
 
     var method: HTTPMethod {
         switch self {
-        case .vehicleType, .vehicles, .vehicle, .vehicleMileages, .vehicleMileage, .vehicleServices, .vehicleService, .changes:
+        case .vehicleType,
+             .vehicles,
+             .vehicle,
+
+             .vehicleMileages,
+             .vehicleMileage,
+
+             .vehicleServices,
+             .vehicleService:
             return .get
         case .login, .refreshToken:
             return .post
+
         case let .saveVehicle(id, _):
-            return id == nil ? .post : .put
+            if id != nil {
+                return .put
+            }
+
+            return .post
+
         case let .saveVehicleMileage(id, _):
-            return id == nil ? .post : .put
+            if id != nil {
+                return .put
+            }
+
+            return .post
+
         case let .saveVehicleService(id, _):
             return id == nil ? .post : .put
         }
@@ -119,33 +240,21 @@ enum AutoCareAPI {
             return try parameterEncoder.encode(model, into: request)
         case let .saveVehicleService(_, model):
             return try parameterEncoder.encode(model, into: request)
-        case let .changes(since):
-            guard let since else { return request }
-            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
-            components?.queryItems = [URLQueryItem(name: "since", value: since)]
-            guard let url = components?.url else { return request }
-            var updated = request
-            updated.url = url
-            return updated
-        case let .vehicleMileages(vehicleId):
-            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
-            components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
-            guard let url = components?.url else { return request }
-            var updated = request
-            updated.url = url
-            return updated
-        case let .vehicleServices(vehicleId):
-            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
-            components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
-            guard let url = components?.url else { return request }
-            var updated = request
-            updated.url = url
-            return updated
-        case .vehicleType, .vehicles, .vehicle, .vehicleMileage, .vehicleService:
+        case .vehicleType,
+             .vehicles,
+             .vehicle,
+
+             .vehicleMileages,
+             .vehicleMileage,
+
+             .vehicleServices,
+             .vehicleService:
             return request
         }
     }
 }
+
+// MARK: URLRequestConvertible
 
 extension AutoCareAPI: URLRequestConvertible {
     public func asURLRequest() throws -> URLRequest {

@@ -53,12 +53,8 @@
 		A562EEAC2D93397F00D68116 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEAB2D93397F00D68116 /* NetworkManager.swift */; };
 		A562EEAF2D933AC700D68116 /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = A562EEAE2D933AC700D68116 /* Pulse */; };
 		A562EEB12D933AC700D68116 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A562EEB02D933AC700D68116 /* PulseUI */; };
-		A562EEB42D933B2D00D68116 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A562EEB32D933B2D00D68116 /* Alamofire */; };
 		A562EEB62D933B5100D68116 /* AutoCareAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEB52D933B5100D68116 /* AutoCareAPI.swift */; };
 		A562EEB82D933C0B00D68116 /* RefreshTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEB72D933C0B00D68116 /* RefreshTokenRequest.swift */; };
-		A562EEBB2D933C4E00D68116 /* DefaultEventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEBA2D933C4E00D68116 /* DefaultEventMonitor.swift */; };
-		A562EEBD2D933C5800D68116 /* NetworkLoggerEventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEBC2D933C5800D68116 /* NetworkLoggerEventMonitor.swift */; };
-		A562EEC02D933C8200D68116 /* DefaultRequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEBF2D933C8200D68116 /* DefaultRequestInterceptor.swift */; };
 		A562EEC22D933CAA00D68116 /* RefreshTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EEC12D933CAA00D68116 /* RefreshTokenResponse.swift */; };
 		A5717DCD2D97025B00776F71 /* VehicleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5717DCC2D97025B00776F71 /* VehicleRequest.swift */; };
 		A57F1DB62D942E4D00584AEC /* VehicleDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57F1DB52D942E4D00584AEC /* VehicleDataSource.swift */; };
@@ -142,9 +138,6 @@
 		A562EEAB2D93397F00D68116 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		A562EEB52D933B5100D68116 /* AutoCareAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCareAPI.swift; sourceTree = "<group>"; };
 		A562EEB72D933C0B00D68116 /* RefreshTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenRequest.swift; sourceTree = "<group>"; };
-		A562EEBA2D933C4E00D68116 /* DefaultEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultEventMonitor.swift; sourceTree = "<group>"; };
-		A562EEBC2D933C5800D68116 /* NetworkLoggerEventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLoggerEventMonitor.swift; sourceTree = "<group>"; };
-		A562EEBF2D933C8200D68116 /* DefaultRequestInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultRequestInterceptor.swift; sourceTree = "<group>"; };
 		A562EEC12D933CAA00D68116 /* RefreshTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenResponse.swift; sourceTree = "<group>"; };
 		A5717DCC2D97025B00776F71 /* VehicleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleRequest.swift; sourceTree = "<group>"; };
 		A57F1DB52D942E4D00584AEC /* VehicleDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleDataSource.swift; sourceTree = "<group>"; };
@@ -195,7 +188,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A562EEAF2D933AC700D68116 /* Pulse in Frameworks */,
-				A562EEB42D933B2D00D68116 /* Alamofire in Frameworks */,
 				A562EE8A2D9333F500D68116 /* KeychainAccess in Frameworks */,
 				A562EE8D2D9334E500D68116 /* Factory in Frameworks */,
 				A562EEB12D933AC700D68116 /* PulseUI in Frameworks */,
@@ -444,8 +436,6 @@
 		A562EE992D93376C00D68116 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				A562EEB92D933C4600D68116 /* EventMonitor */,
-				A562EEBE2D933C7B00D68116 /* RequestInterceptor */,
 				A562EE9A2D93377400D68116 /* Entities */,
 				A562EEB52D933B5100D68116 /* AutoCareAPI.swift */,
 				A562EEAB2D93397F00D68116 /* NetworkManager.swift */,
@@ -539,23 +529,6 @@
 				A562EEA72D93390100D68116 /* LoginDataSource.swift */,
 			);
 			path = Login;
-			sourceTree = "<group>";
-		};
-		A562EEB92D933C4600D68116 /* EventMonitor */ = {
-			isa = PBXGroup;
-			children = (
-				A562EEBC2D933C5800D68116 /* NetworkLoggerEventMonitor.swift */,
-				A562EEBA2D933C4E00D68116 /* DefaultEventMonitor.swift */,
-			);
-			path = EventMonitor;
-			sourceTree = "<group>";
-		};
-		A562EEBE2D933C7B00D68116 /* RequestInterceptor */ = {
-			isa = PBXGroup;
-			children = (
-				A562EEBF2D933C8200D68116 /* DefaultRequestInterceptor.swift */,
-			);
-			path = RequestInterceptor;
 			sourceTree = "<group>";
 		};
 		A5717DCB2D97024100776F71 /* Vehicle */ = {
@@ -908,7 +881,6 @@
 				A562EE8C2D9334E500D68116 /* Factory */,
 				A562EEAE2D933AC700D68116 /* Pulse */,
 				A562EEB02D933AC700D68116 /* PulseUI */,
-				A562EEB32D933B2D00D68116 /* Alamofire */,
 			);
 			productName = AutoCare;
 			productReference = A5E333852AEBE48F0089DD81 /* AutoCare.app */;
@@ -944,7 +916,6 @@
 				A562EE882D9333F500D68116 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				A562EE8B2D9334E500D68116 /* XCRemoteSwiftPackageReference "Factory" */,
 				A562EEAD2D933AC700D68116 /* XCRemoteSwiftPackageReference "Pulse" */,
-				A562EEB22D933B2D00D68116 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = A5E333862AEBE48F0089DD81 /* Products */;
 			projectDirPath = "";
@@ -985,7 +956,6 @@
 				A57F1DBC2D942EFE00584AEC /* VehicleResponse.swift in Sources */,
 				A5804B322BEBB6EC00BE9602 /* CurrencyUITextField.swift in Sources */,
 				A5FCB77C2AED43620038A546 /* VehicleListView.swift in Sources */,
-				A562EEBB2D933C4E00D68116 /* DefaultEventMonitor.swift in Sources */,
 				A5619DF62E0FF3C400D46700 /* VehicleServiceRequest.swift in Sources */,
 				A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */,
 				A54EB8DF2D948432001AE2A7 /* VehicleType.swift in Sources */,
@@ -998,8 +968,6 @@
 				A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */,
 				A5DD63E82AF035BB009254C2 /* VehicleEditState.swift in Sources */,
 				A53F41632D5E104100FE70B7 /* HomeViewModel.swift in Sources */,
-				A562EEC02D933C8200D68116 /* DefaultRequestInterceptor.swift in Sources */,
-				A562EEBD2D933C5800D68116 /* NetworkLoggerEventMonitor.swift in Sources */,
 				A5B470ED2CDFF7B200ECE77E /* HomeRouter.swift in Sources */,
 				A50FC89D2BE6C4270044E126 /* MileageEditState.swift in Sources */,
 				A562EE9E2D93378600D68116 /* LoginRequest.swift in Sources */,
@@ -1328,14 +1296,6 @@
 				minimumVersion = 5.1.3;
 			};
 		};
-		A562EEB22D933B2D00D68116 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1368,11 +1328,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A562EEAD2D933AC700D68116 /* XCRemoteSwiftPackageReference "Pulse" */;
 			productName = PulseUI;
-		};
-		A562EEB32D933B2D00D68116 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A562EEB22D933B2D00D68116 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
