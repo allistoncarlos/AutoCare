@@ -40,7 +40,6 @@
 		A5619DFF2E0FF4FD00D46700 /* VehicleServiceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5619DFE2E0FF4FD00D46700 /* VehicleServiceResponse.swift */; };
 		A5619E022E0FF58F00D46700 /* ServicesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5619E012E0FF58F00D46700 /* ServicesRouter.swift */; };
 		A562EE872D9333A900D68116 /* KeychainDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EE862D9333A500D68116 /* KeychainDataSource.swift */; };
-		A5AUTH022E3000010038BEE1 /* AuthSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AUTH012E3000010038BEE1 /* AuthSessionStore.swift */; };
 		A562EE8A2D9333F500D68116 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A562EE892D9333F500D68116 /* KeychainAccess */; };
 		A562EE8D2D9334E500D68116 /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = A562EE8C2D9334E500D68116 /* Factory */; };
 		A562EE912D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A562EE902D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift */; };
@@ -69,8 +68,12 @@
 		A58ED06E2B83FBBA0023295E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58ED06D2B83FBBA0023295E /* LoginView.swift */; };
 		A5A7A5732D6276B8008608DC /* Vehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7A5722D6276B4008608DC /* Vehicle.swift */; };
 		A5A7A5752D628547008608DC /* VehicleMileage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7A5742D628547008608DC /* VehicleMileage.swift */; };
+		A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */; };
+		A5ASYNC2E2000010038BEE2 /* AsyncSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ASYNC1E2000010038BEE2 /* AsyncSemaphore.swift */; };
+		A5AUTH022E3000010038BEE1 /* AuthSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AUTH012E3000010038BEE1 /* AuthSessionStore.swift */; };
 		A5B470E82CDFF60300ECE77E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B470E62CDFF60000ECE77E /* HomeView.swift */; };
 		A5B470ED2CDFF7B200ECE77E /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B470EC2CDFF7B000ECE77E /* HomeRouter.swift */; };
+		A5BGWRK2E2000010038BEE1 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */; };
 		A5C3A94B2BA716D800A0CC21 /* MileagesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */; };
 		A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */; };
 		A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */; };
@@ -90,14 +93,12 @@
 		A5FCB77E2AED436C0038A546 /* VehicleEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */; };
 		A5FCB7852AED43A10038A546 /* MileageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB7842AED43A10038A546 /* MileageListView.swift */; };
 		A5FCB78D2AED49380038A546 /* MileageListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */; };
-		A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */; };
-		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
 		A5FH0112E1000010038BEE1 /* SyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0012E1000010038BEE1 /* SyncState.swift */; };
-		A5BGWRK2E2000010038BEE1 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */; };
-		A5ASYNC2E2000010038BEE2 /* AsyncSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5ASYNC1E2000010038BEE2 /* AsyncSemaphore.swift */; };
-		A5FH0162E1000010038BEE6 /* ChangesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0062E1000010038BEE6 /* ChangesRepository.swift */; };
 		A5FH0122E1000010038BEE2 /* ChangesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0022E1000010038BEE2 /* ChangesResponse.swift */; };
 		A5FH0132E1000010038BEE3 /* ChangesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */; };
+		A5FH0162E1000010038BEE6 /* ChangesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0062E1000010038BEE6 /* ChangesRepository.swift */; };
+		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
+/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
@@ -131,7 +132,6 @@
 		A5619DFE2E0FF4FD00D46700 /* VehicleServiceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleServiceResponse.swift; sourceTree = "<group>"; };
 		A5619E012E0FF58F00D46700 /* ServicesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesRouter.swift; sourceTree = "<group>"; };
 		A562EE862D9333A500D68116 /* KeychainDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainDataSource.swift; sourceTree = "<group>"; };
-		A5AUTH012E3000010038BEE1 /* AuthSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSessionStore.swift; sourceTree = "<group>"; };
 		A562EE902D93353E00D68116 /* AutoCareApp+RepositoryInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+RepositoryInjection.swift"; sourceTree = "<group>"; };
 		A562EE952D93367600D68116 /* LoginRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRepository.swift; sourceTree = "<group>"; };
 		A562EE972D93372900D68116 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
@@ -156,8 +156,12 @@
 		A58ED06D2B83FBBA0023295E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A5A7A5722D6276B4008608DC /* Vehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vehicle.swift; sourceTree = "<group>"; };
 		A5A7A5742D628547008608DC /* VehicleMileage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileage.swift; sourceTree = "<group>"; };
+		A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
+		A5ASYNC1E2000010038BEE2 /* AsyncSemaphore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSemaphore.swift; sourceTree = "<group>"; };
+		A5AUTH012E3000010038BEE1 /* AuthSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSessionStore.swift; sourceTree = "<group>"; };
 		A5B470E62CDFF60000ECE77E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A5B470EC2CDFF7B000ECE77E /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
+		A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileagesRouter.swift; sourceTree = "<group>"; };
 		A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListViewModel.swift; sourceTree = "<group>"; };
 		A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListState.swift; sourceTree = "<group>"; };
@@ -181,14 +185,12 @@
 		A5FCB77D2AED436C0038A546 /* VehicleEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleEditView.swift; sourceTree = "<group>"; };
 		A5FCB7842AED43A10038A546 /* MileageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListView.swift; sourceTree = "<group>"; };
 		A5FCB78C2AED49380038A546 /* MileageListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageListViewModel.swift; sourceTree = "<group>"; };
-		A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
-		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
 		A5FH0012E1000010038BEE1 /* SyncState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncState.swift; sourceTree = "<group>"; };
-		A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
-		A5ASYNC1E2000010038BEE2 /* AsyncSemaphore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSemaphore.swift; sourceTree = "<group>"; };
-		A5FH0062E1000010038BEE6 /* ChangesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesRepository.swift; sourceTree = "<group>"; };
 		A5FH0022E1000010038BEE2 /* ChangesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesResponse.swift; sourceTree = "<group>"; };
 		A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesDataSource.swift; sourceTree = "<group>"; };
+		A5FH0062E1000010038BEE6 /* ChangesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesRepository.swift; sourceTree = "<group>"; };
+		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A5E333822AEBE48F0089DD81 /* Frameworks */ = {
@@ -398,14 +400,6 @@
 			path = Keychain;
 			sourceTree = "<group>";
 		};
-		A5AUTH032E3000010038BEE1 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				A5AUTH012E3000010038BEE1 /* AuthSessionStore.swift */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
 		A562EE8F2D93352600D68116 /* DI */ = {
 			isa = PBXGroup;
 			children = (
@@ -440,14 +434,6 @@
 				A5619DF72E0FF43E00D46700 /* VehicleService */,
 			);
 			path = Repositories;
-			sourceTree = "<group>";
-		};
-		A5FH0052E1000010038BEE5 /* Changes */ = {
-			isa = PBXGroup;
-			children = (
-				A5FH0062E1000010038BEE6 /* ChangesRepository.swift */,
-			);
-			path = Changes;
 			sourceTree = "<group>";
 		};
 		A562EE942D93366600D68116 /* Login */ = {
@@ -519,14 +505,6 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		A5FH0202E1000010038BEE4 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				A5FH0022E1000010038BEE2 /* ChangesResponse.swift */,
-			);
-			path = Sync;
-			sourceTree = "<group>";
-		};
 		A562EEA52D9338D700D68116 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
@@ -538,14 +516,6 @@
 				A5FH0212E1000010038BEE5 /* Sync */,
 			);
 			path = DataSources;
-			sourceTree = "<group>";
-		};
-		A5FH0212E1000010038BEE5 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */,
-			);
-			path = Sync;
 			sourceTree = "<group>";
 		};
 		A562EEA62D9338EF00D68116 /* Login */ = {
@@ -627,6 +597,25 @@
 				A54EB8DE2D948432001AE2A7 /* VehicleType.swift */,
 			);
 			path = SwiftData;
+			sourceTree = "<group>";
+		};
+		A5ARCH052D9C4CEB0038BEE5 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */,
+				A5FH0012E1000010038BEE1 /* SyncState.swift */,
+				A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */,
+				A5ASYNC1E2000010038BEE2 /* AsyncSemaphore.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
+		A5AUTH032E3000010038BEE1 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				A5AUTH012E3000010038BEE1 /* AuthSessionStore.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		A5B470E92CDFF79300ECE77E /* Home */ = {
@@ -768,17 +757,6 @@
 			path = VehicleMileage;
 			sourceTree = "<group>";
 		};
-		A5ARCH052D9C4CEB0038BEE5 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				A5ARCH012D9C4CEB0038BEE1 /* SyncService.swift */,
-				A5FH0012E1000010038BEE1 /* SyncState.swift */,
-				A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */,
-				A5ASYNC1E2000010038BEE2 /* AsyncSemaphore.swift */,
-			);
-			path = Sync;
-			sourceTree = "<group>";
-		};
 		A5F171342D9C4CE60038BEE6 /* SwiftData */ = {
 			isa = PBXGroup;
 			children = (
@@ -884,6 +862,30 @@
 				A529BB932BC85596003DCCBC /* MileageEditView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		A5FH0052E1000010038BEE5 /* Changes */ = {
+			isa = PBXGroup;
+			children = (
+				A5FH0062E1000010038BEE6 /* ChangesRepository.swift */,
+			);
+			path = Changes;
+			sourceTree = "<group>";
+		};
+		A5FH0202E1000010038BEE4 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				A5FH0022E1000010038BEE2 /* ChangesResponse.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
+		A5FH0212E1000010038BEE5 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */,
+			);
+			path = Sync;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1119,8 +1121,8 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1212,7 +1214,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1253,7 +1255,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
