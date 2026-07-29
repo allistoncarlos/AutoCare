@@ -39,7 +39,7 @@ struct HomeView: View {
         )
         .task {
             await viewModel.requestAuthorizationForNotifications()
-            await viewModel.fetchData()
+            await viewModel.syncAndFetchData()
         }
         .onChange(of: isNewVehiclePresented) { _, newValue in
             if !newValue {

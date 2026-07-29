@@ -13,21 +13,39 @@ struct MileageEditView: View {
     @ObservedObject var viewModel: ViewModel
     @Binding var navigationPath: NavigationPath
     
-    @State private var isLoading = true
-    
+    @State private var isLoading: Bool
     @State private var isSubtitleHidden = false
-    @State private var totalCostValue = 0
-    @State private var fuelCost = 0
-    @State private var odometer = 0
-    @State private var liters = 0
-    @State private var isComplete = true
-    
-    @StateObject var networkConnectivity = NetworkConnectivity()
-    
+    @State private var totalCostValue: Int
+    @State private var fuelCost: Int
+    @State private var odometer: Int
+    @State private var liters: Int
+    @State private var isComplete: Bool
+
     var currencyFormatter: NumberFormatterProtocol
     var decimalFormatter: NumberFormatterProtocol
     var integerFormatter: NumberFormatterProtocol
-    
+
+    init(
+        viewModel: ViewModel,
+        navigationPath: Binding<NavigationPath>,
+        currencyFormatter: NumberFormatterProtocol,
+        decimalFormatter: NumberFormatterProtocol,
+        integerFormatter: NumberFormatterProtocol
+    ) {
+        self.viewModel = viewModel
+        self._navigationPath = navigationPath
+        self.currencyFormatter = currencyFormatter
+        self.decimalFormatter = decimalFormatter
+        self.integerFormatter = integerFormatter
+
+        let snapshot = viewModel.formSnapshotForExistingMileage()
+        _totalCostValue = State(initialValue: snapshot?.totalCostValue ?? 0)
+        _fuelCost = State(initialValue: snapshot?.fuelCostValue ?? 0)
+        _odometer = State(initialValue: snapshot?.odometerValue ?? 0)
+        _liters = State(initialValue: snapshot?.litersValue ?? 0)
+        _isComplete = State(initialValue: snapshot?.isComplete ?? true)
+        _isLoading = State(initialValue: viewModel.vehicleMileage != nil)
+    }
     var body: some View {
         Form {
             Section(header: Text("Abastecimento")) {
@@ -113,13 +131,17 @@ struct MileageEditView: View {
                         HStack {
                             Text("Litros").font(.subheadline)
                             Spacer()
-                            Text("\(previousMileage.liters) L").font(.subheadline)
+                            if let liters = previousMileage.liters.toLeadingZerosString(decimalPlaces: 3) {
+                                Text("\(liters) L").font(.subheadline)
+                            }
                         }
                         
                         HStack {
                             Text("Consumo").font(.subheadline)
                             Spacer()
-                            Text("\(previousMileage.calculatedMileage) km/L").font(.subheadline)
+                            if let calculatedMileage = previousMileage.calculatedMileage.toLeadingZerosString(decimalPlaces: 3) {
+                                Text("\(calculatedMileage) km/L").font(.subheadline)
+                            }
                         }
                     }
                     .padding([.leading, .trailing], 20)
@@ -129,11 +151,11 @@ struct MileageEditView: View {
                 }
             }
         }
-        .navigationTitle(viewModel.vehicleMileage == nil ? "Novo abastecimento" : "\(viewModel.vehicleMileage!.liters)")
+        .navigationTitle(navigationTitle)
         .toolbar {
             Button("Salvar") {
                 Task {
-                    await viewModel.save(isConnected: networkConnectivity.status == .connected)
+                    await viewModel.save()
                 }
             }
         }
@@ -170,10 +192,33 @@ struct MileageEditView: View {
             }
         }
         .task {
+            await viewModel.reloadExistingMileage()
+            applyFormSnapshot(viewModel.formSnapshotForExistingMileage())
             await viewModel.fetchPreviousVehicleMileage()
         }
     }
+
+    private func applyFormSnapshot(_ snapshot: ViewModel.FormSnapshot?) {
+        guard let snapshot else {
+            isLoading = false
+            return
+        }
+
+        totalCostValue = snapshot.totalCostValue
+        fuelCost = snapshot.fuelCostValue
+        odometer = snapshot.odometerValue
+        liters = snapshot.litersValue
+        isComplete = snapshot.isComplete
+    }
     
+    private var navigationTitle: String {
+        if let vehicleMileage = viewModel.vehicleMileage,
+           let liters = vehicleMileage.liters.toLeadingZerosString(decimalPlaces: 3) {
+            return liters
+        }
+        return "Novo abastecimento"
+    }
+
     private func calculateLiters() {
         if isComplete {
             guard fuelCost > 0 else {

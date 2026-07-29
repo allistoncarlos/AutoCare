@@ -8,47 +8,31 @@
 import Foundation
 
 protocol VehicleDataSourceProtocol {
-    func fetchData() async -> [Vehicle]?
-    func fetchData(id: String) async -> Vehicle?
-    func save(id: String?, vehicle: Vehicle) async -> Vehicle?
+    func fetchData() async -> [VehicleResponse]?
+    func fetchData(id: String) async -> VehicleResponse?
+    func save(vehicle: Vehicle) async throws -> VehicleResponse?
 }
 
 class VehicleDataSource: VehicleDataSourceProtocol {
-    func fetchData() async -> [Vehicle]? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: [VehicleResponse].self,
-                endpoint: .vehicles
-            ) {
-                return apiResult
-                    .compactMap { $0.toVehicle() }
-                    .sorted(by: { $1.name.uppercased() > $0.name.uppercased() })
-        }
-
-        return nil
+    func fetchData() async -> [VehicleResponse]? {
+        await NetworkManager.shared.performRequest(
+            responseType: [VehicleResponse].self,
+            endpoint: .vehicles
+        )
     }
 
-    func fetchData(id: String) async -> Vehicle? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: VehicleResponse.self,
-                endpoint: .vehicle(id: id)
-            ) {
-            return apiResult.toVehicle()
-        }
-
-        return nil
+    func fetchData(id: String) async -> VehicleResponse? {
+        await NetworkManager.shared.performRequest(
+            responseType: VehicleResponse.self,
+            endpoint: .vehicle(id: id)
+        )
     }
 
-    func save(id: String?, vehicle: Vehicle) async -> Vehicle? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: VehicleResponse.self,
-                endpoint: .saveVehicle(id: id, data: vehicle.toRequest())
-            ) {
-            return apiResult.toVehicle()
-        }
-
-        return nil
+    func save(vehicle: Vehicle) async throws -> VehicleResponse? {
+        let request = vehicle.toRequest()
+        return await NetworkManager.shared.performRequest(
+            responseType: VehicleResponse.self,
+            endpoint: .saveVehicle(data: request, serverId: vehicle.id)
+        )
     }
 }

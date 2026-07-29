@@ -114,21 +114,19 @@ enum APIConstants {
 // MARK: - AutoCareAPI
 
 enum AutoCareAPI {
-    private static let apiArea = "autocare"
-
     case login(data: LoginRequest)
     case refreshToken(data: RefreshTokenRequest)
     case changes(since: String?)
     case vehicleType
     case vehicles
     case vehicle(id: String)
-    case saveVehicle(id: String?, data: VehicleRequest)
+    case saveVehicle(data: VehicleRequest, serverId: String?)
     case vehicleMileages(vehicleId: String)
     case vehicleMileage(id: String)
-    case saveVehicleMileage(id: String?, data: VehicleMileageRequest)
+    case saveVehicleMileage(data: VehicleMileageRequest, serverId: String?)
     case vehicleServices(vehicleId: String)
     case vehicleService(id: String)
-    case saveVehicleService(id: String?, data: VehicleServiceRequest)
+    case saveVehicleService(data: VehicleServiceRequest, serverId: String?)
 
     var baseURL: String {
         Config.apiPath
@@ -139,40 +137,36 @@ enum AutoCareAPI {
         case .login:
             return "\(APIConstants.authResource)/login"
         case .refreshToken:
-            return "\(APIConstants.userResource)/refresh"
-
+            return "\(APIConstants.authResource)/refresh"
+        case .changes:
+            return APIConstants.changesResource
         case .vehicleType:
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleTypeResource)"
-
+            return APIConstants.vehicleTypeResource
         case .vehicles:
             return APIConstants.vehicleResource
         case let .vehicle(id):
             return "\(APIConstants.vehicleResource)/\(id)"
-        case let .saveVehicle(id, _):
-            if let id {
-                return "\(APIConstants.vehicleResource)/\(id)"
+        case let .saveVehicle(data, serverId):
+            if serverId != nil {
+                return "\(APIConstants.vehicleResource)/\(data.clientId)"
             }
-
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleResource)/"
-
-        case let .vehicleMileages(vehicleId):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)"
-        case let .vehicleMileage(vehicleId, id):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/\(vehicleId)/\(id)"
-        case let .saveVehicleMileage(id, _):
-            if let id {
-                return "\(APIConstants.vehicleMileageResource)/\(id)"
+            return APIConstants.vehicleResource
+        case .vehicleMileages:
+            return APIConstants.vehicleMileageResource
+        case let .vehicleMileage(id):
+            return "\(APIConstants.vehicleMileageResource)/\(id)"
+        case let .saveVehicleMileage(data, serverId):
+            if serverId != nil {
+                return "\(APIConstants.vehicleMileageResource)/\(data.clientId)"
             }
-
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleMileageResource)/"
-
-        case let .vehicleServices(vehicleId):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)"
-        case let .vehicleService(vehicleId, id):
-            return "\(AutoCareAPI.apiArea)/\(APIConstants.vehicleServiceResource)/\(vehicleId)/\(id)"
-        case let .saveVehicleService(id, _):
-            if let id {
-                return "\(APIConstants.vehicleServiceResource)/\(id)"
+            return APIConstants.vehicleMileageResource
+        case .vehicleServices:
+            return APIConstants.vehicleServiceResource
+        case let .vehicleService(id):
+            return "\(APIConstants.vehicleServiceResource)/\(id)"
+        case let .saveVehicleService(data, serverId):
+            if serverId != nil {
+                return "\(APIConstants.vehicleServiceResource)/\(data.clientId)"
             }
             return APIConstants.vehicleServiceResource
         }
@@ -183,32 +177,20 @@ enum AutoCareAPI {
         case .vehicleType,
              .vehicles,
              .vehicle,
-
              .vehicleMileages,
              .vehicleMileage,
-
              .vehicleServices,
-             .vehicleService:
+             .vehicleService,
+             .changes:
             return .get
         case .login, .refreshToken:
             return .post
-
-        case let .saveVehicle(id, _):
-            if id != nil {
-                return .put
-            }
-
-            return .post
-
-        case let .saveVehicleMileage(id, _):
-            if id != nil {
-                return .put
-            }
-
-            return .post
-
-        case let .saveVehicleService(id, _):
-            return id == nil ? .post : .put
+        case let .saveVehicle(_, serverId):
+            return serverId == nil ? .post : .put
+        case let .saveVehicleMileage(_, serverId):
+            return serverId == nil ? .post : .put
+        case let .saveVehicleService(_, serverId):
+            return serverId == nil ? .post : .put
         }
     }
 
@@ -234,21 +216,35 @@ enum AutoCareAPI {
             return try parameterEncoder.encode(parameters, into: request)
         case let .refreshToken(parameters):
             return try parameterEncoder.encode(parameters, into: request)
-        case let .saveVehicle(_, model):
-            return try parameterEncoder.encode(model, into: request)
-        case let .saveVehicleMileage(_, model):
-            return try parameterEncoder.encode(model, into: request)
-        case let .saveVehicleService(_, model):
-            return try parameterEncoder.encode(model, into: request)
-        case .vehicleType,
-             .vehicles,
-             .vehicle,
-
-             .vehicleMileages,
-             .vehicleMileage,
-
-             .vehicleServices,
-             .vehicleService:
+        case let .saveVehicle(data, _):
+            return try parameterEncoder.encode(data, into: request)
+        case let .saveVehicleMileage(data, _):
+            return try parameterEncoder.encode(data, into: request)
+        case let .saveVehicleService(data, _):
+            return try parameterEncoder.encode(data, into: request)
+        case let .changes(since):
+            guard let since else { return request }
+            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+            components?.queryItems = [URLQueryItem(name: "since", value: since)]
+            guard let url = components?.url else { return request }
+            var updated = request
+            updated.url = url
+            return updated
+        case let .vehicleMileages(vehicleId):
+            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+            components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
+            guard let url = components?.url else { return request }
+            var updated = request
+            updated.url = url
+            return updated
+        case let .vehicleServices(vehicleId):
+            var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+            components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
+            guard let url = components?.url else { return request }
+            var updated = request
+            updated.url = url
+            return updated
+        case .vehicleType, .vehicles, .vehicle, .vehicleMileage, .vehicleService:
             return request
         }
     }

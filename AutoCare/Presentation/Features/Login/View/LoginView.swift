@@ -21,46 +21,41 @@ struct LoginView: View {
     }
 
     var body: some View {
-        ZStack {
-            if case .success = viewModel.state {
-                viewModel.homeView()
-            } else {
-                NavigationView {
-                    Form {
-                        TextField("Username", text: $username)
-                            .autocapitalization(.none)
-                        SecureField("Password", text: $password) {
-                            Task {
-                                await viewModel.login(username: username, password: password)
-                            }
-                        }
+        NavigationView {
+            Form {
+                TextField("Username", text: $username)
+                    .autocapitalization(.none)
+                SecureField("Password", text: $password) {
+                    Task {
+                        await viewModel.login(username: username, password: password)
+                    }
+                }
 
-                        Section(
-                            footer:
-                            Button("Login") {
-                                Task {
-                                    await viewModel.login(username: username, password: password)
-                                }
-                            }
-                            .disabled(username.isEmpty || password.isEmpty || viewModel.state == .loading)
-                            .buttonStyle(MainButtonStyle())
-                        ) {
-                            EmptyView()
+                Section(
+                    footer:
+                    Button("Login") {
+                        Task {
+                            await viewModel.login(username: username, password: password)
                         }
                     }
-                    .overlay(
-                        TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
-                    )
-                    .onChange(of: viewModel.state) { _, newState in
-                        isLoading = newState == .loading
-                    }
-                    .navigationTitle("Login")
+                    .disabled(username.isEmpty || password.isEmpty || viewModel.state == .loading)
+                    .buttonStyle(MainButtonStyle())
+                ) {
+                    EmptyView()
                 }
-                .navigationViewStyle(.stack)
-
-                if case let LoginState.error(error) = viewModel.state {
-                    alertView(error)
-                }
+            }
+            .overlay(
+                TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
+            )
+            .onChange(of: viewModel.state) { _, newState in
+                isLoading = newState == .loading
+            }
+            .navigationTitle("Login")
+        }
+        .navigationViewStyle(.stack)
+        .overlay {
+            if case let LoginState.error(error) = viewModel.state {
+                alertView(error)
             }
         }
     }

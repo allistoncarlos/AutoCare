@@ -11,7 +11,15 @@ protocol ChangesDataSourceProtocol {
 
 final class ChangesDataSource: ChangesDataSourceProtocol {
     func fetchChanges(since: Date?) async -> ChangesResponse? {
-        let sinceValue = since.map { ISO8601DateFormatter().string(from: $0) }
+        let sinceValue: String?
+        if let since {
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            sinceValue = formatter.string(from: since)
+        } else {
+            sinceValue = nil
+        }
+
         return await NetworkManager.shared.performRequest(
             responseType: ChangesResponse.self,
             endpoint: .changes(since: sinceValue)

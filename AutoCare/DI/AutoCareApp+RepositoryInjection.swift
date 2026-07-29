@@ -10,7 +10,8 @@ import Foundation
 
 extension Container {
     var loginRepository: Factory<LoginRepositoryProtocol> { self { LoginRepository() } }
-    
+    var changesRepository: Factory<ChangesRepositoryProtocol> { self { ChangesRepository() } }
+
     var vehicleTypeRepository: Factory<VehicleTypeRepositoryProtocol> { self { VehicleTypeRepository() } }
     var vehicleRepository: Factory<VehicleRepositoryProtocol> { self { VehicleRepository() } }
     var vehicleMileageRepository: Factory<VehicleMileageRepositoryProtocol> { self { VehicleMileageRepository() } }

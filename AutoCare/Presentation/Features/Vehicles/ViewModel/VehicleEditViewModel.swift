@@ -19,7 +19,6 @@ extension VehicleEditView {
         @Published private(set) var vehicle: Vehicle?
 
         private let vehicleId: String?
-        private let networkConnectivity = NetworkConnectivity()
 
         @Injected(\.swiftDataManager) private var swiftDataManager
         @Injected(\.vehicleRepository) private var repository
@@ -32,9 +31,7 @@ extension VehicleEditView {
         func fetchData() async {
             state = .loading
 
-            if networkConnectivity.status == .connected {
-                await fetchRemoteVehicleTypes()
-            }
+            await fetchRemoteVehicleTypes()
 
             do {
                 vehicleTypes = try await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)])
@@ -83,8 +80,28 @@ extension VehicleEditView {
                 return
             }
 
+            if let vehicle {
+                vehicle.name = name
+                vehicle.brand = brand
+                vehicle.model = model
+                vehicle.year = year
+                vehicle.licensePlate = licensePlate
+                vehicle.odometer = odometerValue
+                vehicle.isDefault = isDefault
+                vehicle.vehicleTypeId = vehicleTypeId
+                vehicle.synced = false
+
+                if await repository.save(vehicle: vehicle) != nil {
+                    state = .successSavedVehicle
+                    isPresented.wrappedValue = false
+                } else {
+                    state = .error
+                }
+                return
+            }
+
             let vehicleToSave = Vehicle(
-                id: vehicle?.id,
+                id: nil,
                 name: name,
                 brand: brand,
                 model: model,
@@ -92,101 +109,25 @@ extension VehicleEditView {
                 licensePlate: licensePlate,
                 odometer: odometerValue,
                 isDefault: isDefault,
-                vehicleTypeId: vehicleTypeId,
-                clientId: vehicle?.clientId
+                vehicleTypeId: vehicleTypeId
             )
 
-            if networkConnectivity.status == .connected {
-                await saveRemote(vehicle: vehicleToSave, isPresented: isPresented)
+            if await repository.save(vehicle: vehicleToSave) != nil {
+                state = .successSavedVehicle
+                isPresented.wrappedValue = false
             } else {
-                await saveLocal(vehicle: vehicleToSave, isPresented: isPresented)
+                state = .error
             }
         }
 
         private func fetchRemoteVehicleTypes() async {
+            guard KeychainDataSource.hasValidToken() else { return }
             guard let remoteTypes = await vehicleTypeRepository.fetchData() else { return }
 
             do {
                 try await swiftDataManager.importData(remoteTypes)
             } catch {
                 print(error)
-            }
-        }
-
-        private func saveRemote(vehicle: Vehicle, isPresented: Binding<Bool>) async {
-            if let saved = await repository.save(id: vehicle.id, vehicle: vehicle) {
-                if let existingId = saved.id,
-                   let existing = await fetchVehicle(byId: existingId) {
-                    existing.name = saved.name
-                    existing.brand = saved.brand
-                    existing.model = saved.model
-                    existing.year = saved.year
-                    existing.licensePlate = saved.licensePlate
-                    existing.odometer = saved.odometer
-                    existing.isDefault = saved.isDefault
-                    existing.vehicleTypeId = saved.vehicleTypeId
-                    existing.clientId = saved.clientId
-                    existing.synced = true
-                    try? await swiftDataManager.save()
-                } else if let existing = await fetchVehicle(byClientId: saved.clientId) {
-                    existing.id = saved.id
-                    existing.name = saved.name
-                    existing.brand = saved.brand
-                    existing.model = saved.model
-                    existing.year = saved.year
-                    existing.licensePlate = saved.licensePlate
-                    existing.odometer = saved.odometer
-                    existing.isDefault = saved.isDefault
-                    existing.vehicleTypeId = saved.vehicleTypeId
-                    existing.synced = true
-                    try? await swiftDataManager.save()
-                } else {
-                    saved.synced = true
-                    try? await swiftDataManager.insert(saved)
-                }
-                state = .successSavedVehicle
-                isPresented.wrappedValue = false
-            } else {
-                await saveLocal(vehicle: vehicle, isPresented: isPresented)
-            }
-        }
-
-        private func fetchVehicle(byId id: String) async -> Vehicle? {
-            try? await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.id == id })
-        }
-
-        private func fetchVehicle(byClientId clientId: String) async -> Vehicle? {
-            guard let vehicles = try? await swiftDataManager.fetch(sortBy: [SortDescriptor(\Vehicle.name)]) else {
-                return nil
-            }
-
-            return vehicles.first { $0.clientId == clientId }
-        }
-
-        private func saveLocal(vehicle: Vehicle, isPresented: Binding<Bool>) async {
-            do {
-                if let id = vehicle.id,
-                   let existing = try await swiftDataManager.fetchOne(where: #Predicate<Vehicle> { $0.id == id }) {
-                    existing.name = vehicle.name
-                    existing.brand = vehicle.brand
-                    existing.model = vehicle.model
-                    existing.year = vehicle.year
-                    existing.licensePlate = vehicle.licensePlate
-                    existing.odometer = vehicle.odometer
-                    existing.isDefault = vehicle.isDefault
-                    existing.vehicleTypeId = vehicle.vehicleTypeId
-                    existing.synced = false
-                } else {
-                    vehicle.synced = false
-                    try await swiftDataManager.insert(vehicle)
-                }
-
-                try await swiftDataManager.save()
-                state = .successSavedVehicle
-                isPresented.wrappedValue = false
-            } catch {
-                print(error.localizedDescription)
-                state = .error
             }
         }
     }

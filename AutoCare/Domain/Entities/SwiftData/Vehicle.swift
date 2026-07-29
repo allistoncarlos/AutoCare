@@ -22,7 +22,7 @@ final class Vehicle: Syncable {
     var vehicleTypeId: String
 
     var synced: Bool = false
-    var clientId: String = ""
+    @Attribute(.unique) var clientId: String = ""
     var createdAt: Date?
     var updatedAt: Date?
     var deleted: Bool = false
@@ -76,5 +76,13 @@ final class Vehicle: Syncable {
             isDefault: isDefault,
             vehicleTypeId: vehicleTypeId
         )
+    }
+
+    var referenceId: String {
+        if let id, !id.isEmpty {
+            return id
+        }
+
+        return clientId
     }
 }

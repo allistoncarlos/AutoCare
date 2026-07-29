@@ -47,6 +47,63 @@ extension MileageEditView {
         init(vehicleMileage: VehicleMileage?, vehicleId: String) {
             self.vehicleMileage = vehicleMileage
             self.vehicleId = vehicleId
+            populateFromExistingMileage()
+        }
+
+        struct FormSnapshot {
+            let totalCostValue: Int
+            let fuelCostValue: Int
+            let odometerValue: Int
+            let litersValue: Int
+            let isComplete: Bool
+        }
+
+        func formSnapshotForExistingMileage() -> FormSnapshot? {
+            guard let mileage = vehicleMileage else { return nil }
+
+            return FormSnapshot(
+                totalCostValue: Self.currencyFieldValue(from: mileage.totalCost),
+                fuelCostValue: Self.currencyFieldValue(from: mileage.fuelCost),
+                odometerValue: mileage.odometer * 100,
+                litersValue: Self.currencyFieldValue(from: mileage.liters),
+                isComplete: mileage.complete
+            )
+        }
+
+        private func populateFromExistingMileage() {
+            guard let mileage = vehicleMileage else { return }
+
+            date = mileage.date
+            totalCost = NSDecimalNumber(decimal: mileage.totalCost).stringValue
+            fuelCost = NSDecimalNumber(decimal: mileage.fuelCost).stringValue
+            odometer = "\(mileage.odometer)"
+            liters = mileage.liters
+            complete = mileage.complete
+            odometerDifference = mileage.odometerDifference
+        }
+
+        private static func currencyFieldValue(from decimal: Decimal) -> Int {
+            NSDecimalNumber(decimal: decimal * 100).intValue
+        }
+
+        private func mileageIdentity(_ mileage: VehicleMileage) -> String {
+            mileage.id ?? mileage.clientId
+        }
+
+        func reloadExistingMileage() async {
+            guard let mileage = vehicleMileage else { return }
+
+            let clientId = mileage.clientId
+            guard
+                let fresh: VehicleMileage = try? await swiftDataManager.fetchOne(
+                    where: #Predicate<VehicleMileage> { $0.clientId == clientId }
+                )
+            else {
+                return
+            }
+
+            vehicleMileage = fresh
+            populateFromExistingMileage()
         }
 
         func updateOdometerDifference() {
@@ -74,8 +131,10 @@ extension MileageEditView {
 
                 var lastVehicleMileage: VehicleMileage?
 
-                if let vehicleMileage, let currentId = vehicleMileage.id {
-                    if let index = result.firstIndex(where: { $0.id == currentId }), index + 1 < result.count {
+                if let vehicleMileage {
+                    let currentIdentity = mileageIdentity(vehicleMileage)
+                    if let index = result.firstIndex(where: { mileageIdentity($0) == currentIdentity }),
+                       index + 1 < result.count {
                         lastVehicleMileage = result[index + 1]
                     }
                 } else {
@@ -90,7 +149,7 @@ extension MileageEditView {
             }
         }
 
-        func save(isConnected: Bool) async {
+        func save() async {
             guard manager.triggerValidation() else { return }
 
             state = .loading
@@ -108,7 +167,27 @@ extension MileageEditView {
             }
 
             let calculatedMileage = calculateMileage() ?? 0
-            let mileage = vehicleMileage ?? VehicleMileage(
+
+            if let vehicleMileage {
+                vehicleMileage.date = date
+                vehicleMileage.totalCost = totalCostValue
+                vehicleMileage.odometer = odometer
+                vehicleMileage.odometerDifference = odometerDifference ?? 0
+                vehicleMileage.liters = liters
+                vehicleMileage.fuelCost = fuelCost
+                vehicleMileage.calculatedMileage = calculatedMileage
+                vehicleMileage.complete = complete
+                vehicleMileage.synced = false
+
+                if await repository.save(vehicleMileage: vehicleMileage) != nil {
+                    state = .successSave
+                } else {
+                    state = .error
+                }
+                return
+            }
+
+            let mileage = VehicleMileage(
                 id: nil,
                 date: date,
                 totalCost: totalCostValue,
@@ -121,74 +200,11 @@ extension MileageEditView {
                 vehicleId: vehicleId
             )
 
-            if isConnected {
-                await saveRemote(id: mileage.id, vehicleMileage: mileage)
-            } else {
-                await saveLocal(id: mileage.id, vehicleMileage: mileage)
-            }
-        }
-
-        private func saveRemote(id: String?, vehicleMileage: VehicleMileage) async {
-            if let saved = await repository.save(id: id, vehicleMileage: vehicleMileage) {
-                if let existingId = saved.id,
-                   let existing = try? await swiftDataManager.fetchOne(where: #Predicate<VehicleMileage> { $0.id == existingId }) {
-                    existing.date = saved.date
-                    existing.totalCost = saved.totalCost
-                    existing.odometer = saved.odometer
-                    existing.odometerDifference = saved.odometerDifference
-                    existing.liters = saved.liters
-                    existing.fuelCost = saved.fuelCost
-                    existing.calculatedMileage = saved.calculatedMileage
-                    existing.complete = saved.complete
-                    existing.synced = true
-                    try? await swiftDataManager.save()
-                } else {
-                    saved.synced = true
-                    try? await swiftDataManager.insert(saved)
-                }
+            if await repository.save(vehicleMileage: mileage) != nil {
                 state = .successSave
             } else {
-                await saveLocal(id: id, vehicleMileage: vehicleMileage)
-            }
-        }
-
-        private func saveLocal(id: String?, vehicleMileage: VehicleMileage) async {
-            do {
-                if let id {
-                    try await update(id: id, vehicleMileage: vehicleMileage)
-                } else {
-                    try await insert(vehicleMileage: vehicleMileage)
-                }
-                state = .successSave
-            } catch {
-                print(error.localizedDescription)
                 state = .error
             }
-        }
-
-        private func update(id: String, vehicleMileage: VehicleMileage) async throws {
-            guard let existing = try await swiftDataManager.fetchOne(where: #Predicate<VehicleMileage> { $0.id == id }) else {
-                state = .error
-                return
-            }
-
-            existing.date = vehicleMileage.date
-            existing.totalCost = vehicleMileage.totalCost
-            existing.odometer = vehicleMileage.odometer
-            existing.odometerDifference = vehicleMileage.odometerDifference
-            existing.liters = vehicleMileage.liters
-            existing.fuelCost = vehicleMileage.fuelCost
-            existing.calculatedMileage = vehicleMileage.calculatedMileage
-            existing.complete = vehicleMileage.complete
-            existing.synced = false
-            try await swiftDataManager.save()
-            state = .successSave
-        }
-
-        private func insert(vehicleMileage: VehicleMileage) async throws {
-            vehicleMileage.synced = false
-            try await swiftDataManager.insert(vehicleMileage)
-            state = .successSave
         }
     }
 }

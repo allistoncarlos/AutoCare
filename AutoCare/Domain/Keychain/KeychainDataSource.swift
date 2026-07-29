@@ -44,14 +44,20 @@ public enum KeychainDataSource: String {
     }
 
     public static func hasValidToken() -> Bool {
-        if id.get() != nil &&
-            accessToken.get() != nil &&
+        guard
+            id.get() != nil,
+            accessToken.get() != nil,
             refreshToken.get() != nil,
-           let expiresIn = expiresIn.get()?.toDate(),
-           expiresIn > NSDate.init() as Date {
-            return true
+            let expiresIn = expiresIn.get()?.toDate()
+        else {
+            return false
         }
 
-        return false
+        if expiresIn <= Date() {
+            clear()
+            return false
+        }
+
+        return true
     }
 }

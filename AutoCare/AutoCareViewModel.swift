@@ -16,12 +16,6 @@ extension AutoCareApp {
     final class ViewModel: ObservableObject {
         @Injected(\.syncService) private var syncService
 
-        func resultView() -> AnyView {
-            KeychainDataSource.hasValidToken()
-                ? AnyView(LoginRouter.makeHomeView())
-                : AnyView(LoginRouter.makeLoginView())
-        }
-
         func scheduleAppSync() async {
             let calendar = Calendar.autoupdatingCurrent
             let checkTime = calendar.date(byAdding: .minute, value: 2, to: Date())!
@@ -32,6 +26,7 @@ extension AutoCareApp {
         }
 
         func syncData() async {
+            guard KeychainDataSource.hasValidToken() else { return }
             await syncService.sync()
             await notifySyncCompleted()
         }

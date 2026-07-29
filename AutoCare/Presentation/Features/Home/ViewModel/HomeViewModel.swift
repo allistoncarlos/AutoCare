@@ -29,10 +29,12 @@ extension HomeView {
 
         init() {
             networkConnectivity.$status
+                .removeDuplicates()
+                .dropFirst()
                 .receive(on: RunLoop.main)
                 .sink { [weak self] status in
                     guard status == .connected else { return }
-                    Task { await self?.syncData() }
+                    Task { await self?.syncAndFetchData() }
                 }
                 .store(in: &cancellables)
         }
@@ -51,31 +53,18 @@ extension HomeView {
             HomeRouter.makePulseUI()
         }
 
-        func fetchData() async {
+        func syncAndFetchData() async {
             state = .loading
 
-            let isConnected = networkConnectivity.status == .connected
-            if isConnected {
-                await fetchRemote()
+            if networkConnectivity.status == .connected {
+                await syncService.sync()
             }
 
-            do {
-                let vehicles: [Vehicle] = try await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)])
-                state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
-
-                if vehicles.isEmpty {
-                    selectedVehicle = nil
-                } else if selectedVehicle == nil {
-                    selectedVehicle = vehicles.first(where: \.isDefault) ?? vehicles.first
-                }
-            } catch {
-                print(error.localizedDescription)
-                state = .error
-            }
+            await reloadLocalData()
         }
 
-        func syncData() async {
-            await syncService.sync()
+        func fetchData() async {
+            await reloadLocalData()
         }
 
         @discardableResult
@@ -91,8 +80,20 @@ extension HomeView {
             }
         }
 
-        private func fetchRemote() async {
-            await syncService.pullRemoteChanges()
+        private func reloadLocalData() async {
+            do {
+                let vehicles: [Vehicle] = try await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)])
+                state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
+
+                if vehicles.isEmpty {
+                    selectedVehicle = nil
+                } else if selectedVehicle == nil {
+                    selectedVehicle = vehicles.first(where: \.isDefault) ?? vehicles.first
+                }
+            } catch {
+                print(error.localizedDescription)
+                state = .error
+            }
         }
     }
 }

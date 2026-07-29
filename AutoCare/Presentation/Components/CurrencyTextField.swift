@@ -26,14 +26,6 @@ struct CurrencyTextField: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: CurrencyUITextField, context: Context) {
-        // Sincroniza o valor se necessário
-        if uiView.text != formattedValue {
-            uiView.text = formattedValue
-        }
-    }
-
-    private var formattedValue: String {
-        let decimalValue = Decimal(value) / 100.0
-        return numberFormatter.string(for: decimalValue) ?? ""
+        uiView.setStoredValue(value)
     }
 }

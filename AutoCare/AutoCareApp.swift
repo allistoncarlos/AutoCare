@@ -6,6 +6,7 @@
 //
 
 import BackgroundTasks
+import Factory
 import SwiftData
 import SwiftUI
 import TTProgressHUD
@@ -25,17 +26,25 @@ struct AutoCareApp: App {
     )
 
     @ObservedObject private var viewModel = ViewModel()
+    @ObservedObject private var authSession = Container.shared.authSessionStore()
 
     var body: some Scene {
         WindowGroup {
-            viewModel.resultView()
-                .task {
-                    await viewModel.syncData()
-                    await viewModel.scheduleAppSync()
+            Group {
+                if authSession.isAuthenticated {
+                    LoginRouter.makeHomeView()
+                } else {
+                    LoginRouter.makeLoginView()
                 }
+            }
+            .task {
+                guard authSession.isAuthenticated else { return }
+                await viewModel.scheduleAppSync()
+            }
         }
         .modelContainer(SwiftDataManager.shared.container)
         .backgroundTask(.appRefresh(AutoCareApp.syncTask)) {
+            guard Container.shared.authSessionStore().isAuthenticated else { return }
             await viewModel.scheduleAppSync()
             await viewModel.syncData()
         }

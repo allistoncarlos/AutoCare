@@ -9,12 +9,15 @@ import Foundation
 import SwiftData
 
 public protocol Syncable: PersistentModel {
-    var synced: Bool { get set }
+    var id: String? { get set }
     var clientId: String { get set }
+    var synced: Bool { get set }
     var createdAt: Date? { get set }
     var updatedAt: Date? { get set }
     var deleted: Bool { get set }
     var deletedAt: Date? { get set }
+
+    func applyRemoteChanges(to local: Self)
 }
 
 enum SyncDefaults {

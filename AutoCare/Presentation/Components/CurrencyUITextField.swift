@@ -26,11 +26,23 @@ class CurrencyUITextField: UITextField {
 
     override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
+
+        guard newSuperview != nil else { return }
+
         addTarget(self, action: #selector(editingChanged), for: .editingChanged)
         addTarget(self, action: #selector(resetSelection), for: .allTouchEvents)
         keyboardType = .numberPad
         textAlignment = .right
-        sendActions(for: .editingChanged)
+        setInitialValue()
+        resetSelection()
+    }
+
+    func setStoredValue(_ value: Int) {
+        guard currentValue != value else { return }
+
+        currentValue = value
+        setInitialValue()
+        resetSelection()
     }
 
     override func deleteBackward() {

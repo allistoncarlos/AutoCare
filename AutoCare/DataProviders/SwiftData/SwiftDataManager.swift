@@ -10,44 +10,56 @@ import SwiftData
 
 @ModelActor
 actor SwiftDataActor {
-    func insert<T: PersistentModel>(_ item: T) throws {
+    func save<T: PersistentModel>(id: String? = nil, item: T) throws -> T {
+        if let id, !id.isEmpty {
+            try modelContext.save()
+            return item
+        }
+
         modelContext.insert(item)
         try modelContext.save()
+        return item
     }
 
-    func delete<T: PersistentModel>(_ item: T) throws {
-        modelContext.delete(item)
-        try modelContext.save()
+    func updateFromBackend<T: Syncable & PersistentModel>(clientId: String, item: T) async throws {
+        let descriptor = FetchDescriptor<T>(
+            predicate: #Predicate { $0.clientId == clientId }
+        )
+
+        if let local = try modelContext.fetch(descriptor).first {
+            await MainActor.run {
+                item.applyRemoteChanges(to: local)
+                local.synced = true
+            }
+            try modelContext.save()
+        }
     }
 
-    func deleteAll<T: PersistentModel>(_ type: T.Type) throws {
-        try modelContext.delete(model: type)
-        try modelContext.save()
-    }
-
-    func save() throws {
-        try modelContext.save()
-    }
-
-    func importData<T: Syncable>(_ data: [T]) throws where T: PersistentModel {
+    func importData<T: Syncable>(_ data: [T]) async throws where T: PersistentModel {
         try modelContext.delete(model: T.self)
 
         for item in data {
-            item.synced = true
-            modelContext.insert(item)
+            await MainActor.run {
+                item.synced = true
+            }
+            _ = try save(id: nil, item: item)
         }
-
-        try modelContext.save()
     }
 
-    func replaceAll<T: Syncable>(_ data: [T], where predicate: Predicate<T>) throws where T: PersistentModel {
-        let descriptor = FetchDescriptor<T>(predicate: predicate)
-        let existing = try modelContext.fetch(descriptor)
-        existing.forEach { modelContext.delete($0) }
-
+    func mergeData<T: Syncable>(_ data: [T]) throws where T: PersistentModel {
         for item in data {
             item.synced = true
-            modelContext.insert(item)
+
+            let clientId = item.clientId
+            let descriptor = FetchDescriptor<T>(
+                predicate: #Predicate { $0.clientId == clientId }
+            )
+
+            if let local = try modelContext.fetch(descriptor).first {
+                item.applyRemoteChanges(to: local)
+            } else {
+                modelContext.insert(item)
+            }
         }
 
         try modelContext.save()
@@ -55,6 +67,11 @@ actor SwiftDataActor {
 
     func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) throws -> [T] {
         let descriptor = FetchDescriptor<T>(sortBy: sortBy)
+        return try modelContext.fetch(descriptor)
+    }
+
+    func fetch<T: PersistentModel>(where predicate: Predicate<T>) throws -> [T] {
+        let descriptor = FetchDescriptor<T>(predicate: predicate, sortBy: [])
         return try modelContext.fetch(descriptor)
     }
 
@@ -72,24 +89,8 @@ actor SwiftDataActor {
         return try modelContext.fetch(descriptor).first
     }
 
-    func fetchUnsynced<T: Syncable>(_ type: T.Type) throws -> [T] where T: PersistentModel {
-        let descriptor = FetchDescriptor<T>(predicate: #Predicate { entity in
-            entity.synced == false
-        })
-        return try modelContext.fetch(descriptor)
-    }
-
-    func markSynced<T: Syncable>(_ item: T) throws where T: PersistentModel {
-        item.synced = true
-        try modelContext.save()
-    }
-
-    func applyRemoteChanges(_ changes: ChangesPayloadResponse) throws {
-        applyVehicleTypes(changes.vehicleTypes ?? [])
-        applyVehicles(changes.vehicles ?? [])
-        applyMileages(changes.vehicleMileages ?? [])
-        applyServices(changes.vehicleServices ?? [])
-        try backfillClientIds()
+    func delete<T: PersistentModel>(_ item: T) throws {
+        modelContext.delete(item)
         try modelContext.save()
     }
 
@@ -128,227 +129,8 @@ actor SwiftDataActor {
             try modelContext.save()
         }
     }
-
-    private func applyVehicleTypes(_ changes: [SyncChangeResponse]) {
-        for change in changes {
-            guard let id = change.id ?? change.clientId else { continue }
-
-            if change.deleted == true {
-                if let existing = try? fetchOne(where: #Predicate<VehicleType> { $0.id == id }) {
-                    modelContext.delete(existing)
-                }
-                continue
-            }
-
-            let entity = (try? fetchOne(where: #Predicate<VehicleType> { $0.id == id })) ?? VehicleType(
-                id: id,
-                name: change.name ?? id,
-                emoji: change.emoji ?? "🚗",
-                clientId: change.clientId ?? id
-            )
-
-            entity.name = change.name ?? entity.name
-            entity.emoji = change.emoji ?? entity.emoji
-            entity.clientId = change.clientId ?? entity.clientId
-            entity.updatedAt = parseDate(change.updatedAt)
-            entity.deleted = change.deleted ?? false
-            entity.deletedAt = parseDate(change.deletedAt)
-            entity.synced = true
-
-            if (try? fetchOne(where: #Predicate<VehicleType> { $0.id == id })) == nil {
-                modelContext.insert(entity)
-            }
-        }
-    }
-
-    private func applyVehicles(_ changes: [SyncChangeResponse]) {
-        for change in changes {
-            if change.deleted == true {
-                if let existing = findVehicle(remoteId: change.id, clientId: change.clientId) {
-                    modelContext.delete(existing)
-                }
-                continue
-            }
-
-            guard
-                let name = change.name,
-                let brand = change.brand,
-                let model = change.model,
-                let year = change.year,
-                let licensePlate = change.licensePlate,
-                let vehicleTypeId = change.vehicleTypeId
-            else { continue }
-
-            let existing = findVehicle(remoteId: change.id, clientId: change.clientId)
-            let vehicle = existing ?? Vehicle(
-                id: change.id,
-                name: name,
-                brand: brand,
-                model: model,
-                year: year,
-                licensePlate: licensePlate,
-                odometer: change.odometer ?? 0,
-                isDefault: change.isDefault ?? false,
-                vehicleTypeId: vehicleTypeId,
-                clientId: change.clientId
-            )
-
-            vehicle.id = change.id ?? vehicle.id
-            vehicle.name = name
-            vehicle.brand = brand
-            vehicle.model = model
-            vehicle.year = year
-            vehicle.licensePlate = licensePlate
-            vehicle.odometer = change.odometer ?? vehicle.odometer
-            vehicle.isDefault = change.isDefault ?? vehicle.isDefault
-            vehicle.vehicleTypeId = vehicleTypeId
-            vehicle.clientId = change.clientId ?? vehicle.clientId
-            vehicle.updatedAt = parseDate(change.updatedAt)
-            vehicle.deleted = change.deleted ?? false
-            vehicle.deletedAt = parseDate(change.deletedAt)
-            vehicle.synced = true
-
-            if existing == nil {
-                modelContext.insert(vehicle)
-            }
-        }
-    }
-
-    private func applyMileages(_ changes: [SyncChangeResponse]) {
-        for change in changes {
-            if change.deleted == true {
-                if let existing = findMileage(remoteId: change.id, clientId: change.clientId) {
-                    modelContext.delete(existing)
-                }
-                continue
-            }
-
-            guard let date = change.date, let vehicleId = change.vehicleId else { continue }
-
-            let existing = findMileage(remoteId: change.id, clientId: change.clientId)
-            let mileage = existing ?? VehicleMileage(
-                id: change.id,
-                date: date,
-                totalCost: change.totalCost ?? 0,
-                odometer: change.odometer ?? 0,
-                odometerDifference: change.odometerDifference ?? 0,
-                liters: change.liters ?? 0,
-                fuelCost: change.fuelCost ?? 0,
-                calculatedMileage: change.calculatedMileage ?? 0,
-                complete: change.complete ?? true,
-                vehicleId: vehicleId,
-                clientId: change.clientId
-            )
-
-            mileage.id = change.id ?? mileage.id
-            mileage.date = date
-            mileage.totalCost = change.totalCost ?? mileage.totalCost
-            mileage.odometer = change.odometer ?? mileage.odometer
-            mileage.odometerDifference = change.odometerDifference ?? mileage.odometerDifference
-            mileage.liters = change.liters ?? mileage.liters
-            mileage.fuelCost = change.fuelCost ?? mileage.fuelCost
-            mileage.calculatedMileage = change.calculatedMileage ?? mileage.calculatedMileage
-            mileage.complete = change.complete ?? mileage.complete
-            mileage.vehicleId = vehicleId
-            mileage.clientId = change.clientId ?? mileage.clientId
-            mileage.updatedAt = parseDate(change.updatedAt)
-            mileage.deleted = change.deleted ?? false
-            mileage.deletedAt = parseDate(change.deletedAt)
-            mileage.synced = true
-
-            if existing == nil {
-                modelContext.insert(mileage)
-            }
-        }
-    }
-
-    private func applyServices(_ changes: [SyncChangeResponse]) {
-        for change in changes {
-            if change.deleted == true {
-                if let existing = findService(remoteId: change.id, clientId: change.clientId) {
-                    modelContext.delete(existing)
-                }
-                continue
-            }
-
-            guard
-                let date = change.date,
-                let vehicleId = change.vehicleId,
-                let type = change.type,
-                let subtype = change.subtype,
-                let remoteId = change.id
-            else { continue }
-
-            let existing = findService(remoteId: change.id, clientId: change.clientId)
-            let service = existing ?? VehicleService(
-                id: remoteId,
-                date: date,
-                odometer: change.odometer ?? 0,
-                type: VehicleServiceType(rawValue: type) ?? .wheelsAndTyres,
-                subtype: VehicleServiceSubtype(rawValue: subtype) ?? .calibrate,
-                totalCost: change.totalCost ?? 0,
-                comment: change.comment ?? "",
-                vehicle_id: vehicleId,
-                clientId: change.clientId
-            )
-
-            service.id = remoteId
-            service.date = date
-            service.odometer = change.odometer ?? service.odometer
-            service.type = VehicleServiceType(rawValue: type) ?? service.type
-            service.subtype = VehicleServiceSubtype(rawValue: subtype) ?? service.subtype
-            service.totalCost = change.totalCost ?? service.totalCost
-            service.comment = change.comment ?? service.comment
-            service.vehicle_id = vehicleId
-            service.clientId = change.clientId ?? service.clientId
-            service.updatedAt = parseDate(change.updatedAt)
-            service.deleted = change.deleted ?? false
-            service.deletedAt = parseDate(change.deletedAt)
-            service.synced = true
-
-            if existing == nil {
-                modelContext.insert(service)
-            }
-        }
-    }
-
-    private func findVehicle(remoteId: String?, clientId: String?) -> Vehicle? {
-        if let remoteId, let vehicle = try? fetchOne(where: #Predicate<Vehicle> { $0.id == remoteId }) {
-            return vehicle
-        }
-        if let clientId, let vehicle = try? fetchOne(where: #Predicate<Vehicle> { $0.clientId == clientId }) {
-            return vehicle
-        }
-        return nil
-    }
-
-    private func findMileage(remoteId: String?, clientId: String?) -> VehicleMileage? {
-        if let remoteId, let mileage = try? fetchOne(where: #Predicate<VehicleMileage> { $0.id == remoteId }) {
-            return mileage
-        }
-        if let clientId, let mileage = try? fetchOne(where: #Predicate<VehicleMileage> { $0.clientId == clientId }) {
-            return mileage
-        }
-        return nil
-    }
-
-    private func findService(remoteId: String?, clientId: String?) -> VehicleService? {
-        if let remoteId, let service = try? fetchOne(where: #Predicate<VehicleService> { $0.id == remoteId }) {
-            return service
-        }
-        if let clientId, let service = try? fetchOne(where: #Predicate<VehicleService> { $0.clientId == clientId }) {
-            return service
-        }
-        return nil
-    }
-
-    private func parseDate(_ value: String?) -> Date? {
-        guard let value else { return nil }
-        return ISO8601DateFormatter().date(from: value)
-    }
 }
 
-@MainActor
 final class SwiftDataManager {
     let schema = Schema([
         VehicleType.self,
@@ -366,35 +148,39 @@ final class SwiftDataManager {
     static let shared = SwiftDataManager()
 
     private init() {
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
         do {
-            container = try ModelContainer(
-                for: schema,
-                configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-            )
-            context = ModelContext(container)
-            previewModelContainer = try ModelContainer(
-                for: schema,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-            )
-            actor = SwiftDataActor(modelContainer: container)
-            Task { try? await self.backfillClientIds() }
+            container = try ModelContainer(for: schema, configurations: configuration)
         } catch {
-            fatalError(error.localizedDescription)
+            print("SwiftData store failed to load: \(error.localizedDescription)")
+            Self.removePersistentStoreFiles()
+            do {
+                container = try ModelContainer(for: schema, configurations: configuration)
+            } catch {
+                fatalError("SwiftData store could not be created after reset: \(error.localizedDescription)")
+            }
         }
+
+        context = ModelContext(container)
+        previewModelContainer = try! ModelContainer(
+            for: schema,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+        actor = SwiftDataActor(modelContainer: container)
+
+        Task { try? await self.backfillClientIds() }
     }
 
-    func backfillClientIds() async throws {
-        try await actor.backfillClientIds()
+    func fetch<T: PersistentModel>() async throws -> [T] {
+        try await fetch(sortBy: [])
     }
 
     func fetch<T: PersistentModel>(sortBy: [SortDescriptor<T>] = []) async throws -> [T] {
         try await actor.fetch(sortBy: sortBy)
     }
 
-    func fetch<T: PersistentModel>(
-        where predicate: Predicate<T>,
-        sortBy: [SortDescriptor<T>] = []
-    ) async throws -> [T] {
+    func fetch<T: PersistentModel>(where predicate: Predicate<T>, sortBy: [SortDescriptor<T>] = []) async throws -> [T] {
         try await actor.fetch(where: predicate, sortBy: sortBy)
     }
 
@@ -402,39 +188,352 @@ final class SwiftDataManager {
         try await actor.fetchOne(where: predicate)
     }
 
-    func insert<T: PersistentModel>(_ item: T) async throws {
-        try await actor.insert(item)
+    func fetchUnsyncedEntities() throws -> [any PersistentModel] {
+        var unsyncedEntities: [any PersistentModel] = []
+
+        let vehicles = try context.fetch(
+            FetchDescriptor<Vehicle>(predicate: #Predicate { !$0.synced })
+        )
+        let mileages = try context.fetch(
+            FetchDescriptor<VehicleMileage>(predicate: #Predicate { !$0.synced })
+        )
+        let services = try context.fetch(
+            FetchDescriptor<VehicleService>(predicate: #Predicate { !$0.synced })
+        )
+
+        unsyncedEntities.append(contentsOf: vehicles)
+        unsyncedEntities.append(contentsOf: mileages)
+        unsyncedEntities.append(contentsOf: services)
+
+        return unsyncedEntities
     }
 
-    func delete<T: PersistentModel>(_ item: T) async throws {
-        try await actor.delete(item)
+    func save<T: PersistentModel>(id: String? = nil, item: T) async throws -> T {
+        try await actor.save(id: id, item: item)
     }
 
-    func deleteAll<T: PersistentModel>(_ type: T.Type) async throws {
-        try await actor.deleteAll(type)
-    }
-
-    func save() async throws {
-        try await actor.save()
+    func updateFromBackend<T: Syncable>(clientId: String, item: T) async throws where T: PersistentModel {
+        try await actor.updateFromBackend(clientId: clientId, item: item)
     }
 
     func importData<T: Syncable>(_ data: [T]) async throws where T: PersistentModel {
         try await actor.importData(data)
     }
 
-    func replaceAll<T: Syncable>(_ data: [T], where predicate: Predicate<T>) async throws where T: PersistentModel {
-        try await actor.replaceAll(data, where: predicate)
+    func mergeData<T: Syncable>(_ data: [T]) async throws where T: PersistentModel {
+        try await actor.mergeData(data)
     }
 
-    func fetchUnsynced<T: Syncable>(_ type: T.Type) async throws -> [T] where T: PersistentModel {
-        try await actor.fetchUnsynced(type)
+    func delete<T: PersistentModel>(_ item: T) async throws {
+        try await actor.delete(item)
     }
 
-    func markSynced<T: Syncable>(_ item: T) async throws where T: PersistentModel {
-        try await actor.markSynced(item)
+    func backfillClientIds() async throws {
+        try await actor.backfillClientIds()
     }
 
-    func applyRemoteChanges(_ changes: ChangesPayloadResponse) async throws {
-        try await actor.applyRemoteChanges(changes)
+    func applyChanges<T: Syncable>(_ incoming: [T]) throws where T: PersistentModel {
+        for remote in incoming {
+            let clientId = remote.clientId
+
+            let descriptor = FetchDescriptor<T>(
+                predicate: #Predicate { $0.clientId == clientId }
+            )
+
+            let local = try context.fetch(descriptor).first
+
+            if remote.deleted {
+                if let local {
+                    context.delete(local)
+                }
+                continue
+            }
+
+            if let local {
+                remote.applyRemoteChanges(to: local)
+            } else {
+                context.insert(remote)
+            }
+        }
+
+        try context.save()
+    }
+
+    func applyRemoteChanges(_ changes: ChangesPayloadResponse) throws {
+        try applyChanges(changes.vehicleTypes?.compactMap { VehicleType(from: $0) } ?? [])
+        try applyChanges(changes.vehicles?.compactMap { Vehicle(from: $0) } ?? [])
+        try applyChanges(changes.vehicleMileages?.compactMap { VehicleMileage(from: $0) } ?? [])
+        try applyChanges(changes.vehicleServices?.compactMap { VehicleService(from: $0) } ?? [])
+    }
+}
+
+private extension SwiftDataManager {
+    static func applicationSupportURL() -> URL {
+        let fileManager = FileManager.default
+        let appSupport = try? fileManager.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        return appSupport ?? fileManager.temporaryDirectory
+    }
+
+    static func removePersistentStoreFiles(filename: String = "default.store") {
+        let baseURL = applicationSupportURL().appendingPathComponent(filename)
+        let sidecarSHM = baseURL.appendingPathExtension("shm")
+        let sidecarWAL = baseURL.appendingPathExtension("wal")
+
+        let fileManager = FileManager.default
+        for url in [baseURL, sidecarSHM, sidecarWAL] where fileManager.fileExists(atPath: url.path) {
+            try? fileManager.removeItem(at: url)
+        }
+    }
+}
+
+private extension ISO8601DateFormatter {
+    static func parseSyncDate(_ value: String?) -> Date? {
+        guard let value else { return nil }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: value) {
+            return date
+        }
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: value)
+    }
+}
+
+extension VehicleType {
+    convenience init?(from change: SyncChangeResponse) {
+        guard let id = change.id ?? change.clientId else { return nil }
+
+        self.init(
+            id: id,
+            name: change.name ?? id,
+            emoji: change.emoji ?? "🚗",
+            clientId: SyncDefaults.resolveClientId(change.clientId, id: id),
+            synced: true,
+            createdAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            updatedAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            deleted: change.deleted ?? false,
+            deletedAt: ISO8601DateFormatter.parseSyncDate(change.deletedAt)
+        )
+    }
+
+    convenience init(from response: VehicleTypeResponse) {
+        self.init(
+            id: response.id,
+            name: response.name,
+            emoji: response.emoji,
+            clientId: SyncDefaults.resolveClientId(nil, id: response.id),
+            synced: true
+        )
+    }
+
+    func applyRemoteChanges(to local: VehicleType) {
+        local.id = id ?? local.id
+        local.clientId = clientId
+        local.deleted = deleted
+        local.deletedAt = deletedAt
+        local.updatedAt = updatedAt
+        local.synced = true
+        local.name = name
+        local.emoji = emoji
+    }
+}
+
+extension Vehicle {
+    convenience init?(from change: SyncChangeResponse) {
+        guard
+            let name = change.name,
+            let brand = change.brand,
+            let model = change.model,
+            let year = change.year,
+            let licensePlate = change.licensePlate,
+            let vehicleTypeId = change.vehicleTypeId
+        else { return nil }
+
+        self.init(
+            id: change.id,
+            name: name,
+            brand: brand,
+            model: model,
+            year: year,
+            licensePlate: licensePlate,
+            odometer: change.odometer ?? 0,
+            isDefault: change.isDefault ?? false,
+            vehicleTypeId: vehicleTypeId,
+            clientId: SyncDefaults.resolveClientId(change.clientId, id: change.id),
+            synced: true,
+            createdAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            updatedAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            deleted: change.deleted ?? false,
+            deletedAt: ISO8601DateFormatter.parseSyncDate(change.deletedAt)
+        )
+    }
+
+    convenience init(from response: VehicleResponse) {
+        self.init(
+            id: response.id,
+            name: response.name,
+            brand: response.brand,
+            model: response.model,
+            year: response.year,
+            licensePlate: response.licensePlate,
+            odometer: response.odometer,
+            isDefault: response.isDefault,
+            vehicleTypeId: response.vehicleType.id,
+            clientId: SyncDefaults.resolveClientId(response.clientId, id: response.id),
+            synced: false,
+            createdAt: response.createdAt,
+            updatedAt: response.updatedAt,
+            deleted: response.deleted ?? false,
+            deletedAt: response.deletedAt
+        )
+    }
+
+    func applyRemoteChanges(to local: Vehicle) {
+        local.id = id
+        local.clientId = clientId
+        local.deleted = deleted
+        local.deletedAt = deletedAt
+        local.updatedAt = updatedAt
+        local.synced = true
+        local.name = name
+        local.brand = brand
+        local.model = model
+        local.year = year
+        local.licensePlate = licensePlate
+        local.odometer = odometer
+        local.isDefault = isDefault
+        local.vehicleTypeId = vehicleTypeId
+    }
+}
+
+extension VehicleMileage {
+    convenience init?(from change: SyncChangeResponse) {
+        guard let date = change.date, let vehicleId = change.vehicleId else { return nil }
+
+        self.init(
+            id: change.id,
+            date: date,
+            totalCost: change.totalCost ?? 0,
+            odometer: change.odometer ?? 0,
+            odometerDifference: change.odometerDifference ?? 0,
+            liters: change.liters ?? 0,
+            fuelCost: change.fuelCost ?? 0,
+            calculatedMileage: change.calculatedMileage ?? 0,
+            complete: change.complete ?? true,
+            vehicleId: vehicleId,
+            clientId: SyncDefaults.resolveClientId(change.clientId, id: change.id),
+            synced: true,
+            createdAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            updatedAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            deleted: change.deleted ?? false,
+            deletedAt: ISO8601DateFormatter.parseSyncDate(change.deletedAt)
+        )
+    }
+
+    convenience init(from response: VehicleMileageResponse) {
+        self.init(
+            id: response.id,
+            date: response.date,
+            totalCost: response.totalCost,
+            odometer: response.odometer,
+            odometerDifference: response.odometerDifference,
+            liters: response.liters,
+            fuelCost: response.fuelCost,
+            calculatedMileage: response.calculatedMileage,
+            complete: response.complete,
+            vehicleId: response.vehicleId,
+            clientId: SyncDefaults.resolveClientId(response.clientId, id: response.id),
+            synced: false,
+            createdAt: response.createdAt,
+            updatedAt: response.updatedAt,
+            deleted: response.deleted ?? false,
+            deletedAt: response.deletedAt
+        )
+    }
+
+    func applyRemoteChanges(to local: VehicleMileage) {
+        local.id = id
+        local.clientId = clientId
+        local.deleted = deleted
+        local.deletedAt = deletedAt
+        local.updatedAt = updatedAt
+        local.synced = true
+        local.date = date
+        local.totalCost = totalCost
+        local.odometer = odometer
+        local.odometerDifference = odometerDifference
+        local.liters = liters
+        local.fuelCost = fuelCost
+        local.calculatedMileage = calculatedMileage
+        local.complete = complete
+        local.vehicleId = vehicleId
+    }
+}
+
+extension VehicleService {
+    convenience init?(from change: SyncChangeResponse) {
+        guard
+            let date = change.date,
+            let vehicleId = change.vehicleId,
+            let type = change.type,
+            let subtype = change.subtype
+        else { return nil }
+
+        self.init(
+            id: change.id,
+            date: date,
+            odometer: change.odometer ?? 0,
+            type: VehicleServiceType(rawValue: type) ?? .wheelsAndTyres,
+            subtype: VehicleServiceSubtype(rawValue: subtype) ?? .calibrate,
+            totalCost: change.totalCost ?? 0,
+            comment: change.comment ?? "",
+            vehicle_id: vehicleId,
+            clientId: SyncDefaults.resolveClientId(change.clientId, id: change.id),
+            synced: true,
+            createdAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            updatedAt: ISO8601DateFormatter.parseSyncDate(change.updatedAt),
+            deleted: change.deleted ?? false,
+            deletedAt: ISO8601DateFormatter.parseSyncDate(change.deletedAt)
+        )
+    }
+
+    convenience init(from response: VehicleServiceResponse) {
+        self.init(
+            id: response.id,
+            date: response.date,
+            odometer: response.odometer,
+            type: VehicleServiceType(rawValue: response.type) ?? .wheelsAndTyres,
+            subtype: VehicleServiceSubtype(rawValue: response.subtype) ?? .calibrate,
+            totalCost: response.totalCost,
+            comment: response.comment,
+            vehicle_id: response.vehicleId,
+            clientId: SyncDefaults.resolveClientId(response.clientId, id: response.id),
+            synced: false,
+            createdAt: response.createdAt,
+            updatedAt: response.updatedAt,
+            deleted: response.deleted ?? false,
+            deletedAt: response.deletedAt
+        )
+    }
+
+    func applyRemoteChanges(to local: VehicleService) {
+        local.id = id
+        local.clientId = clientId
+        local.deleted = deleted
+        local.deletedAt = deletedAt
+        local.updatedAt = updatedAt
+        local.synced = true
+        local.date = date
+        local.odometer = odometer
+        local.type = type
+        local.subtype = subtype
+        local.totalCost = totalCost
+        local.comment = comment
+        local.vehicle_id = vehicle_id
     }
 }

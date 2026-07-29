@@ -20,7 +20,7 @@ struct MileageListView: View {
     var body: some View {
         NavigationStack(path: $presentedMileages) {
             ScrollView {
-                ForEach(viewModel.vehicleMileages, id: \.id) { vehicleMileage in
+                ForEach(viewModel.vehicleMileages, id: \.clientId) { vehicleMileage in
                     NavigationLink(value: vehicleMileage) {
                         MileageListItem(vehicleMileage: vehicleMileage)
                     }
@@ -36,17 +36,13 @@ struct MileageListView: View {
                 .disabled(viewModel.state == .loading)
             }
             .navigationDestination(for: String.self) { _ in
-                if let id = viewModel.selectedVehicle.id {
-                    navigateToEditMileageView(vehicleId: id)
-                }
+                navigateToEditMileageView(vehicleId: viewModel.selectedVehicle.referenceId)
             }
             .navigationDestination(for: VehicleMileage.self) { vehicleMileage in
-                if let id = viewModel.selectedVehicle.id {
-                    navigateToEditMileageView(
-                        vehicleId: id,
-                        vehicleMileage: vehicleMileage
-                    )
-                }
+                navigateToEditMileageView(
+                    vehicleId: viewModel.selectedVehicle.referenceId,
+                    vehicleMileage: vehicleMileage
+                )
             }
         }
         .disabled(viewModel.state == .loading)

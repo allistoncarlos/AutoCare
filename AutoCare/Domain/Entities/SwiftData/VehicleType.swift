@@ -10,12 +10,12 @@ import SwiftData
 
 @Model
 final class VehicleType: Syncable {
-    var id: String
+    var id: String?
     var name: String
     var emoji: String
 
     var synced: Bool = false
-    var clientId: String = ""
+    @Attribute(.unique) var clientId: String = ""
     var createdAt: Date?
     var updatedAt: Date?
     var deleted: Bool = false

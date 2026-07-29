@@ -18,9 +18,7 @@ extension ServiceListView {
         @Published private(set) var vehicleServices: [VehicleService] = []
 
         let selectedVehicle: Vehicle
-        private let networkConnectivity = NetworkConnectivity()
 
-        @Injected(\.swiftDataManager) private var swiftDataManager
         @Injected(\.vehicleServiceRepository) private var repository
 
         init(selectedVehicle: Vehicle) {
@@ -41,25 +39,7 @@ extension ServiceListView {
 
         func fetchData() async {
             state = .loading
-
-            if networkConnectivity.status == .connected, let vehicleId = selectedVehicle.id {
-                await fetchRemoteData(vehicleId: vehicleId)
-            }
-
             await fetchLocalData()
-        }
-
-        private func fetchRemoteData(vehicleId: String) async {
-            guard let result = await repository.fetchData(vehicleId: vehicleId) else { return }
-
-            do {
-                try await swiftDataManager.replaceAll(
-                    result,
-                    where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId }
-                )
-            } catch {
-                print(error)
-            }
         }
 
         private func fetchLocalData() async {
@@ -69,10 +49,7 @@ extension ServiceListView {
                     return
                 }
 
-                vehicleServices = try await swiftDataManager.fetch(
-                    where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId },
-                    sortBy: [SortDescriptor(\.date, order: .reverse)]
-                )
+                vehicleServices = try await repository.fetchData(vehicleId: vehicleId) ?? []
                 state = .successVehicleServices(vehicleServices)
             } catch {
                 print(error.localizedDescription)

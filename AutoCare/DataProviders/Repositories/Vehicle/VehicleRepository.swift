@@ -5,26 +5,57 @@
 //  Created by Alliston Aleixo on 26/03/25.
 //
 
-import Foundation
 import Factory
+import Foundation
 
 protocol VehicleRepositoryProtocol {
     func fetchData() async -> [Vehicle]?
     func fetchData(id: String) async -> Vehicle?
-    @discardableResult func save(id: String?, vehicle: Vehicle) async -> Vehicle?
+    @discardableResult func save(vehicle: Vehicle) async -> Vehicle?
 }
 
 struct VehicleRepository: VehicleRepositoryProtocol {
     func fetchData() async -> [Vehicle]? {
-        return await dataSource.fetchData()
+        do {
+            return try await SwiftDataManager.shared.fetch(
+                sortBy: [SortDescriptor(\Vehicle.name, order: .forward)]
+            )
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
 
     func fetchData(id: String) async -> Vehicle? {
-        return await dataSource.fetchData(id: id)
+        do {
+            return try await SwiftDataManager.shared.fetchOne(
+                where: #Predicate<Vehicle> { $0.clientId == id }
+            )
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
 
-    func save(id: String?, vehicle: Vehicle) async -> Vehicle? {
-        return await dataSource.save(id: id, vehicle: vehicle)
+    func save(vehicle: Vehicle) async -> Vehicle? {
+        do {
+            let result: Vehicle = try await SwiftDataManager.shared.save(id: vehicle.id, item: vehicle)
+
+            BackgroundWorker.shared.run {
+                if let savedVehicle = try await dataSource.save(vehicle: vehicle) {
+                    let persistentEntity = Vehicle(from: savedVehicle)
+                    try await SwiftDataManager.shared.updateFromBackend(
+                        clientId: persistentEntity.clientId,
+                        item: persistentEntity
+                    )
+                }
+            }
+
+            return result
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
 
     @Injected(\.vehicleDataSource) var dataSource: VehicleDataSourceProtocol

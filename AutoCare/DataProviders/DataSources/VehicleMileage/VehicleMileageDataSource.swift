@@ -8,49 +8,31 @@
 import Foundation
 
 protocol VehicleMileageDataSourceProtocol {
-    func fetchData(vehicleId: String) async -> [VehicleMileage]?
-    func fetchData(vehicleId: String,id: String) async -> VehicleMileage?
-    func save(id: String?, vehicleMileage: VehicleMileage) async -> VehicleMileage?
+    func fetchData(vehicleId: String) async -> [VehicleMileageResponse]?
+    func fetchData(vehicleId: String, id: String) async -> VehicleMileageResponse?
+    func save(vehicleMileage: VehicleMileage) async throws -> VehicleMileageResponse?
 }
 
 class VehicleMileageDataSource: VehicleMileageDataSourceProtocol {
-    func fetchData(vehicleId: String) async -> [VehicleMileage]? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: [VehicleMileageResponse].self,
-                endpoint: .vehicleMileages(vehicleId: vehicleId)
-            ) {
-                return apiResult
-                    .compactMap { $0.toVehicleMileage() }
-                    .sorted(by: {
-                        $0.date.compare($1.date) == .orderedDescending
-                    })
-        }
-
-        return nil
+    func fetchData(vehicleId: String) async -> [VehicleMileageResponse]? {
+        await NetworkManager.shared.performRequest(
+            responseType: [VehicleMileageResponse].self,
+            endpoint: .vehicleMileages(vehicleId: vehicleId)
+        )
     }
 
-    func fetchData(vehicleId: String,id: String) async -> VehicleMileage? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: VehicleMileageResponse.self,
-                endpoint: .vehicleMileage(id: id)
-            ) {
-            return apiResult.toVehicleMileage()
-        }
-
-        return nil
+    func fetchData(vehicleId: String, id: String) async -> VehicleMileageResponse? {
+        await NetworkManager.shared.performRequest(
+            responseType: VehicleMileageResponse.self,
+            endpoint: .vehicleMileage(id: id)
+        )
     }
 
-    func save(id: String?, vehicleMileage: VehicleMileage) async -> VehicleMileage? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: VehicleMileageResponse.self,
-                endpoint: .saveVehicleMileage(id: id, data: vehicleMileage.toRequest())
-            ) {
-            return apiResult.toVehicleMileage()
-        }
-
-        return nil
+    func save(vehicleMileage: VehicleMileage) async throws -> VehicleMileageResponse? {
+        let request = vehicleMileage.toRequest()
+        return await NetworkManager.shared.performRequest(
+            responseType: VehicleMileageResponse.self,
+            endpoint: .saveVehicleMileage(data: request, serverId: vehicleMileage.id)
+        )
     }
 }

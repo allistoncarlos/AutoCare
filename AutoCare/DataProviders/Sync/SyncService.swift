@@ -10,42 +10,51 @@ import Foundation
 
 @MainActor
 final class SyncService {
-    @Injected(\.swiftDataManager) private var swiftDataManager
+    @Injected(\.changesRepository) private var changesRepository
     @Injected(\.vehicleRepository) private var vehicleRepository
     @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository
     @Injected(\.vehicleServiceRepository) private var vehicleServiceRepository
 
-    private let changesDataSource: ChangesDataSourceProtocol
-
-    init(changesDataSource: ChangesDataSourceProtocol = ChangesDataSource()) {
-        self.changesDataSource = changesDataSource
-    }
+    private var ongoingSync: Task<Void, Never>?
 
     func sync() async {
-        await pushUnsyncedChanges()
-        await pullRemoteChanges()
+        guard KeychainDataSource.hasValidToken() else { return }
+
+        if let ongoingSync {
+            await ongoingSync.value
+            return
+        }
+
+        let task = Task { @MainActor in
+            defer { self.ongoingSync = nil }
+
+            await self.pushUnsyncedChanges()
+            await self.pullRemoteChanges()
+
+            SyncState.lastSyncRunAt = .now
+        }
+
+        ongoingSync = task
+        await task.value
     }
 
     func pushUnsyncedChanges() async {
         do {
-            let vehicles = try await swiftDataManager.fetchUnsynced(Vehicle.self)
-            for vehicle in vehicles where vehicle.deleted == false {
-                if await vehicleRepository.save(id: vehicle.id, vehicle: vehicle) != nil {
-                    try await swiftDataManager.markSynced(vehicle)
-                }
-            }
+            let unsyncedEntities = try SwiftDataManager.shared.fetchUnsyncedEntities()
 
-            let mileages = try await swiftDataManager.fetchUnsynced(VehicleMileage.self)
-            for mileage in mileages where mileage.deleted == false {
-                if await vehicleMileageRepository.save(id: mileage.id, vehicleMileage: mileage) != nil {
-                    try await swiftDataManager.markSynced(mileage)
+            for model in unsyncedEntities {
+                if let vehicle = model as? Vehicle {
+                    await vehicleRepository.save(vehicle: vehicle)
+                    continue
                 }
-            }
 
-            let services = try await swiftDataManager.fetchUnsynced(VehicleService.self)
-            for service in services where service.deleted == false {
-                if await vehicleServiceRepository.save(id: service.id, vehicleService: service) != nil {
-                    try await swiftDataManager.markSynced(service)
+                if let mileage = model as? VehicleMileage {
+                    await vehicleMileageRepository.save(vehicleMileage: mileage)
+                    continue
+                }
+
+                if let service = model as? VehicleService {
+                    await vehicleServiceRepository.save(vehicleService: service)
                 }
             }
         } catch {
@@ -54,18 +63,30 @@ final class SyncService {
     }
 
     func pullRemoteChanges() async {
-        guard let response = await changesDataSource.fetchChanges(since: SyncTimestampStore.lastSync) else {
+        guard let response = await changesRepository.fetchChanges(since: SyncState.lastServerSyncAt) else {
             return
         }
 
         do {
-            try await swiftDataManager.applyRemoteChanges(response.changes)
+            try SwiftDataManager.shared.applyRemoteChanges(response.changes)
 
-            if let serverTime = ISO8601DateFormatter().date(from: response.serverTime) {
-                SyncTimestampStore.lastSync = serverTime
+            if let serverTime = ISO8601DateFormatter.parseSyncDate(response.serverTime) {
+                SyncState.lastServerSyncAt = serverTime
             }
         } catch {
             print("Não foi possível aplicar alterações remotas: \(error)")
         }
+    }
+}
+
+private extension ISO8601DateFormatter {
+    static func parseSyncDate(_ value: String) -> Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: value) {
+            return date
+        }
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: value)
     }
 }

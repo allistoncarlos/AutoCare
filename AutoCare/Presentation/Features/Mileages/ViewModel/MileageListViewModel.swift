@@ -18,9 +18,7 @@ extension MileageListView {
         @Published private(set) var vehicleMileages: [VehicleMileage] = []
 
         let selectedVehicle: Vehicle
-        private let networkConnectivity = NetworkConnectivity()
 
-        @Injected(\.swiftDataManager) private var swiftDataManager
         @Injected(\.vehicleMileageRepository) private var repository
 
         init(selectedVehicle: Vehicle) {
@@ -41,38 +39,14 @@ extension MileageListView {
 
         func fetchData() async {
             state = .loading
-
-            if networkConnectivity.status == .connected, let vehicleId = selectedVehicle.id {
-                await fetchRemoteData(vehicleId: vehicleId)
-            }
-
             await fetchLocalData()
-        }
-
-        private func fetchRemoteData(vehicleId: String) async {
-            guard let result = await repository.fetchData(vehicleId: vehicleId) else { return }
-
-            do {
-                try await swiftDataManager.replaceAll(
-                    result,
-                    where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId }
-                )
-            } catch {
-                print(error)
-            }
         }
 
         private func fetchLocalData() async {
             do {
-                guard let vehicleId = selectedVehicle.id else {
-                    state = .error
-                    return
-                }
+                let vehicleId = selectedVehicle.referenceId
 
-                vehicleMileages = try await swiftDataManager.fetch(
-                    where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId },
-                    sortBy: [SortDescriptor(\.date, order: .reverse)]
-                )
+                vehicleMileages = try await repository.fetchData(vehicleId: vehicleId) ?? []
                 state = .successVehicleMileages(vehicleMileages)
             } catch {
                 print(error.localizedDescription)

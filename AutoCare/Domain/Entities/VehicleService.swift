@@ -36,7 +36,7 @@ enum VehicleServiceSubtype: String, Codable, CustomStringConvertible {
 
 @Model
 final class VehicleService: Syncable {
-    var id: String
+    var id: String?
     var date: Date = Date()
     var odometer: Int = 0
     var type: VehicleServiceType
@@ -46,14 +46,14 @@ final class VehicleService: Syncable {
     var vehicle_id: String
 
     var synced: Bool = false
-    var clientId: String = ""
+    @Attribute(.unique) var clientId: String = ""
     var createdAt: Date?
     var updatedAt: Date?
     var deleted: Bool = false
     var deletedAt: Date?
 
     init(
-        id: String,
+        id: String? = nil,
         date: Date,
         odometer: Int,
         type: VehicleServiceType,

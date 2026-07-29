@@ -22,7 +22,7 @@ final class VehicleMileage: Syncable {
     var vehicleId: String
 
     var synced: Bool = false
-    var clientId: String = ""
+    @Attribute(.unique) var clientId: String = ""
     var createdAt: Date?
     var updatedAt: Date?
     var deleted: Bool = false

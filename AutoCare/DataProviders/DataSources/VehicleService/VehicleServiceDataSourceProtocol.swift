@@ -6,52 +6,33 @@
 //
 
 import Foundation
-import SwiftData
 
 protocol VehicleServiceDataSourceProtocol {
-    func fetchData(vehicleId: String) async -> [VehicleService]?
-    func fetchData(vehicleId: String,id: String) async -> VehicleService?
-    func save(id: String?, vehicleService: VehicleService) async -> VehicleService?
+    func fetchData(vehicleId: String) async -> [VehicleServiceResponse]?
+    func fetchData(vehicleId: String, id: String) async -> VehicleServiceResponse?
+    func save(vehicleService: VehicleService) async throws -> VehicleServiceResponse?
 }
 
 class VehicleServiceDataSource: VehicleServiceDataSourceProtocol {
-    func fetchData(vehicleId: String) async -> [VehicleService]? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: [VehicleServiceResponse].self,
-                endpoint: .vehicleServices(vehicleId: vehicleId)
-            ) {
-                return apiResult
-                    .compactMap { $0.toVehicleService() }
-                    .sorted(by: {
-                        $0.date.compare($1.date) == .orderedDescending
-                    })
-        }
-
-        return nil
+    func fetchData(vehicleId: String) async -> [VehicleServiceResponse]? {
+        await NetworkManager.shared.performRequest(
+            responseType: [VehicleServiceResponse].self,
+            endpoint: .vehicleServices(vehicleId: vehicleId)
+        )
     }
 
-    func fetchData(vehicleId: String,id: String) async -> VehicleService? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: VehicleServiceResponse.self,
-                endpoint: .vehicleService(id: id)
-            ) {
-            return apiResult.toVehicleService()
-        }
-
-        return nil
+    func fetchData(vehicleId: String, id: String) async -> VehicleServiceResponse? {
+        await NetworkManager.shared.performRequest(
+            responseType: VehicleServiceResponse.self,
+            endpoint: .vehicleService(id: id)
+        )
     }
 
-    func save(id: String?, vehicleService: VehicleService) async -> VehicleService? {
-        if let apiResult = await NetworkManager.shared
-            .performRequest(
-                responseType: VehicleServiceResponse.self,
-                endpoint: .saveVehicleService(id: id, data: vehicleService.toRequest())
-            ) {
-            return apiResult.toVehicleService()
-        }
-
-        return nil
+    func save(vehicleService: VehicleService) async throws -> VehicleServiceResponse? {
+        let request = vehicleService.toRequest()
+        return await NetworkManager.shared.performRequest(
+            responseType: VehicleServiceResponse.self,
+            endpoint: .saveVehicleService(data: request, serverId: vehicleService.id)
+        )
     }
 }

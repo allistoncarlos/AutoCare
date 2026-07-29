@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Factory
 
 // MARK: - Encodable + Data pretty print helpers
 
@@ -93,6 +94,11 @@ public class NetworkManager {
                     )
                 }
 
+                await signOut()
+
+            case 401:
+                await signOut()
+
             case 500..<600 where retryCount < retryLimit:
                 try await Task.sleep(nanoseconds: UInt64(retryDelay * 1_000_000_000))
                 return await performRequest(
@@ -150,6 +156,12 @@ public class NetworkManager {
         KeychainDataSource.expiresIn.set(formattedExpiresIn)
 
         return true
+    }
+
+    private func signOut() async {
+        await MainActor.run {
+            Container.shared.authSessionStore().logout(clearLocalData: false)
+        }
     }
 
 }
