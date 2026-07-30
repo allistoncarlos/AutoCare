@@ -4,6 +4,19 @@
 <dict>
 	<key>API_PATH</key>
 	<string>$(API_PATH)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>mac-mini-de-alliston.tail56b10b.ts.net</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>AutoCare.SyncTask</string>
