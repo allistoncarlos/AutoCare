@@ -12,33 +12,59 @@ import TTProgressHUD
 struct VehicleListView: View {
     @ObservedObject var viewModel: ViewModel
     @State var isLoading = true
-    
+
     @State private var presentedVehicles = NavigationPath()
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         NavigationStack(path: $presentedVehicles) {
-            VStack {
-                List(viewModel.vehicles, id: \.id) { vehicle in
-                    NavigationLink(vehicle.name, value: vehicle.id)
+            ScrollView {
+                LazyVStack(spacing: BrandTheme.Spacing.sm) {
+                    if viewModel.vehicles.isEmpty {
+                        BrandEmptyState(
+                            icon: "car.fill",
+                            title: "Nenhum veículo",
+                            message: "Toque em + para cadastrar seu veículo."
+                        )
+                        .padding(.top, BrandTheme.Spacing.xxl)
+                    } else {
+                        BrandSectionHeader(title: "Veículos", accent: BrandTheme.Colors.violetSoft)
+                            .padding(.horizontal, BrandTheme.Spacing.lg)
+                            .padding(.top, BrandTheme.Spacing.sm)
+
+                        ForEach(viewModel.vehicles, id: \.id) { vehicle in
+                            NavigationLink(value: vehicle.id) {
+                                BrandListRow(
+                                    icon: "car.fill",
+                                    title: vehicle.name,
+                                    subtitle: "\(vehicle.brand) \(vehicle.model) · \(vehicle.licensePlate)"
+                                )
+                                .padding(BrandTheme.Spacing.md)
+                                .background(BrandTheme.Colors.backgroundSurface(colorScheme))
+                                .clipShape(RoundedRectangle(cornerRadius: BrandTheme.Radius.lg))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: BrandTheme.Radius.lg)
+                                        .stroke(BrandTheme.Colors.border(colorScheme), lineWidth: 1)
+                                )
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.horizontal, BrandTheme.Spacing.lg)
+                        }
+                    }
                 }
+                .padding(.bottom, BrandTheme.Spacing.lg)
             }
-            .disabled(isLoading)
-            .padding(.top, 10)
-//            .navigationDestination(for: String.self) { vehicleId in
-//                viewModel.editVehicleView(
-//                    navigationPath: $presentedVehicles,
-//                    platformId: vehicleId
-//                )
-//            }
+            .brandScreen()
             .navigationTitle("Veículos")
             .toolbar {
                 Button(action: {}) {
                     NavigationLink(value: String()) {
-                        Image(systemName: "plus")
+                        BrandAddToolbarButton()
                     }
                 }
             }
         }
+        .tint(BrandTheme.Colors.violetCore)
         .overlay(
             TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
         )
@@ -61,4 +87,5 @@ struct VehicleListView: View {
 #Preview {
     VehicleListView(viewModel: VehicleListView.ViewModel())
         .modelContainer(SwiftDataManager.shared.previewModelContainer)
+        .preferredColorScheme(.dark)
 }

@@ -25,15 +25,23 @@ enum HomeRouter {
         NavigationView { ConsoleView() }
     }
 
-    static func makeMileageListView(selectedVehicle: Vehicle) -> some View {
+    static func makeMileageListView(
+        selectedVehicle: Vehicle,
+        onVehiclePickerTap: @escaping () -> Void
+    ) -> some View {
         MileageListView(
-            viewModel: MileageListView.ViewModel(selectedVehicle: selectedVehicle)
+            selectedVehicle: selectedVehicle,
+            onVehiclePickerTap: onVehiclePickerTap
         )
     }
 
-    static func makeServiceListView(selectedVehicle: Vehicle) -> some View {
+    static func makeServiceListView(
+        selectedVehicle: Vehicle,
+        onVehiclePickerTap: @escaping () -> Void
+    ) -> some View {
         ServiceListView(
-            viewModel: ServiceListView.ViewModel(selectedVehicle: selectedVehicle)
+            selectedVehicle: selectedVehicle,
+            onVehiclePickerTap: onVehiclePickerTap
         )
     }
 }

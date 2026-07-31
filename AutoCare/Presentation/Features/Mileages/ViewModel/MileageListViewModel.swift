@@ -28,12 +28,12 @@ extension MileageListView {
         func editMileageView(
             navigationPath: Binding<NavigationPath>,
             vehicleId: String,
-            vehicleMileage: VehicleMileage? = nil
+            mileageClientId: String? = nil
         ) -> some View {
             MileagesRouter.makeEditMileageView(
                 navigationPath: navigationPath,
                 vehicleId: vehicleId,
-                vehicleMileage: vehicleMileage
+                mileageClientId: mileageClientId
             )
         }
 
@@ -43,15 +43,10 @@ extension MileageListView {
         }
 
         private func fetchLocalData() async {
-            do {
-                let vehicleId = selectedVehicle.referenceId
+            let vehicleId = selectedVehicle.referenceId
 
-                vehicleMileages = try await repository.fetchData(vehicleId: vehicleId) ?? []
-                state = .successVehicleMileages(vehicleMileages)
-            } catch {
-                print(error.localizedDescription)
-                state = .error
-            }
+            vehicleMileages = await repository.fetchData(vehicleId: vehicleId) ?? []
+            state = .successVehicleMileages(vehicleMileages)
         }
     }
 }

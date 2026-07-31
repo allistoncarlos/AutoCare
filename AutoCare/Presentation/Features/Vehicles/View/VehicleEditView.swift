@@ -54,6 +54,7 @@ struct VehicleEditView: View {
 
     @State private var selectedYear = ""
     @Binding var isPresented: Bool
+    @Environment(\.colorScheme) private var colorScheme
 
     var currentYear: Int = Calendar(identifier: .gregorian).dateComponents([.year], from: .now).year!
 
@@ -71,43 +72,44 @@ struct VehicleEditView: View {
     }
 
     var body: some View {
-        Form {
-            Section(header: Text("Veículo")) {
-                Picker("", selection: $form.selectedVehicleType) {
-                    ForEach(viewModel.vehicleTypes, id: \.name) { vehicleType in
-                        Text(vehicleType.emoji)
-                            .tag(vehicleType.id)
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: BrandTheme.Spacing.lg) {
+                    BrandSectionHeader(title: "Veículo", accent: BrandTheme.Colors.violetSoft)
+
+                    BrandCard {
+                        VStack(spacing: BrandTheme.Spacing.md) {
+                            Picker("", selection: $form.selectedVehicleType) {
+                                ForEach(viewModel.vehicleTypes, id: \.name) { vehicleType in
+                                    Text(vehicleType.emoji)
+                                        .tag(vehicleType.id)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .validation(form.selectedVehicleTypeValidation)
+
+                            formField("Nome", text: $form.name, validation: form.nameValidation)
+                            formField("Marca", text: $form.brand, validation: form.brandValidation)
+                            formField("Modelo", text: $form.model, validation: form.modelValidation)
+
+                            VStack(alignment: .leading, spacing: BrandTheme.Spacing.xs) {
+                                Text("Ano")
+                                    .font(BrandTheme.Typography.caption(12))
+                                    .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
+                                Picker("Ano", selection: $selectedYear) {
+                                    ForEach(selectableYears, id: \.self) {
+                                        Text($0)
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                .validation(form.yearValidation)
+                            }
+
+                            formField("Placa", text: $form.licensePlate, validation: form.licensePlateValidation)
+                            formField("Odômetro", text: $form.odometer, validation: form.odometerValidation, keyboard: .numberPad)
+                        }
                     }
-                }
-                .pickerStyle(.segmented)
-                .validation(form.selectedVehicleTypeValidation)
 
-                TextField("Nome", text: $form.name)
-                    .validation(form.nameValidation)
-
-                TextField("Marca", text: $form.brand)
-                    .validation(form.brandValidation)
-
-                TextField("Modelo", text: $form.model)
-                    .validation(form.modelValidation)
-
-                Picker("Ano", selection: $selectedYear) {
-                    ForEach(selectableYears, id: \.self) {
-                        Text($0)
-                    }
-                }
-                .validation(form.yearValidation)
-
-                TextField("Placa", text: $form.licensePlate)
-                    .validation(form.licensePlateValidation)
-
-                TextField("Odômetro", text: $form.odometer)
-                    .keyboardType(.numberPad)
-                    .validation(form.odometerValidation)
-            }
-
-            Section(
-                footer:
                     Button("Salvar") {
                         Task {
                             if form.isFormValid {
@@ -125,13 +127,27 @@ struct VehicleEditView: View {
                             }
                         }
                     }
-            ) {
-                EmptyView()
+                    .disabled(!form.isFormValid)
+                    .buttonStyle(MainButtonStyle())
+
+                    SignatureBadge()
+                        .padding(.top, BrandTheme.Spacing.sm)
+                }
+                .padding(BrandTheme.Spacing.lg)
             }
-            .disabled(!form.isFormValid)
-            .buttonStyle(MainButtonStyle())
+            .brandBackground()
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancelar") {
+                        isPresented = false
+                    }
+                    .foregroundStyle(BrandTheme.Colors.violetCore)
+                }
+            }
         }
-        .navigationTitle(title)
+        .tint(BrandTheme.Colors.violetCore)
         .disabled(viewModel.state == .loading)
         .overlay(
             TTProgressHUD(
@@ -156,6 +172,30 @@ struct VehicleEditView: View {
             await viewModel.fetchData()
         }
     }
+
+    private func formField(
+        _ label: String,
+        text: Binding<String>,
+        validation: ValidationContainer,
+        keyboard: UIKeyboardType = .default
+    ) -> some View {
+        VStack(alignment: .leading, spacing: BrandTheme.Spacing.xs) {
+            Text(label)
+                .font(BrandTheme.Typography.caption(12))
+                .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
+            TextField(label, text: text)
+                .keyboardType(keyboard)
+                .font(BrandTheme.Typography.body())
+                .padding(BrandTheme.Spacing.md)
+                .background(BrandTheme.Colors.backgroundElevated(colorScheme))
+                .clipShape(RoundedRectangle(cornerRadius: BrandTheme.Radius.md))
+                .overlay(
+                    RoundedRectangle(cornerRadius: BrandTheme.Radius.md)
+                        .stroke(BrandTheme.Colors.border(colorScheme), lineWidth: 1)
+                )
+                .validation(validation)
+        }
+    }
 }
 
 #Preview {
@@ -164,4 +204,5 @@ struct VehicleEditView: View {
         isPresented: .constant(true)
     )
     .modelContainer(SwiftDataManager.shared.previewModelContainer)
+    .preferredColorScheme(.dark)
 }

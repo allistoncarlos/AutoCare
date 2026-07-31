@@ -26,5 +26,10 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>PlusJakartaSans.ttf</string>
+		<string>Inter.ttf</string>
+	</array>
 </dict>
 </plist>

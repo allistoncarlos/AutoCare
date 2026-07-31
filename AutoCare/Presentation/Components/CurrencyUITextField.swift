@@ -51,6 +51,7 @@ class CurrencyUITextField: UITextField {
     }
 
     private func setupViews() {
+        font = BrandTheme.Typography.uiFontBody(size: 15)
         setInitialValue()
     }
 
@@ -59,6 +60,8 @@ class CurrencyUITextField: UITextField {
             let val = Double(currentValue)
             let decimalValue = Decimal(val / 100.0)
             text = currency(from: decimalValue)
+        } else {
+            text = ""
         }
     }
 

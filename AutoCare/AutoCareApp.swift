@@ -37,6 +37,9 @@ struct AutoCareApp: App {
                     LoginRouter.makeLoginView()
                 }
             }
+            .brandTypography()
+            .tint(BrandTheme.Colors.violetCore)
+            .preferredColorScheme(.dark)
             .task {
                 guard authSession.isAuthenticated else { return }
                 await viewModel.scheduleAppSync()
@@ -44,7 +47,7 @@ struct AutoCareApp: App {
         }
         .modelContainer(SwiftDataManager.shared.container)
         .backgroundTask(.appRefresh(AutoCareApp.syncTask)) {
-            guard Container.shared.authSessionStore().isAuthenticated else { return }
+            guard KeychainDataSource.hasValidToken() else { return }
             await viewModel.scheduleAppSync()
             await viewModel.syncData()
         }

@@ -7,34 +7,43 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct ServiceListItem: View {
     var vehicleService: VehicleService
-    
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(vehicleService.type.description)
-                    .foregroundColor(.primary)
-                    .font(.headline)
-            
-                Label(
-                    "\(vehicleService.subtype.description) (\(vehicleService.date.toFormattedString(dateFormat: AutoCareApp.dateFormat)))",
-                    systemImage: "car.badge.gearshape.fill"
-                )
-                    .foregroundColor(.secondary)
-                    .font(.subheadline)
-            }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .topLeading)
 
-            if let totalCost = vehicleService.totalCost.toCurrencyString() {
-                Text(totalCost)
-                    .foregroundColor(.primary)
-                    .font(.headline)
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        BrandCard {
+            HStack(alignment: .top, spacing: BrandTheme.Spacing.md) {
+                Image(systemName: "car.badge.gearshape.fill")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(BrandTheme.Colors.violetSoft)
+                    .frame(width: 28)
+                    .padding(.top, 2)
+
+                VStack(alignment: .leading, spacing: BrandTheme.Spacing.xs) {
+                    Text(vehicleService.type.description)
+                        .font(BrandTheme.Typography.body(15, weight: .semibold))
+                        .foregroundStyle(BrandTheme.Colors.textPrimary(colorScheme))
+
+                    Text("\(vehicleService.subtype.description) · \(vehicleService.date.toFormattedString(dateFormat: AutoCareApp.dateFormat))")
+                        .font(BrandTheme.Typography.caption(13))
+                        .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
+                }
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .topLeading)
+
+                if let totalCost = vehicleService.totalCost.toCurrencyString() {
+                    Text(totalCost)
+                        .font(BrandTheme.Typography.heading(16))
+                        .foregroundStyle(BrandTheme.Colors.textPrimary(colorScheme))
+                }
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
+                    .padding(.top, 4)
             }
         }
-        .padding()
     }
 }
 
@@ -51,4 +60,7 @@ struct ServiceListItem: View {
             vehicle_id: "65f7489acdac2f573161d7f7"
         )
     )
+    .padding()
+    .brandBackground()
+    .preferredColorScheme(.dark)
 }

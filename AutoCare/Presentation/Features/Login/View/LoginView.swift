@@ -15,44 +15,73 @@ struct LoginView: View {
     @State var isLoading = false
 
     @ObservedObject var viewModel: LoginViewModel
+    @Environment(\.colorScheme) private var colorScheme
 
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
     }
 
     var body: some View {
-        NavigationView {
-            Form {
-                TextField("Username", text: $username)
-                    .autocapitalization(.none)
-                SecureField("Password", text: $password) {
-                    Task {
-                        await viewModel.login(username: username, password: password)
-                    }
-                }
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: BrandTheme.Spacing.xl) {
+                    Spacer(minLength: BrandTheme.Spacing.xxl)
 
-                Section(
-                    footer:
-                    Button("Login") {
-                        Task {
-                            await viewModel.login(username: username, password: password)
+                    BrandAppHeader(
+                        appName: "AutoCare",
+                        tagline: "Controle abastecimentos e manutenção do seu veículo."
+                    )
+
+                    VStack(spacing: BrandTheme.Spacing.md) {
+                        BrandSectionHeader(title: "Acesso", accent: BrandTheme.Colors.violetSoft)
+
+                        BrandCard {
+                            VStack(spacing: BrandTheme.Spacing.md) {
+                                VStack(alignment: .leading, spacing: BrandTheme.Spacing.xs) {
+                                    Text("Usuário")
+                                        .font(BrandTheme.Typography.caption(12))
+                                        .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
+                                    BrandTextField(placeholder: "Digite seu usuário", text: $username)
+                                }
+
+                                VStack(alignment: .leading, spacing: BrandTheme.Spacing.xs) {
+                                    Text("Senha")
+                                        .font(BrandTheme.Typography.caption(12))
+                                        .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
+                                    BrandTextField(
+                                        placeholder: "Digite sua senha",
+                                        text: $password,
+                                        isSecure: true
+                                    )
+                                }
+                            }
                         }
+
+                        Button("Entrar") {
+                            Task {
+                                await viewModel.login(username: username, password: password)
+                            }
+                        }
+                        .disabled(username.isEmpty || password.isEmpty || viewModel.state == .loading)
+                        .buttonStyle(MainButtonStyle())
                     }
-                    .disabled(username.isEmpty || password.isEmpty || viewModel.state == .loading)
-                    .buttonStyle(MainButtonStyle())
-                ) {
-                    EmptyView()
+
+                    Spacer(minLength: BrandTheme.Spacing.lg)
+
+                    SignatureBadge()
+                        .padding(.bottom, BrandTheme.Spacing.lg)
                 }
+                .padding(.horizontal, BrandTheme.Spacing.lg)
             }
+            .brandBackground()
             .overlay(
                 TTProgressHUD($isLoading, config: AutoCareApp.hudConfig)
             )
             .onChange(of: viewModel.state) { _, newState in
                 isLoading = newState == .loading
             }
-            .navigationTitle("Login")
         }
-        .navigationViewStyle(.stack)
+        .tint(BrandTheme.Colors.violetCore)
         .overlay {
             if case let LoginState.error(error) = viewModel.state {
                 alertView(error)
@@ -83,4 +112,5 @@ struct LoginView: View {
 #Preview {
     LoginView(viewModel: LoginViewModel())
         .modelContainer(SwiftDataManager.shared.previewModelContainer)
+        .preferredColorScheme(.dark)
 }

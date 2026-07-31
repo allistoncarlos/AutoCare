@@ -43,18 +43,13 @@ extension ServiceListView {
         }
 
         private func fetchLocalData() async {
-            do {
-                guard let vehicleId = selectedVehicle.id else {
-                    state = .error
-                    return
-                }
-
-                vehicleServices = try await repository.fetchData(vehicleId: vehicleId) ?? []
-                state = .successVehicleServices(vehicleServices)
-            } catch {
-                print(error.localizedDescription)
+            guard let vehicleId = selectedVehicle.id else {
                 state = .error
+                return
             }
+
+            vehicleServices = await repository.fetchData(vehicleId: vehicleId) ?? []
+            state = .successVehicleServices(vehicleServices)
         }
     }
 }

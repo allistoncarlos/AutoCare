@@ -10,31 +10,57 @@ import SwiftUI
 import TTProgressHUD
 
 struct ServiceListView: View {
-    @ObservedObject var viewModel: ViewModel
+    @StateObject private var viewModel: ViewModel
     @State private var presentedServices = NavigationPath()
 
-    init(viewModel: ServiceListView.ViewModel) {
-        self.viewModel = viewModel
+    let onVehiclePickerTap: () -> Void
+
+    init(selectedVehicle: Vehicle, onVehiclePickerTap: @escaping () -> Void) {
+        _viewModel = StateObject(wrappedValue: ViewModel(selectedVehicle: selectedVehicle))
+        self.onVehiclePickerTap = onVehiclePickerTap
     }
 
     var body: some View {
         NavigationStack(path: $presentedServices) {
-            ScrollView {
-                ForEach(viewModel.vehicleServices, id: \.id) { vehicleService in
-                    NavigationLink(value: vehicleService) {
-                        ServiceListItem(vehicleService: vehicleService)
+            VStack(spacing: 0) {
+                BrandScreenHeader(
+                    title: viewModel.selectedVehicle.name,
+                    onTitleTap: onVehiclePickerTap
+                ) {
+                    Button(action: {}) {
+                        NavigationLink(value: String()) {
+                            BrandToolbarIconButton(systemName: "plus")
+                        }
                     }
+                    .disabled(viewModel.state == .loading)
+                }
+
+                ScrollView {
+                    LazyVStack(spacing: BrandTheme.Spacing.sm) {
+                        if viewModel.vehicleServices.isEmpty {
+                            if viewModel.state != .loading {
+                                BrandEmptyState(
+                                    icon: "wrench.and.screwdriver.fill",
+                                    title: "Nenhum serviço",
+                                    message: "Toque em + para registrar uma manutenção."
+                                )
+                                .padding(.top, BrandTheme.Spacing.xl)
+                            }
+                        } else {
+                            ForEach(viewModel.vehicleServices, id: \.id) { vehicleService in
+                                NavigationLink(value: vehicleService) {
+                                    ServiceListItem(vehicleService: vehicleService)
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.horizontal, BrandTheme.Spacing.lg)
+                            }
+                        }
+                    }
+                    .padding(.bottom, BrandTheme.Spacing.lg)
                 }
             }
-            .navigationView(title: viewModel.selectedVehicle.name)
-            .toolbar {
-                Button(action: {}) {
-                    NavigationLink(value: String()) {
-                        Image(systemName: "plus")
-                    }
-                }
-                .disabled(viewModel.state == .loading)
-            }
+            .brandScreen()
+            .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: String.self) { _ in
                 if let id = viewModel.selectedVehicle.id {
                     navigateToEditServiceView(vehicleId: id)
@@ -49,6 +75,7 @@ struct ServiceListView: View {
                 }
             }
         }
+        .tint(BrandTheme.Colors.violetCore)
         .disabled(viewModel.state == .loading)
         .overlay(
             TTProgressHUD(
@@ -80,19 +107,19 @@ struct ServiceListView: View {
 
 #Preview {
     ServiceListView(
-        viewModel: ServiceListView.ViewModel(
-            selectedVehicle: Vehicle(
-                id: "1",
-                name: "Fiat Argo 2021",
-                brand: "Fiat",
-                model: "Argo",
-                year: "2021",
-                licensePlate: "AAA-1C34",
-                odometer: 0,
-                isDefault: true,
-                vehicleTypeId: "1"
-            )
-        )
+        selectedVehicle: Vehicle(
+            id: "1",
+            name: "Fiat Argo 2021",
+            brand: "Fiat",
+            model: "Argo",
+            year: "2021",
+            licensePlate: "AAA-1C34",
+            odometer: 0,
+            isDefault: true,
+            vehicleTypeId: "1"
+        ),
+        onVehiclePickerTap: {}
     )
     .modelContainer(SwiftDataManager.shared.previewModelContainer)
+    .preferredColorScheme(.dark)
 }

@@ -16,6 +16,8 @@ extension HomeView {
     final class ViewModel: ObservableObject {
         @Published private(set) var state: HomeState = .idle
         @Published private(set) var selectedVehicle: Vehicle?
+        @Published private(set) var vehicles: [Vehicle] = []
+        @Published var isVehiclePickerPresented = false
 
         private let networkConnectivity = NetworkConnectivity()
         private var cancellables = Set<AnyCancellable>()
@@ -67,6 +69,15 @@ extension HomeView {
             await reloadLocalData()
         }
 
+        func openVehiclePicker() {
+            isVehiclePickerPresented = true
+        }
+
+        func selectVehicle(_ vehicle: Vehicle) {
+            selectedVehicle = vehicle
+            isVehiclePickerPresented = false
+        }
+
         @discardableResult
         func requestAuthorizationForNotifications() async -> Bool {
             let notificationCenter = UNUserNotificationCenter.current()
@@ -83,11 +94,15 @@ extension HomeView {
         private func reloadLocalData() async {
             do {
                 let vehicles: [Vehicle] = try await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)])
+                self.vehicles = vehicles
                 state = vehicles.isEmpty ? .newVehicle : .successVehicle(vehicles)
 
                 if vehicles.isEmpty {
                     selectedVehicle = nil
-                } else if selectedVehicle == nil {
+                } else if let current = selectedVehicle,
+                          let updated = vehicles.first(where: { $0.clientId == current.clientId }) {
+                    selectedVehicle = updated
+                } else {
                     selectedVehicle = vehicles.first(where: \.isDefault) ?? vehicles.first
                 }
             } catch {

@@ -10,12 +10,15 @@ import SwiftUI
 struct NavigationViewModifier: ViewModifier {
     let title: String?
     let color: Color?
+    var displayMode: NavigationBarItem.TitleDisplayMode = .inline
+
+    @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
         content
-            .navigationTitle(title ?? "")
-            .toolbarBackground(color ?? .clear, for: .navigationBar, .tabBar)
-            .toolbarBackground(.visible, for: .navigationBar, .tabBar)
-            .toolbarColorScheme(.dark, for: .navigationBar, .tabBar)
+            .brandNavigation(title: title, displayMode: displayMode)
+            .toolbarBackground(color ?? BrandTheme.Colors.backgroundSurface(colorScheme), for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarColorScheme(colorScheme == .dark ? .dark : .light, for: .tabBar)
     }
 }

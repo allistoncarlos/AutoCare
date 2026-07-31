@@ -12,10 +12,10 @@ enum MileagesRouter {
     static func makeEditMileageView(
         navigationPath: Binding<NavigationPath>,
         vehicleId: String,
-        vehicleMileage: VehicleMileage?
+        mileageClientId: String?
     ) -> some View {
         let viewModel = MileageEditView.ViewModel(
-            vehicleMileage: vehicleMileage,
+            mileageClientId: mileageClientId,
             vehicleId: vehicleId
         )
 
@@ -40,6 +40,7 @@ enum MileagesRouter {
             decimalFormatter: decimalFormatter,
             integerFormatter: integerFormatter
         )
+        .id(mileageClientId ?? "new")
     }
 
     static func goBackToMileages(navigationPath: Binding<NavigationPath>) {

@@ -9,8 +9,12 @@ import SwiftUI
 
 // MARK: - NavigationView
 extension View {
-    func navigationView(title: String?, color: Color? = nil) -> some View {
-        modifier(NavigationViewModifier(title: title, color: color))
+    func navigationView(
+        title: String?,
+        color: Color? = nil,
+        displayMode: NavigationBarItem.TitleDisplayMode = .inline
+    ) -> some View {
+        modifier(NavigationViewModifier(title: title, color: color, displayMode: displayMode))
     }
 }
  

@@ -19,6 +19,7 @@ extension MileageEditView {
 
         var previousMileage: VehicleMileage?
 
+        private let mileageClientId: String?
         private let vehicleId: String
         private var cancellable = Set<AnyCancellable>()
 
@@ -44,10 +45,13 @@ extension MileageEditView {
         lazy var dateValidation = _date.validation(manager: manager)
         lazy var totalCostValidation = _totalCost.validation(manager: manager)
 
-        init(vehicleMileage: VehicleMileage?, vehicleId: String) {
-            self.vehicleMileage = vehicleMileage
+        var isEditing: Bool { mileageClientId != nil }
+
+        var taskId: String { mileageClientId ?? "new" }
+
+        init(mileageClientId: String?, vehicleId: String) {
+            self.mileageClientId = mileageClientId
             self.vehicleId = vehicleId
-            populateFromExistingMileage()
         }
 
         struct FormSnapshot {
@@ -91,12 +95,11 @@ extension MileageEditView {
         }
 
         func reloadExistingMileage() async {
-            guard let mileage = vehicleMileage else { return }
+            guard let mileageClientId, !mileageClientId.isEmpty else { return }
 
-            let clientId = mileage.clientId
             guard
                 let fresh: VehicleMileage = try? await swiftDataManager.fetchOne(
-                    where: #Predicate<VehicleMileage> { $0.clientId == clientId }
+                    where: #Predicate<VehicleMileage> { $0.clientId == mileageClientId }
                 )
             else {
                 return
@@ -122,7 +125,9 @@ extension MileageEditView {
 
         func fetchPreviousVehicleMileage() async {
             do {
-                state = .loading
+                if !isEditing {
+                    state = .loading
+                }
 
                 let result = try await swiftDataManager.fetch(
                     where: #Predicate<VehicleMileage> { $0.vehicleId == vehicleId },

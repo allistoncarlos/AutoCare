@@ -74,6 +74,8 @@
 		A5B470E82CDFF60300ECE77E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B470E62CDFF60000ECE77E /* HomeView.swift */; };
 		A5B470ED2CDFF7B200ECE77E /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B470EC2CDFF7B000ECE77E /* HomeRouter.swift */; };
 		A5BGWRK2E2000010038BEE1 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */; };
+		A5BRND022FC400010038BEE1 /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BRND012FC400010038BEE1 /* BrandTheme.swift */; };
+		A5BRND042FC400010038BEE2 /* BrandComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BRND032FC400010038BEE2 /* BrandComponents.swift */; };
 		A5C3A94B2BA716D800A0CC21 /* MileagesRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */; };
 		A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */; };
 		A5C3A94F2BA71D9400A0CC21 /* VehicleListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */; };
@@ -97,6 +99,9 @@
 		A5FH0122E1000010038BEE2 /* ChangesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0022E1000010038BEE2 /* ChangesResponse.swift */; };
 		A5FH0132E1000010038BEE3 /* ChangesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */; };
 		A5FH0162E1000010038BEE6 /* ChangesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0062E1000010038BEE6 /* ChangesRepository.swift */; };
+		A5FONT022FC400010038BEE1 /* PlusJakartaSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT012FC400010038BEE1 /* PlusJakartaSans.ttf */; };
+		A5FONT042FC400010038BEE1 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT032FC400010038BEE1 /* Inter.ttf */; };
+		A5MILRT2FC400010038BEE1 /* MileageRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5MILRT1FC400010038BEE1 /* MileageRoute.swift */; };
 		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
 /* End PBXBuildFile section */
 
@@ -162,6 +167,8 @@
 		A5B470E62CDFF60000ECE77E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A5B470EC2CDFF7B000ECE77E /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		A5BGWRK1E2000010038BEE1 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
+		A5BRND012FC400010038BEE1 /* BrandTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
+		A5BRND032FC400010038BEE2 /* BrandComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandComponents.swift; sourceTree = "<group>"; };
 		A5C3A94A2BA716D800A0CC21 /* MileagesRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileagesRouter.swift; sourceTree = "<group>"; };
 		A5C3A94C2BA71D7500A0CC21 /* VehicleListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListViewModel.swift; sourceTree = "<group>"; };
 		A5C3A94E2BA71D9400A0CC21 /* VehicleListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleListState.swift; sourceTree = "<group>"; };
@@ -189,6 +196,9 @@
 		A5FH0022E1000010038BEE2 /* ChangesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesResponse.swift; sourceTree = "<group>"; };
 		A5FH0032E1000010038BEE3 /* ChangesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesDataSource.swift; sourceTree = "<group>"; };
 		A5FH0062E1000010038BEE6 /* ChangesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesRepository.swift; sourceTree = "<group>"; };
+		A5FONT012FC400010038BEE1 /* PlusJakartaSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PlusJakartaSans.ttf; sourceTree = "<group>"; };
+		A5FONT032FC400010038BEE1 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
+		A5MILRT1FC400010038BEE1 /* MileageRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageRoute.swift; sourceTree = "<group>"; };
 		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -213,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				A50014B32B86625700040E3C /* Button */,
+				A5BRND012FC400010038BEE1 /* BrandTheme.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -554,6 +565,7 @@
 		A5804B2E2BEBB6C600BE9602 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A5BRND032FC400010038BEE2 /* BrandComponents.swift */,
 				A5804B2F2BEBB6D600BE9602 /* CurrencyTextField.swift */,
 				A5804B312BEBB6EC00BE9602 /* CurrencyUITextField.swift */,
 				A5804B342BEBB70A00BE9602 /* PreviewNumberFormatter.swift */,
@@ -677,6 +689,7 @@
 				A562EE8F2D93352600D68116 /* DI */,
 				A5FCB7752AED431C0038A546 /* Presentation */,
 				A5E333A22AEBEE180089DD81 /* Domain */,
+				A5FONT062FC400010038BEE1 /* Resources */,
 				A5E3339E2AEBEA5F0089DD81 /* Info.plist */,
 				A5E3339C2AEBEA220089DD81 /* Config */,
 				A5E3338C2AEBE4900089DD81 /* Assets.xcassets */,
@@ -840,6 +853,7 @@
 			isa = PBXGroup;
 			children = (
 				A5DF4BDB2AEEE5DB007D41B2 /* MileageListState.swift */,
+				A5MILRT1FC400010038BEE1 /* MileageRoute.swift */,
 				A50FC89C2BE6C4270044E126 /* MileageEditState.swift */,
 			);
 			path = Model;
@@ -888,6 +902,23 @@
 			path = Sync;
 			sourceTree = "<group>";
 		};
+		A5FONT052FC400010038BEE1 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				A5FONT012FC400010038BEE1 /* PlusJakartaSans.ttf */,
+				A5FONT032FC400010038BEE1 /* Inter.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		A5FONT062FC400010038BEE1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A5FONT052FC400010038BEE1 /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -924,7 +955,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					A5E333842AEBE48F0089DD81 = {
 						CreatedOnToolsVersion = 15.0;
@@ -964,6 +995,8 @@
 				A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */,
 				A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */,
 				A57FCA7B2FC393A400DFF96C /* AutoCare.icon in Resources */,
+				A5FONT022FC400010038BEE1 /* PlusJakartaSans.ttf in Resources */,
+				A5FONT042FC400010038BEE1 /* Inter.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -995,6 +1028,8 @@
 				A562EEB62D933B5100D68116 /* AutoCareAPI.swift in Sources */,
 				A5619DFC2E0FF48800D46700 /* VehicleServiceDataSourceProtocol.swift in Sources */,
 				A50014B52B86626000040E3C /* MainButtonStyle.swift in Sources */,
+				A5BRND022FC400010038BEE1 /* BrandTheme.swift in Sources */,
+				A5BRND042FC400010038BEE2 /* BrandComponents.swift in Sources */,
 				A529BB962BC855A6003DCCBC /* MileageEditViewModel.swift in Sources */,
 				A5804B352BEBB70A00BE9602 /* PreviewNumberFormatter.swift in Sources */,
 				A5DD63E62AF032B9009254C2 /* VehicleEditViewModel.swift in Sources */,
@@ -1002,6 +1037,7 @@
 				A53F41632D5E104100FE70B7 /* HomeViewModel.swift in Sources */,
 				A5B470ED2CDFF7B200ECE77E /* HomeRouter.swift in Sources */,
 				A50FC89D2BE6C4270044E126 /* MileageEditState.swift in Sources */,
+				A5MILRT2FC400010038BEE1 /* MileageRoute.swift in Sources */,
 				A562EE9E2D93378600D68116 /* LoginRequest.swift in Sources */,
 				A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */,
 				A562EEAC2D93397F00D68116 /* NetworkManager.swift in Sources */,
@@ -1099,6 +1135,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 56JG4Q8S7U;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1164,6 +1201,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 56JG4Q8S7U;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1195,7 +1233,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"AutoCare/Preview Content\"";
-				DEVELOPMENT_TEAM = 56JG4Q8S7U;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1236,7 +1273,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"AutoCare/Preview Content\"";
-				DEVELOPMENT_TEAM = 56JG4Q8S7U;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
