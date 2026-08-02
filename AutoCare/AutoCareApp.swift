@@ -25,6 +25,10 @@ struct AutoCareApp: App {
         caption: "Por favor aguarde..."
     )
 
+    #if os(iOS)
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    #endif
+
     @ObservedObject private var viewModel = ViewModel()
     @ObservedObject private var authSession = Container.shared.authSessionStore()
 

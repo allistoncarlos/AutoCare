@@ -103,6 +103,11 @@
 		A5FONT042FC400010038BEE1 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT032FC400010038BEE1 /* Inter.ttf */; };
 		A5MILRT2FC400010038BEE1 /* MileageRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5MILRT1FC400010038BEE1 /* MileageRoute.swift */; };
 		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
+		A5CPLAY02FC500010038BEE1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY01FC500010038BEE1 /* AppDelegate.swift */; };
+		A5CPLAY04FC500010038BEE1 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY03FC500010038BEE1 /* CarPlaySceneDelegate.swift */; };
+		A5CPLAY06FC500010038BEE1 /* CarPlayInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY05FC500010038BEE1 /* CarPlayInterfaceController.swift */; };
+		A5CPLAY08FC500010038BEE1 /* CarPlayFuelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY07FC500010038BEE1 /* CarPlayFuelService.swift */; };
+		A5CPLAY0AFC500010038BEE1 /* CarPlayFuelDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY09FC500010038BEE1 /* CarPlayFuelDraft.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -200,6 +205,11 @@
 		A5FONT032FC400010038BEE1 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
 		A5MILRT1FC400010038BEE1 /* MileageRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageRoute.swift; sourceTree = "<group>"; };
 		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
+		A5CPLAY01FC500010038BEE1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A5CPLAY03FC500010038BEE1 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		A5CPLAY05FC500010038BEE1 /* CarPlayInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayInterfaceController.swift; sourceTree = "<group>"; };
+		A5CPLAY07FC500010038BEE1 /* CarPlayFuelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayFuelService.swift; sourceTree = "<group>"; };
+		A5CPLAY09FC500010038BEE1 /* CarPlayFuelDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayFuelDraft.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -687,6 +697,7 @@
 			children = (
 				A562EE922D93365500D68116 /* DataProviders */,
 				A562EE8F2D93352600D68116 /* DI */,
+				A5CPLAY0BFC500010038BEE1 /* CarPlay */,
 				A5FCB7752AED431C0038A546 /* Presentation */,
 				A5E333A22AEBEE180089DD81 /* Domain */,
 				A5FONT062FC400010038BEE1 /* Resources */,
@@ -694,11 +705,23 @@
 				A5E3339C2AEBEA220089DD81 /* Config */,
 				A5E3338C2AEBE4900089DD81 /* Assets.xcassets */,
 				A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */,
+				A5CPLAY01FC500010038BEE1 /* AppDelegate.swift */,
 				A5E3338E2AEBE4900089DD81 /* AutoCare.entitlements */,
 				A5E3338F2AEBE4900089DD81 /* Preview Content */,
 				A587CF472DA08F8500051244 /* AutoCareViewModel.swift */,
 			);
 			path = AutoCare;
+			sourceTree = "<group>";
+		};
+		A5CPLAY0BFC500010038BEE1 /* CarPlay */ = {
+			isa = PBXGroup;
+			children = (
+				A5CPLAY03FC500010038BEE1 /* CarPlaySceneDelegate.swift */,
+				A5CPLAY05FC500010038BEE1 /* CarPlayInterfaceController.swift */,
+				A5CPLAY07FC500010038BEE1 /* CarPlayFuelService.swift */,
+				A5CPLAY09FC500010038BEE1 /* CarPlayFuelDraft.swift */,
+			);
+			path = CarPlay;
 			sourceTree = "<group>";
 		};
 		A5E3338F2AEBE4900089DD81 /* Preview Content */ = {
@@ -1007,6 +1030,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5CPLAY02FC500010038BEE1 /* AppDelegate.swift in Sources */,
+				A5CPLAY04FC500010038BEE1 /* CarPlaySceneDelegate.swift in Sources */,
+				A5CPLAY06FC500010038BEE1 /* CarPlayInterfaceController.swift in Sources */,
+				A5CPLAY08FC500010038BEE1 /* CarPlayFuelService.swift in Sources */,
+				A5CPLAY0AFC500010038BEE1 /* CarPlayFuelDraft.swift in Sources */,
 				A5A7A5732D6276B8008608DC /* Vehicle.swift in Sources */,
 				A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */,
 				A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */,
@@ -1237,8 +1265,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AutoCare/Info.plist;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = NO;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = NO;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
@@ -1277,8 +1305,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AutoCare/Info.plist;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = NO;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = NO;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
