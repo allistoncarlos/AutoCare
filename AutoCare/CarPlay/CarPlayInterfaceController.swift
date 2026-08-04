@@ -26,6 +26,7 @@ final class CarPlayInterfaceController: NSObject {
     private var recentMileages: [VehicleMileage] = []
     private var wizardTemplate: CPListTemplate?
     private var wizardStep: WizardStep = .odometer
+    private var numericBuffer = CarPlayNumericBuffer(kind: .integer)
 
     init(interfaceController: CPInterfaceController) {
         self.interfaceController = interfaceController
@@ -198,10 +199,43 @@ final class CarPlayInterfaceController: NSObject {
 
     private func beginFuelEntry(for vehicle: Vehicle) async {
         draft = await service.makeDraft(for: vehicle)
+        prepareBuffer(for: .odometer)
         wizardStep = .odometer
         let template = CPListTemplate(title: "Odômetro", sections: makeWizardSections())
         wizardTemplate = template
         try? await interfaceController.pushTemplate(template, animated: true)
+    }
+
+    private func prepareBuffer(for step: WizardStep) {
+        guard let draft else { return }
+
+        switch step {
+        case .odometer:
+            numericBuffer = .integer(value: draft.odometer)
+        case .totalCost:
+            numericBuffer = .currency(value: draft.totalCost)
+        case .fuelCost:
+            numericBuffer = .currency(value: draft.fuelCost)
+        case .confirm:
+            break
+        }
+    }
+
+    private func commitCurrentBuffer() {
+        guard var draft else { return }
+
+        switch wizardStep {
+        case .odometer:
+            draft.applyOdometer(numericBuffer)
+        case .totalCost:
+            draft.applyTotalCost(numericBuffer)
+        case .fuelCost:
+            draft.applyFuelCost(numericBuffer)
+        case .confirm:
+            break
+        }
+
+        self.draft = draft
     }
 
     private func refreshWizard(title: String? = nil) {
@@ -221,7 +255,10 @@ final class CarPlayInterfaceController: NSObject {
     }
 
     private func advanceWizard(to step: WizardStep) {
+        commitCurrentBuffer()
         wizardStep = step
+        prepareBuffer(for: step)
+
         let title: String
         switch step {
         case .odometer: title = "Odômetro"
@@ -236,140 +273,177 @@ final class CarPlayInterfaceController: NSObject {
         guard let draft else { return [] }
 
         switch wizardStep {
-        case .odometer:
-            return makeOdometerSections(draft)
-        case .totalCost:
-            return makeTotalCostSections(draft)
-        case .fuelCost:
-            return makeFuelCostSections(draft)
+        case .odometer, .totalCost, .fuelCost:
+            return makeKeypadSections(draft: draft)
         case .confirm:
             return makeConfirmSections(draft)
         }
     }
 
-    private func makeOdometerSections(_ draft: CarPlayFuelDraft) -> [CPListSection] {
-        let valueItem = CPListItem(
-            text: "\(draft.odometer) km",
-            detailText: "Anterior: \(draft.previousOdometer) km · Δ \(draft.odometerDifference) km",
-            image: UIImage(systemName: "gauge.with.dots.needle.67percent")
-        )
-        valueItem.isEnabled = false
-
-        let adjustments: [(String, Int)] = [
-            ("+1 km", 1), ("+10 km", 10), ("+50 km", 50), ("+100 km", 100),
-            ("−1 km", -1), ("−10 km", -10), ("−50 km", -50)
-        ]
-
-        let adjustItems = adjustments.map { title, delta -> CPListItem in
-            let item = CPListItem(text: title, detailText: nil)
+    private func makeKeypadSections(draft: CarPlayFuelDraft) -> [CPListSection] {
+        let display = makeDisplayItem(draft: draft)
+        let digitItems = (1...9).map { digit -> CPListItem in
+            let item = CPListItem(text: "\(digit)", detailText: nil)
             item.handler = { [weak self] _, completion in
-                self?.draft?.adjustOdometer(by: delta)
+                self?.numericBuffer.append(digit: digit)
                 self?.refreshWizard()
                 completion()
             }
             return item
         }
 
-        let nextItem = CPListItem(
-            text: "Continuar",
-            detailText: "Definir valor pago",
-            image: UIImage(systemName: "chevron.right.circle.fill")
-        )
-        nextItem.handler = { [weak self] _, completion in
-            self?.advanceWizard(to: .totalCost)
+        let zeroItem = CPListItem(text: "0", detailText: nil)
+        zeroItem.handler = { [weak self] _, completion in
+            self?.numericBuffer.append(digit: 0)
+            self?.refreshWizard()
             completion()
         }
 
+        let deleteItem = CPListItem(
+            text: "Apagar",
+            detailText: "Remove o último dígito",
+            image: UIImage(systemName: "delete.left.fill")
+        )
+        deleteItem.handler = { [weak self] _, completion in
+            self?.numericBuffer.deleteLast()
+            self?.refreshWizard()
+            completion()
+        }
+
+        let clearItem = CPListItem(
+            text: "Limpar",
+            detailText: "Zera o valor",
+            image: UIImage(systemName: "xmark.circle.fill")
+        )
+        clearItem.handler = { [weak self] _, completion in
+            self?.numericBuffer.clear()
+            self?.refreshWizard()
+            completion()
+        }
+
+        let nextItem = makeNextItem()
+
         return [
-            CPListSection(items: [valueItem], header: draft.vehicleName, sectionIndexTitle: nil),
-            CPListSection(items: adjustItems, header: "Ajustar", sectionIndexTitle: nil),
+            CPListSection(items: [display], header: displayHeader(for: draft), sectionIndexTitle: nil),
+            CPListSection(items: digitItems + [zeroItem], header: "Teclado", sectionIndexTitle: nil),
+            CPListSection(items: [deleteItem, clearItem], header: "Editar", sectionIndexTitle: nil),
             CPListSection(items: [nextItem], header: nil, sectionIndexTitle: nil)
         ]
     }
 
-    private func makeTotalCostSections(_ draft: CarPlayFuelDraft) -> [CPListSection] {
-        let valueItem = CPListItem(
-            text: draft.totalCost.toCurrencyString() ?? "R$ 0,00",
-            detailText: "Valor total do abastecimento",
-            image: UIImage(systemName: "brazilianrealsign.circle.fill")
-        )
-        valueItem.isEnabled = false
-
-        let adjustments: [(String, Decimal)] = [
-            ("+ R$ 1", 1), ("+ R$ 10", 10), ("+ R$ 50", 50), ("+ R$ 100", 100),
-            ("− R$ 1", -1), ("− R$ 10", -10), ("− R$ 50", -50)
-        ]
-
-        let adjustItems = adjustments.map { title, delta -> CPListItem in
-            let item = CPListItem(text: title, detailText: nil)
-            item.handler = { [weak self] _, completion in
-                self?.draft?.adjustTotalCost(by: delta)
-                self?.refreshWizard()
-                completion()
-            }
-            return item
+    private func displayHeader(for draft: CarPlayFuelDraft) -> String {
+        switch wizardStep {
+        case .odometer:
+            return "\(draft.vehicleName) · anterior \(draft.previousOdometer) km"
+        case .totalCost:
+            return "Valor total pago"
+        case .fuelCost:
+            let liters = draftAfterCommittingBuffer().liters.toLeadingZerosString(decimalPlaces: 2) ?? "—"
+            return "Preço por litro · ≈ \(liters) L"
+        case .confirm:
+            return "Resumo"
         }
-
-        let nextItem = CPListItem(
-            text: "Continuar",
-            detailText: "Definir preço por litro",
-            image: UIImage(systemName: "chevron.right.circle.fill")
-        )
-        nextItem.handler = { [weak self] _, completion in
-            self?.advanceWizard(to: .fuelCost)
-            completion()
-        }
-
-        return [
-            CPListSection(items: [valueItem], header: "Custo", sectionIndexTitle: nil),
-            CPListSection(items: adjustItems, header: "Ajustar", sectionIndexTitle: nil),
-            CPListSection(items: [nextItem], header: nil, sectionIndexTitle: nil)
-        ]
     }
 
-    private func makeFuelCostSections(_ draft: CarPlayFuelDraft) -> [CPListSection] {
-        let litersText = draft.liters.toLeadingZerosString(decimalPlaces: 2) ?? "0"
-        let valueItem = CPListItem(
-            text: "\(draft.fuelCost.toCurrencyString() ?? "R$ 0,00") / L",
-            detailText: "≈ \(litersText) L (tanque completo)",
-            image: UIImage(systemName: "drop.fill")
-        )
-        valueItem.isEnabled = false
+    private func makeDisplayItem(draft: CarPlayFuelDraft) -> CPListItem {
+        let preview = draftAfterCommittingBuffer()
+        let text: String
+        let detail: String
+        let image: String
 
-        let adjustments: [(String, Decimal)] = [
-            ("+ R$ 0,01", Decimal(string: "0.01") ?? 0.01),
-            ("+ R$ 0,10", Decimal(string: "0.10") ?? 0.10),
-            ("+ R$ 0,50", Decimal(string: "0.50") ?? 0.50),
-            ("− R$ 0,01", Decimal(string: "-0.01") ?? -0.01),
-            ("− R$ 0,10", Decimal(string: "-0.10") ?? -0.10),
-            ("− R$ 0,50", Decimal(string: "-0.50") ?? -0.50)
-        ]
+        switch wizardStep {
+        case .odometer:
+            text = numericBuffer.isEmpty ? "—" : "\(numericBuffer.displayText) km"
+            detail = "Δ \(preview.odometerDifference) km desde o último"
+            image = "gauge.with.dots.needle.67percent"
+        case .totalCost:
+            text = numericBuffer.displayText
+            detail = "Digite os centavos (ex.: 25050 = R$ 250,50)"
+            image = "brazilianrealsign.circle.fill"
+        case .fuelCost:
+            text = "\(numericBuffer.displayText) / L"
+            let liters = preview.liters.toLeadingZerosString(decimalPlaces: 2) ?? "—"
+            detail = "≈ \(liters) L · digite centavos (ex.: 599 = R$ 5,99)"
+            image = "drop.fill"
+        case .confirm:
+            text = ""
+            detail = ""
+            image = "checkmark"
+        }
 
-        let adjustItems = adjustments.map { title, delta -> CPListItem in
-            let item = CPListItem(text: title, detailText: nil)
+        let item = CPListItem(text: text, detailText: detail, image: UIImage(systemName: image))
+        item.isEnabled = false
+        return item
+    }
+
+    private func makeNextItem() -> CPListItem {
+        switch wizardStep {
+        case .odometer:
+            let item = CPListItem(
+                text: "Continuar",
+                detailText: "Definir valor pago",
+                image: UIImage(systemName: "chevron.right.circle.fill")
+            )
+            item.isEnabled = numericBuffer.integerValue != nil
             item.handler = { [weak self] _, completion in
-                self?.draft?.adjustFuelCost(by: delta)
-                self?.refreshWizard()
+                self?.advanceWizard(to: .totalCost)
                 completion()
             }
             return item
+        case .totalCost:
+            let item = CPListItem(
+                text: "Continuar",
+                detailText: "Definir preço por litro",
+                image: UIImage(systemName: "chevron.right.circle.fill")
+            )
+            item.isEnabled = (numericBuffer.decimalValue ?? 0) > 0
+            item.handler = { [weak self] _, completion in
+                self?.advanceWizard(to: .fuelCost)
+                completion()
+            }
+            return item
+        case .fuelCost:
+            let item = CPListItem(
+                text: "Revisar e salvar",
+                detailText: "Confirmar abastecimento",
+                image: UIImage(systemName: "checkmark.circle.fill")
+            )
+            item.isEnabled = (numericBuffer.decimalValue ?? 0) > 0
+            item.handler = { [weak self] _, completion in
+                self?.advanceWizard(to: .confirm)
+                completion()
+            }
+            return item
+        case .confirm:
+            return CPListItem(text: "Continuar", detailText: nil)
+        }
+    }
+
+    /// Preview do draft com o buffer atual aplicado, sem mutar o estado persistido do passo.
+    private func draftAfterCommittingBuffer() -> CarPlayFuelDraft {
+        guard var draft else {
+            return CarPlayFuelDraft(
+                vehicleId: "",
+                vehicleName: "",
+                previousOdometer: 0,
+                odometer: 0,
+                totalCost: 0,
+                fuelCost: 0
+            )
         }
 
-        let nextItem = CPListItem(
-            text: "Revisar e salvar",
-            detailText: "Confirmar abastecimento",
-            image: UIImage(systemName: "checkmark.circle.fill")
-        )
-        nextItem.handler = { [weak self] _, completion in
-            self?.advanceWizard(to: .confirm)
-            completion()
+        switch wizardStep {
+        case .odometer:
+            draft.applyOdometer(numericBuffer)
+        case .totalCost:
+            draft.applyTotalCost(numericBuffer)
+        case .fuelCost:
+            draft.applyFuelCost(numericBuffer)
+        case .confirm:
+            break
         }
 
-        return [
-            CPListSection(items: [valueItem], header: "Combustível", sectionIndexTitle: nil),
-            CPListSection(items: adjustItems, header: "Ajustar", sectionIndexTitle: nil),
-            CPListSection(items: [nextItem], header: nil, sectionIndexTitle: nil)
-        ]
+        return draft
     }
 
     private func makeConfirmSections(_ draft: CarPlayFuelDraft) -> [CPListSection] {

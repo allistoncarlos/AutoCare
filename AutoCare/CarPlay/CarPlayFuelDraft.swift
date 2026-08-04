@@ -6,7 +6,7 @@
 import Foundation
 
 #if canImport(CarPlay)
-/// Rascunho de abastecimento ajustável na central do carro (sem teclado).
+/// Rascunho de abastecimento preenchido via teclado numérico no CarPlay.
 struct CarPlayFuelDraft {
     var vehicleId: String
     var vehicleName: String
@@ -34,17 +34,19 @@ struct CarPlayFuelDraft {
         odometer > previousOdometer && totalCost > 0 && fuelCost > 0 && liters > 0
     }
 
-    mutating func adjustOdometer(by delta: Int) {
-        odometer = max(previousOdometer, odometer + delta)
+    mutating func applyOdometer(_ buffer: CarPlayNumericBuffer) {
+        guard let value = buffer.integerValue else { return }
+        odometer = max(previousOdometer, value)
     }
 
-    mutating func adjustTotalCost(by delta: Decimal) {
-        totalCost = max(0, (totalCost + delta).roundedDecimal(places: 2))
+    mutating func applyTotalCost(_ buffer: CarPlayNumericBuffer) {
+        guard let value = buffer.decimalValue else { return }
+        totalCost = max(0, value)
     }
 
-    mutating func adjustFuelCost(by delta: Decimal) {
-        let minimum = Decimal(string: "0.01") ?? 0.01
-        fuelCost = max(minimum, (fuelCost + delta).roundedDecimal(places: 2))
+    mutating func applyFuelCost(_ buffer: CarPlayNumericBuffer) {
+        guard let value = buffer.decimalValue, value > 0 else { return }
+        fuelCost = value
     }
 }
 #endif

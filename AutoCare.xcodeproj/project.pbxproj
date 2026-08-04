@@ -108,6 +108,7 @@
 		A5CPLAY06FC500010038BEE1 /* CarPlayInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY05FC500010038BEE1 /* CarPlayInterfaceController.swift */; };
 		A5CPLAY08FC500010038BEE1 /* CarPlayFuelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY07FC500010038BEE1 /* CarPlayFuelService.swift */; };
 		A5CPLAY0AFC500010038BEE1 /* CarPlayFuelDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY09FC500010038BEE1 /* CarPlayFuelDraft.swift */; };
+		A5CPLAY0CFC500010038BEE1 /* CarPlayNumericBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CPLAY0DFC500010038BEE1 /* CarPlayNumericBuffer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -210,6 +211,7 @@
 		A5CPLAY05FC500010038BEE1 /* CarPlayInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayInterfaceController.swift; sourceTree = "<group>"; };
 		A5CPLAY07FC500010038BEE1 /* CarPlayFuelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayFuelService.swift; sourceTree = "<group>"; };
 		A5CPLAY09FC500010038BEE1 /* CarPlayFuelDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayFuelDraft.swift; sourceTree = "<group>"; };
+		A5CPLAY0DFC500010038BEE1 /* CarPlayNumericBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayNumericBuffer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -720,6 +722,7 @@
 				A5CPLAY05FC500010038BEE1 /* CarPlayInterfaceController.swift */,
 				A5CPLAY07FC500010038BEE1 /* CarPlayFuelService.swift */,
 				A5CPLAY09FC500010038BEE1 /* CarPlayFuelDraft.swift */,
+				A5CPLAY0DFC500010038BEE1 /* CarPlayNumericBuffer.swift */,
 			);
 			path = CarPlay;
 			sourceTree = "<group>";
@@ -1035,6 +1038,7 @@
 				A5CPLAY06FC500010038BEE1 /* CarPlayInterfaceController.swift in Sources */,
 				A5CPLAY08FC500010038BEE1 /* CarPlayFuelService.swift in Sources */,
 				A5CPLAY0AFC500010038BEE1 /* CarPlayFuelDraft.swift in Sources */,
+				A5CPLAY0CFC500010038BEE1 /* CarPlayNumericBuffer.swift in Sources */,
 				A5A7A5732D6276B8008608DC /* Vehicle.swift in Sources */,
 				A5ARCH032D9C4CEB0038BEE3 /* SyncService.swift in Sources */,
 				A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */,
