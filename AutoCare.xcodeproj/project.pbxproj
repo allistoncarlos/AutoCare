@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		026C0B3739C3EDF490658BB1 /* AutoCareWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */; };
+		1388D83EE218658F7C574B09 /* MileageFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3570DB425BFB41D67E2C87AF /* MileageFormView.swift */; };
+		172B61DB5DD533A16BC940F4 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */; };
+		191189DA1EB32A8708271D6C /* WatchConnectivityMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */; };
+		2C3A91722B8BB295F49AE7E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C6692BD95AC258AB03DCDA /* HomeView.swift */; };
+		2F572AA89B1E82EC18CB2E3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */; };
+		45ABFCD5BDB7F08442C87250 /* WatchConnectivityMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */; };
+		49BEC0FA59B3F1EC47839C7E /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */; };
+		4C893D124026513C5F924743 /* WatchPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */; };
+		64D1A81566466B0ED9ECB5D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A234FBEA4C8DA20B9E42B959 /* Foundation.framework */; };
+		7A420EFD44E172CB7AC26020 /* WatchNumberPickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */; };
+		7CF2374196132CE4E4A35E17 /* NotLoggedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */; };
+		8E0CC98775401B953959832F /* WatchMileageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */; };
+		A4F1A0D96A40FDF181D73236 /* MileageFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */; };
 		A50014B52B86626000040E3C /* MainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50014B42B86626000040E3C /* MainButtonStyle.swift */; };
 		A50014BB2B86726A00040E3C /* TTProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = A50014BA2B86726A00040E3C /* TTProgressHUD */; };
 		A5088FD52D95E55300D3712A /* VehicleTypeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5088FD42D95E55300D3712A /* VehicleTypeResponse.swift */; };
@@ -103,9 +117,49 @@
 		A5FONT042FC400010038BEE1 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT032FC400010038BEE1 /* Inter.ttf */; };
 		A5MILRT2FC400010038BEE1 /* MileageRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5MILRT1FC400010038BEE1 /* MileageRoute.swift */; };
 		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
+		DA467CA67437976F0C7AFF32 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B25F310B698710133F2006 /* HomeViewModel.swift */; };
+		E6F431D5E11E08D0BA55EC5F /* AutoCare Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F0387BCD6465427B63998CC0 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */; };
+		FBE92C0A98578732A07A82DD /* WatchVehicleSelectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1A564195DE330CB93F7B7A73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A5E3337D2AEBE48F0089DD81 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F3646A594E8C8B60E2B2AE51;
+			remoteInfo = "AutoCare Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2CDD02470399EFEB35D9FBDA /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				E6F431D5E11E08D0BA55EC5F /* AutoCare Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AutoCareWatchApp.swift; path = AutoCareWatchApp.swift; sourceTree = "<group>"; };
+		32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchMileageService.swift; path = WatchMileageService.swift; sourceTree = "<group>"; };
+		3570DB425BFB41D67E2C87AF /* MileageFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MileageFormView.swift; path = MileageFormView.swift; sourceTree = "<group>"; };
+		4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotLoggedView.swift; path = NotLoggedView.swift; sourceTree = "<group>"; };
+		56C6692BD95AC258AB03DCDA /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeView.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchVehicleSelectionStore.swift; sourceTree = "<group>"; };
+		605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MileageFormViewModel.swift; path = MileageFormViewModel.swift; sourceTree = "<group>"; };
+		6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchConnectivityManager.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
+		701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VehicleListView.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
+		733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchNumberPickers.swift; sourceTree = "<group>"; };
+		7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets.xcassets; sourceTree = "<group>"; };
+		A234FBEA4C8DA20B9E42B959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS11.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
 		A5088FD42D95E55300D3712A /* VehicleTypeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTypeResponse.swift; sourceTree = "<group>"; };
 		A50FC8972BE6C12B0044E126 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
@@ -200,9 +254,23 @@
 		A5FONT032FC400010038BEE1 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
 		A5MILRT1FC400010038BEE1 /* MileageRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageRoute.swift; sourceTree = "<group>"; };
 		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
+		BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchPhoneCoordinator.swift; path = WatchPhoneCoordinator.swift; sourceTree = "<group>"; };
+		C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchConnectivityMessages.swift; path = WatchConnectivityMessages.swift; sourceTree = "<group>"; };
+		C6B25F310B698710133F2006 /* HomeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeViewModel.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AutoCare Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchConnectivityManager.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
+		F15545E0204DCAA5BF050985 /* AutoCare Watch App.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = "AutoCare Watch App.entitlements"; path = "AutoCare Watch App.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		42B1F6E344D0C981395D13E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64D1A81566466B0ED9ECB5D5 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A5E333822AEBE48F0089DD81 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -219,6 +287,125 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0522C7A83921A3BEE9FBFF40 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				827D1513BC1A0F61BFE8EA9A /* Features */,
+				4AE5DB678F1F4C0109B9995A /* Components */,
+			);
+			name = Presentation;
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		097A78E97A1328CA9080F037 /* WatchConnectivity */ = {
+			isa = PBXGroup;
+			children = (
+				C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */,
+			);
+			name = WatchConnectivity;
+			path = WatchConnectivity;
+			sourceTree = "<group>";
+		};
+		16B83C73D3D3B01D131408B5 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				097A78E97A1328CA9080F037 /* WatchConnectivity */,
+			);
+			name = Shared;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		2A29C699D9B3B5E2AA62DEF4 /* Vehicles */ = {
+			isa = PBXGroup;
+			children = (
+				701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */,
+			);
+			name = Vehicles;
+			path = Vehicles;
+			sourceTree = "<group>";
+		};
+		4632CDC700ABBD5E5FACA3C9 /* NotLogged */ = {
+			isa = PBXGroup;
+			children = (
+				4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */,
+			);
+			name = NotLogged;
+			path = NotLogged;
+			sourceTree = "<group>";
+		};
+		4AE5DB678F1F4C0109B9995A /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */,
+			);
+			name = Components;
+			path = Components;
+			sourceTree = "<group>";
+		};
+		57EFB495CBA83E94BA8FC37C /* DataProviders */ = {
+			isa = PBXGroup;
+			children = (
+				E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */,
+				32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */,
+				58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */,
+			);
+			name = DataProviders;
+			path = DataProviders;
+			sourceTree = "<group>";
+		};
+		6985D678AEC53E69D7A9799A /* WatchConnectivity */ = {
+			isa = PBXGroup;
+			children = (
+				6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */,
+				BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */,
+			);
+			name = WatchConnectivity;
+			path = WatchConnectivity;
+			sourceTree = "<group>";
+		};
+		73B963A9A2BB9CE2026AB833 /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				A234FBEA4C8DA20B9E42B959 /* Foundation.framework */,
+			);
+			name = watchOS;
+			sourceTree = "<group>";
+		};
+		73C8FC1F833CF64ABCA6CBB4 /* AutoCare Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */,
+				57EFB495CBA83E94BA8FC37C /* DataProviders */,
+				0522C7A83921A3BEE9FBFF40 /* Presentation */,
+				7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */,
+				F15545E0204DCAA5BF050985 /* AutoCare Watch App.entitlements */,
+			);
+			name = "AutoCare Watch App";
+			path = "AutoCare Watch App";
+			sourceTree = "<group>";
+		};
+		827D1513BC1A0F61BFE8EA9A /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				D2BC179F123D0A6F293A4B1A /* Home */,
+				4632CDC700ABBD5E5FACA3C9 /* NotLogged */,
+				2A29C699D9B3B5E2AA62DEF4 /* Vehicles */,
+				9EF3B4C06D4E9B593E5B9E2D /* Mileage */,
+			);
+			name = Features;
+			path = Features;
+			sourceTree = "<group>";
+		};
+		9EF3B4C06D4E9B593E5B9E2D /* Mileage */ = {
+			isa = PBXGroup;
+			children = (
+				3570DB425BFB41D67E2C87AF /* MileageFormView.swift */,
+				605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */,
+			);
+			name = Mileage;
+			path = Mileage;
+			sourceTree = "<group>";
+		};
 		A50014B22B86625100040E3C /* Styles */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,6 +617,7 @@
 				A562EE932D93365B00D68116 /* Repositories */,
 				A562EEA52D9338D700D68116 /* DataSources */,
 				A562EE992D93376C00D68116 /* API */,
+				6985D678AEC53E69D7A9799A /* WatchConnectivity */,
 			);
 			path = DataProviders;
 			sourceTree = "<group>";
@@ -671,6 +859,9 @@
 				A57FCA7A2FC393A400DFF96C /* AutoCare.icon */,
 				A5E333872AEBE48F0089DD81 /* AutoCare */,
 				A5E333862AEBE48F0089DD81 /* Products */,
+				A884A2E15CB77ADE8D0CCCAD /* Frameworks */,
+				73C8FC1F833CF64ABCA6CBB4 /* AutoCare Watch App */,
+				16B83C73D3D3B01D131408B5 /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -678,6 +869,7 @@
 			isa = PBXGroup;
 			children = (
 				A5E333852AEBE48F0089DD81 /* AutoCare.app */,
+				DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -919,6 +1111,24 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		A884A2E15CB77ADE8D0CCCAD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				73B963A9A2BB9CE2026AB833 /* watchOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D2BC179F123D0A6F293A4B1A /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				56C6692BD95AC258AB03DCDA /* HomeView.swift */,
+				C6B25F310B698710133F2006 /* HomeViewModel.swift */,
+			);
+			name = Home;
+			path = Home;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -929,10 +1139,12 @@
 				A5E333812AEBE48F0089DD81 /* Sources */,
 				A5E333822AEBE48F0089DD81 /* Frameworks */,
 				A5E333832AEBE48F0089DD81 /* Resources */,
+				2CDD02470399EFEB35D9FBDA /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E9F5B560CB006A48785DB748 /* PBXTargetDependency */,
 			);
 			name = AutoCare;
 			packageProductDependencies = (
@@ -947,6 +1159,23 @@
 			productReference = A5E333852AEBE48F0089DD81 /* AutoCare.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F3646A594E8C8B60E2B2AE51 /* AutoCare Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EB18D7C809C6540B4335B76 /* Build configuration list for PBXNativeTarget "AutoCare Watch App" */;
+			buildPhases = (
+				BF238122528B31A3E6FC1077 /* Sources */,
+				42B1F6E344D0C981395D13E7 /* Frameworks */,
+				C452ABE5CCE64ABF8A3B8D59 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AutoCare Watch App";
+			productName = "AutoCare Watch App";
+			productReference = DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -959,6 +1188,9 @@
 				TargetAttributes = {
 					A5E333842AEBE48F0089DD81 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					F3646A594E8C8B60E2B2AE51 = {
+						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
@@ -983,6 +1215,7 @@
 			projectRoot = "";
 			targets = (
 				A5E333842AEBE48F0089DD81 /* AutoCare */,
+				F3646A594E8C8B60E2B2AE51 /* AutoCare Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -997,6 +1230,14 @@
 				A57FCA7B2FC393A400DFF96C /* AutoCare.icon in Resources */,
 				A5FONT022FC400010038BEE1 /* PlusJakartaSans.ttf in Resources */,
 				A5FONT042FC400010038BEE1 /* Inter.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C452ABE5CCE64ABF8A3B8D59 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F572AA89B1E82EC18CB2E3A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1092,12 +1333,77 @@
 				A53F41582D5E05FC00FE70B7 /* ServiceListView.swift in Sources */,
 				A5804B302BEBB6D600BE9602 /* CurrencyTextField.swift in Sources */,
 				A55953AB2D96D578004DAD6A /* VehicleTypeDataSourceProtocol.swift in Sources */,
+				45ABFCD5BDB7F08442C87250 /* WatchConnectivityMessages.swift in Sources */,
+				49BEC0FA59B3F1EC47839C7E /* WatchConnectivityManager.swift in Sources */,
+				4C893D124026513C5F924743 /* WatchPhoneCoordinator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF238122528B31A3E6FC1077 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				191189DA1EB32A8708271D6C /* WatchConnectivityMessages.swift in Sources */,
+				026C0B3739C3EDF490658BB1 /* AutoCareWatchApp.swift in Sources */,
+				172B61DB5DD533A16BC940F4 /* WatchConnectivityManager.swift in Sources */,
+				8E0CC98775401B953959832F /* WatchMileageService.swift in Sources */,
+				2C3A91722B8BB295F49AE7E9 /* HomeView.swift in Sources */,
+				DA467CA67437976F0C7AFF32 /* HomeViewModel.swift in Sources */,
+				7CF2374196132CE4E4A35E17 /* NotLoggedView.swift in Sources */,
+				F0387BCD6465427B63998CC0 /* VehicleListView.swift in Sources */,
+				1388D83EE218658F7C574B09 /* MileageFormView.swift in Sources */,
+				A4F1A0D96A40FDF181D73236 /* MileageFormViewModel.swift in Sources */,
+				FBE92C0A98578732A07A82DD /* WatchVehicleSelectionStore.swift in Sources */,
+				7A420EFD44E172CB7AC26020 /* WatchNumberPickers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		E9F5B560CB006A48785DB748 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "AutoCare Watch App";
+			target = F3646A594E8C8B60E2B2AE51 /* AutoCare Watch App */;
+			targetProxy = 1A564195DE330CB93F7B7A73 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		907EAC37784EDFAEC8D516C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "AutoCare Watch App/AutoCare Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56JG4Q8S7U;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = AutoCare;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.alliston.AutoCareApp;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 		A5E333922AEBE4900089DD81 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A5E3339D2AEBEA300089DD81 /* Config.xcconfig */;
@@ -1302,9 +1608,51 @@
 			};
 			name = Release;
 		};
+		EB0D442375BB624E02E48699 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "AutoCare Watch App/AutoCare Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56JG4Q8S7U;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = AutoCare;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.alliston.AutoCareApp;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4EB18D7C809C6540B4335B76 /* Build configuration list for PBXNativeTarget "AutoCare Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				907EAC37784EDFAEC8D516C4 /* Release */,
+				EB0D442375BB624E02E48699 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A5E333802AEBE48F0089DD81 /* Build configuration list for PBXProject "AutoCare" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -32,6 +32,10 @@ final class SyncService {
             await self.pullRemoteChanges()
 
             SyncState.lastSyncRunAt = .now
+
+            #if canImport(WatchConnectivity) && os(iOS)
+            await WatchPhoneCoordinator.shared.pushVehiclesToWatch()
+            #endif
         }
 
         ongoingSync = task

@@ -28,6 +28,12 @@ struct AutoCareApp: App {
     @ObservedObject private var viewModel = ViewModel()
     @ObservedObject private var authSession = Container.shared.authSessionStore()
 
+    init() {
+        #if canImport(WatchConnectivity) && os(iOS)
+        WatchConnectivityManager.shared.activateSession()
+        #endif
+    }
+
     var body: some Scene {
         WindowGroup {
             Group {
@@ -43,6 +49,9 @@ struct AutoCareApp: App {
             .task {
                 guard authSession.isAuthenticated else { return }
                 await viewModel.scheduleAppSync()
+                #if canImport(WatchConnectivity) && os(iOS)
+                await WatchPhoneCoordinator.shared.pushVehiclesToWatch()
+                #endif
             }
         }
         .modelContainer(SwiftDataManager.shared.container)

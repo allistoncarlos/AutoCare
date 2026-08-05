@@ -36,6 +36,10 @@ class LoginViewModel: ObservableObject {
 
             authSession.markAuthenticated()
             state = .success(result)
+
+            #if canImport(WatchConnectivity) && os(iOS)
+            await WatchPhoneCoordinator.shared.pushVehiclesToWatch()
+            #endif
         } else {
             state = .error(.invalidUsernameOrPassword)
         }

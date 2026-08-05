@@ -25,6 +25,12 @@ final class AuthSessionStore: ObservableObject {
         SyncState.reset()
         isAuthenticated = false
 
+        #if canImport(WatchConnectivity) && os(iOS)
+        Task { @MainActor in
+            await WatchPhoneCoordinator.shared.pushVehiclesToWatch()
+        }
+        #endif
+
         guard clearLocalData else { return }
 
         Task { @MainActor in
