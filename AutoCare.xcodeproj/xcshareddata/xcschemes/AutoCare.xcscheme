@@ -15,20 +15,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3646A594E8C8B60E2B2AE51"
-               BuildableName = "AutoCare Watch App.app"
-               BlueprintName = "AutoCare Watch App"
-               ReferencedContainer = "container:AutoCare.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "A5E333842AEBE48F0089DD81"
                BuildableName = "AutoCare.app"
                BlueprintName = "AutoCare"

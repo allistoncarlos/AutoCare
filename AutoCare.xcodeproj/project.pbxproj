@@ -149,17 +149,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AutoCareWatchApp.swift; path = AutoCareWatchApp.swift; sourceTree = "<group>"; };
-		32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchMileageService.swift; path = WatchMileageService.swift; sourceTree = "<group>"; };
-		3570DB425BFB41D67E2C87AF /* MileageFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MileageFormView.swift; path = MileageFormView.swift; sourceTree = "<group>"; };
-		4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotLoggedView.swift; path = NotLoggedView.swift; sourceTree = "<group>"; };
-		56C6692BD95AC258AB03DCDA /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeView.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutoCareWatchApp.swift; sourceTree = "<group>"; };
+		32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchMileageService.swift; sourceTree = "<group>"; };
+		3570DB425BFB41D67E2C87AF /* MileageFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MileageFormView.swift; sourceTree = "<group>"; };
+		4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotLoggedView.swift; sourceTree = "<group>"; };
+		56C6692BD95AC258AB03DCDA /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchVehicleSelectionStore.swift; sourceTree = "<group>"; };
-		605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MileageFormViewModel.swift; path = MileageFormViewModel.swift; sourceTree = "<group>"; };
-		6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchConnectivityManager.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
-		701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VehicleListView.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
+		605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MileageFormViewModel.swift; sourceTree = "<group>"; };
+		6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
+		701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
 		733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchNumberPickers.swift; sourceTree = "<group>"; };
-		7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets.xcassets; sourceTree = "<group>"; };
+		7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A234FBEA4C8DA20B9E42B959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS11.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
 		A5088FD42D95E55300D3712A /* VehicleTypeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTypeResponse.swift; sourceTree = "<group>"; };
@@ -255,12 +255,12 @@
 		A5FONT032FC400010038BEE1 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
 		A5MILRT1FC400010038BEE1 /* MileageRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageRoute.swift; sourceTree = "<group>"; };
 		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
-		BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchPhoneCoordinator.swift; path = WatchPhoneCoordinator.swift; sourceTree = "<group>"; };
-		C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchConnectivityMessages.swift; path = WatchConnectivityMessages.swift; sourceTree = "<group>"; };
-		C6B25F310B698710133F2006 /* HomeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeViewModel.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchPhoneCoordinator.swift; sourceTree = "<group>"; };
+		C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityMessages.swift; sourceTree = "<group>"; };
+		C6B25F310B698710133F2006 /* HomeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AutoCare Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WatchConnectivityManager.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
-		F15545E0204DCAA5BF050985 /* AutoCare Watch App.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = "AutoCare Watch App.entitlements"; path = "AutoCare Watch App.entitlements"; sourceTree = "<group>"; };
+		E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
+		F15545E0204DCAA5BF050985 /* AutoCare Watch App.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "AutoCare Watch App.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -294,7 +294,6 @@
 				827D1513BC1A0F61BFE8EA9A /* Features */,
 				4AE5DB678F1F4C0109B9995A /* Components */,
 			);
-			name = Presentation;
 			path = Presentation;
 			sourceTree = "<group>";
 		};
@@ -303,7 +302,6 @@
 			children = (
 				C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */,
 			);
-			name = WatchConnectivity;
 			path = WatchConnectivity;
 			sourceTree = "<group>";
 		};
@@ -312,7 +310,6 @@
 			children = (
 				097A78E97A1328CA9080F037 /* WatchConnectivity */,
 			);
-			name = Shared;
 			path = Shared;
 			sourceTree = "<group>";
 		};
@@ -321,7 +318,6 @@
 			children = (
 				701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */,
 			);
-			name = Vehicles;
 			path = Vehicles;
 			sourceTree = "<group>";
 		};
@@ -330,7 +326,6 @@
 			children = (
 				4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */,
 			);
-			name = NotLogged;
 			path = NotLogged;
 			sourceTree = "<group>";
 		};
@@ -339,7 +334,6 @@
 			children = (
 				733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */,
 			);
-			name = Components;
 			path = Components;
 			sourceTree = "<group>";
 		};
@@ -350,7 +344,6 @@
 				32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */,
 				58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */,
 			);
-			name = DataProviders;
 			path = DataProviders;
 			sourceTree = "<group>";
 		};
@@ -360,7 +353,6 @@
 				6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */,
 				BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */,
 			);
-			name = WatchConnectivity;
 			path = WatchConnectivity;
 			sourceTree = "<group>";
 		};
@@ -381,7 +373,6 @@
 				7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */,
 				F15545E0204DCAA5BF050985 /* AutoCare Watch App.entitlements */,
 			);
-			name = "AutoCare Watch App";
 			path = "AutoCare Watch App";
 			sourceTree = "<group>";
 		};
@@ -393,7 +384,6 @@
 				2A29C699D9B3B5E2AA62DEF4 /* Vehicles */,
 				9EF3B4C06D4E9B593E5B9E2D /* Mileage */,
 			);
-			name = Features;
 			path = Features;
 			sourceTree = "<group>";
 		};
@@ -403,7 +393,6 @@
 				3570DB425BFB41D67E2C87AF /* MileageFormView.swift */,
 				605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */,
 			);
-			name = Mileage;
 			path = Mileage;
 			sourceTree = "<group>";
 		};
@@ -1126,7 +1115,6 @@
 				56C6692BD95AC258AB03DCDA /* HomeView.swift */,
 				C6B25F310B698710133F2006 /* HomeViewModel.swift */,
 			);
-			name = Home;
 			path = Home;
 			sourceTree = "<group>";
 		};
@@ -1391,7 +1379,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1559,7 +1547,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1599,7 +1587,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1629,7 +1617,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
