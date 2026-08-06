@@ -119,6 +119,7 @@
 		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
 		DA467CA67437976F0C7AFF32 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B25F310B698710133F2006 /* HomeViewModel.swift */; };
 		E6F431D5E11E08D0BA55EC5F /* AutoCare Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EAF0AB76D2C5CB352CEA7336 /* AutoCare.icon in Resources */ = {isa = PBXBuildFile; fileRef = A57FCA7A2FC393A400DFF96C /* AutoCare.icon */; };
 		F0387BCD6465427B63998CC0 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */; };
 		FBE92C0A98578732A07A82DD /* WatchVehicleSelectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */; };
 /* End PBXBuildFile section */
@@ -1238,6 +1239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F572AA89B1E82EC18CB2E3A /* Assets.xcassets in Resources */,
+				EAF0AB76D2C5CB352CEA7336 /* AutoCare.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1373,7 +1375,7 @@
 		907EAC37784EDFAEC8D516C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AutoCare;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "AutoCare Watch App/AutoCare Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
@@ -1611,7 +1613,7 @@
 		EB0D442375BB624E02E48699 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AutoCare;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "AutoCare Watch App/AutoCare Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
