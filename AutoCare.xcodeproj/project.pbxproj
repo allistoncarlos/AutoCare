@@ -39,10 +39,6 @@
 		A53F41662D5E107A00FE70B7 /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41652D5E107A00FE70B7 /* HomeState.swift */; };
 		A53F41692D5E63CF00FE70B7 /* ServiceListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */; };
 		A53F416B2D5E651C00FE70B7 /* ServiceListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */; };
-		A5SVED02FC400010038BEE1 /* ServiceEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED01FC400010038BEE1 /* ServiceEditView.swift */; };
-		A5SVED04FC400010038BEE1 /* ServiceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */; };
-		A5SVED06FC400010038BEE1 /* ServiceEditState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED05FC400010038BEE1 /* ServiceEditState.swift */; };
-		A5SVRT02FC400010038BEE1 /* ServiceRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */; };
 		A54EB8DD2D943234001AE2A7 /* VehicleRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54EB8DC2D943234001AE2A7 /* VehicleRepository.swift */; };
 		A54EB8DF2D948432001AE2A7 /* VehicleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54EB8DE2D948432001AE2A7 /* VehicleType.swift */; };
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
@@ -120,6 +116,10 @@
 		A5FONT022FC400010038BEE1 /* PlusJakartaSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT012FC400010038BEE1 /* PlusJakartaSans.ttf */; };
 		A5FONT042FC400010038BEE1 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT032FC400010038BEE1 /* Inter.ttf */; };
 		A5MILRT2FC400010038BEE1 /* MileageRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5MILRT1FC400010038BEE1 /* MileageRoute.swift */; };
+		A5SVED02FC400010038BEE1 /* ServiceEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED01FC400010038BEE1 /* ServiceEditView.swift */; };
+		A5SVED04FC400010038BEE1 /* ServiceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */; };
+		A5SVED06FC400010038BEE1 /* ServiceEditState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED05FC400010038BEE1 /* ServiceEditState.swift */; };
+		A5SVRT02FC400010038BEE1 /* ServiceRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */; };
 		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
 		DA467CA67437976F0C7AFF32 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B25F310B698710133F2006 /* HomeViewModel.swift */; };
 		E6F431D5E11E08D0BA55EC5F /* AutoCare Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -181,10 +181,6 @@
 		A53F41652D5E107A00FE70B7 /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
 		A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceListState.swift; sourceTree = "<group>"; };
 		A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceListItem.swift; sourceTree = "<group>"; };
-		A5SVED01FC400010038BEE1 /* ServiceEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditView.swift; sourceTree = "<group>"; };
-		A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditViewModel.swift; sourceTree = "<group>"; };
-		A5SVED05FC400010038BEE1 /* ServiceEditState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditState.swift; sourceTree = "<group>"; };
-		A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRoute.swift; sourceTree = "<group>"; };
 		A54EB8DC2D943234001AE2A7 /* VehicleRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleRepository.swift; sourceTree = "<group>"; };
 		A54EB8DE2D948432001AE2A7 /* VehicleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleType.swift; sourceTree = "<group>"; };
 		A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
@@ -262,6 +258,10 @@
 		A5FONT012FC400010038BEE1 /* PlusJakartaSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PlusJakartaSans.ttf; sourceTree = "<group>"; };
 		A5FONT032FC400010038BEE1 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
 		A5MILRT1FC400010038BEE1 /* MileageRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageRoute.swift; sourceTree = "<group>"; };
+		A5SVED01FC400010038BEE1 /* ServiceEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditView.swift; sourceTree = "<group>"; };
+		A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditViewModel.swift; sourceTree = "<group>"; };
+		A5SVED05FC400010038BEE1 /* ServiceEditState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditState.swift; sourceTree = "<group>"; };
+		A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRoute.swift; sourceTree = "<group>"; };
 		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
 		BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchPhoneCoordinator.swift; sourceTree = "<group>"; };
 		C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityMessages.swift; sourceTree = "<group>"; };
@@ -1395,7 +1395,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1563,7 +1563,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1603,7 +1603,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1633,7 +1633,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alliston.AutoCareApp.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
