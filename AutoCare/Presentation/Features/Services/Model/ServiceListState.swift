@@ -22,7 +22,7 @@ enum ServiceListState: Equatable {
              (.newVehicle, .newVehicle):
             return true
         case (.successVehicleServices(let lhsServices), .successVehicleServices(let rhsServices)):
-            return lhsServices.map { $0.id } == rhsServices.map { $0.id }
+            return lhsServices.map { $0.clientId } == rhsServices.map { $0.clientId }
         default:
             return false
         }

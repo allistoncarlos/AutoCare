@@ -58,7 +58,11 @@ final class SyncService {
                 }
 
                 if let service = model as? VehicleService {
-                    await vehicleServiceRepository.save(vehicleService: service)
+                    if service.deleted {
+                        await vehicleServiceRepository.delete(vehicleService: service)
+                    } else {
+                        await vehicleServiceRepository.save(vehicleService: service)
+                    }
                 }
             }
         } catch {

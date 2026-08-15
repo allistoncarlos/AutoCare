@@ -12,13 +12,16 @@ protocol VehicleServiceRepositoryProtocol {
     func fetchData(vehicleId: String) async -> [VehicleService]?
     func fetchData(vehicleId: String, id: String) async -> VehicleService?
     @discardableResult func save(vehicleService: VehicleService) async -> VehicleService?
+    @discardableResult func delete(vehicleService: VehicleService) async -> Bool
 }
 
 struct VehicleServiceRepository: VehicleServiceRepositoryProtocol {
     func fetchData(vehicleId: String) async -> [VehicleService]? {
         do {
             return try await SwiftDataManager.shared.fetch(
-                where: #Predicate<VehicleService> { $0.vehicle_id == vehicleId },
+                where: #Predicate<VehicleService> { service in
+                    service.vehicle_id == vehicleId && !service.deleted
+                },
                 sortBy: [SortDescriptor(\VehicleService.date, order: .reverse)]
             )
         } catch {
@@ -59,6 +62,39 @@ struct VehicleServiceRepository: VehicleServiceRepositoryProtocol {
         } catch {
             print(error.localizedDescription)
             return nil
+        }
+    }
+
+    func delete(vehicleService: VehicleService) async -> Bool {
+        do {
+            let hasRemoteId = !(vehicleService.id ?? "").isEmpty
+            let clientId = vehicleService.clientId
+
+            vehicleService.deleted = true
+            vehicleService.deletedAt = .now
+            vehicleService.synced = !hasRemoteId
+
+            _ = try await SwiftDataManager.shared.save(
+                id: vehicleService.id ?? clientId,
+                item: vehicleService
+            )
+
+            guard hasRemoteId else { return true }
+
+            BackgroundWorker.shared.run {
+                if let deletedService = try await dataSource.delete(clientId: clientId) {
+                    let persistentEntity = VehicleService(from: deletedService)
+                    try await SwiftDataManager.shared.updateFromBackend(
+                        clientId: persistentEntity.clientId,
+                        item: persistentEntity
+                    )
+                }
+            }
+
+            return true
+        } catch {
+            print(error.localizedDescription)
+            return false
         }
     }
 

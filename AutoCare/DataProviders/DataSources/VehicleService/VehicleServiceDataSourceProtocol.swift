@@ -11,6 +11,7 @@ protocol VehicleServiceDataSourceProtocol {
     func fetchData(vehicleId: String) async -> [VehicleServiceResponse]?
     func fetchData(vehicleId: String, id: String) async -> VehicleServiceResponse?
     func save(vehicleService: VehicleService) async throws -> VehicleServiceResponse?
+    func delete(clientId: String) async throws -> VehicleServiceResponse?
 }
 
 class VehicleServiceDataSource: VehicleServiceDataSourceProtocol {
@@ -33,6 +34,13 @@ class VehicleServiceDataSource: VehicleServiceDataSourceProtocol {
         return await NetworkManager.shared.performRequest(
             responseType: VehicleServiceResponse.self,
             endpoint: .saveVehicleService(data: request, serverId: vehicleService.id)
+        )
+    }
+
+    func delete(clientId: String) async throws -> VehicleServiceResponse? {
+        await NetworkManager.shared.performRequest(
+            responseType: VehicleServiceResponse.self,
+            endpoint: .deleteVehicleService(clientId: clientId)
         )
     }
 }

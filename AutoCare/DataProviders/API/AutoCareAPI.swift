@@ -127,6 +127,7 @@ enum AutoCareAPI {
     case vehicleServices(vehicleId: String)
     case vehicleService(id: String)
     case saveVehicleService(data: VehicleServiceRequest, serverId: String?)
+    case deleteVehicleService(clientId: String)
 
     var baseURL: String {
         Config.apiPath
@@ -169,6 +170,8 @@ enum AutoCareAPI {
                 return "\(APIConstants.vehicleServiceResource)/\(data.clientId)"
             }
             return APIConstants.vehicleServiceResource
+        case let .deleteVehicleService(clientId):
+            return "\(APIConstants.vehicleServiceResource)/\(clientId)"
         }
     }
 
@@ -191,6 +194,8 @@ enum AutoCareAPI {
             return serverId == nil ? .post : .put
         case let .saveVehicleService(_, serverId):
             return serverId == nil ? .post : .put
+        case .deleteVehicleService:
+            return .delete
         }
     }
 
@@ -244,7 +249,7 @@ enum AutoCareAPI {
             var updated = request
             updated.url = url
             return updated
-        case .vehicleType, .vehicles, .vehicle, .vehicleMileage, .vehicleService:
+        case .vehicleType, .vehicles, .vehicle, .vehicleMileage, .vehicleService, .deleteVehicleService:
             return request
         }
     }

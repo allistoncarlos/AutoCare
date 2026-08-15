@@ -13,54 +13,65 @@ struct ServiceListItem: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        BrandCard {
-            HStack(alignment: .top, spacing: BrandTheme.Spacing.md) {
-                Image(systemName: "car.badge.gearshape.fill")
-                    .font(.system(size: 18, weight: .medium))
+        HStack(alignment: .top, spacing: 12) {
+            leadingColumn
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+
+            trailingColumn
+                .fixedSize(horizontal: true, vertical: false)
+        }
+    }
+
+    private var leadingColumn: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 6) {
+                Image(systemName: vehicleService.type.systemImage)
+                    .font(.subheadline)
                     .foregroundStyle(BrandTheme.Colors.violetSoft)
-                    .frame(width: 28)
-                    .padding(.top, 2)
 
-                VStack(alignment: .leading, spacing: BrandTheme.Spacing.xs) {
-                    Text(vehicleService.type.description)
-                        .font(BrandTheme.Typography.body(15, weight: .semibold))
-                        .foregroundStyle(BrandTheme.Colors.textPrimary(colorScheme))
-
-                    Text("\(vehicleService.subtype.description) · \(vehicleService.date.toFormattedString(dateFormat: AutoCareApp.dateFormat))")
-                        .font(BrandTheme.Typography.caption(13))
-                        .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
-                }
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .topLeading)
-
-                if let totalCost = vehicleService.totalCost.toCurrencyString() {
-                    Text(totalCost)
-                        .font(BrandTheme.Typography.heading(16))
-                        .foregroundStyle(BrandTheme.Colors.textPrimary(colorScheme))
-                }
-
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
-                    .padding(.top, 4)
+                Text(vehicleService.type.description)
+                    .font(.body)
+                    .foregroundStyle(BrandTheme.Colors.textPrimary(colorScheme))
             }
+
+            Text("\(vehicleService.subtype.description) · \(vehicleService.date.toFormattedString(dateFormat: AutoCareApp.dateFormat))")
+                .font(.subheadline)
+                .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
+        }
+    }
+
+    private var trailingColumn: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            if let totalCost = vehicleService.totalCost.toCurrencyString() {
+                Text(totalCost)
+                    .font(.body)
+                    .foregroundStyle(BrandTheme.Colors.textPrimary(colorScheme))
+            }
+
+            Text("\(vehicleService.odometer) km")
+                .font(.subheadline)
+                .foregroundStyle(BrandTheme.Colors.textMuted(colorScheme))
         }
     }
 }
 
 #Preview {
-    ServiceListItem(
-        vehicleService: VehicleService(
-            id: "1",
-            date: Date(),
-            odometer: 1234,
-            type: .wheelsAndTyres,
-            subtype: .calibrate,
-            totalCost: 0,
-            comment: "Comentário",
-            vehicle_id: "65f7489acdac2f573161d7f7"
+    List {
+        ServiceListItem(
+            vehicleService: VehicleService(
+                id: "1",
+                date: Date(),
+                odometer: 1234,
+                type: .wheelsAndTyres,
+                subtype: .calibrate,
+                totalCost: 50,
+                comment: "Comentário",
+                vehicle_id: "65f7489acdac2f573161d7f7"
+            )
         )
-    )
-    .padding()
-    .brandBackground()
+        .brandFormListRow()
+    }
+    .listStyle(.insetGrouped)
+    .brandScreen()
     .preferredColorScheme(.dark)
 }

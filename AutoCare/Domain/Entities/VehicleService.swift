@@ -8,28 +8,63 @@
 import Foundation
 import SwiftData
 
-enum VehicleServiceType: String, Codable, CustomStringConvertible {
+enum VehicleServiceType: String, Codable, CaseIterable, Identifiable, CustomStringConvertible {
     case wheelsAndTyres
     case wash
+    case repair
+
+    var id: String { rawValue }
 
     var description: String {
         switch self {
         case .wheelsAndTyres: return "Rodas e Pneus"
         case .wash: return "Lavagem"
+        case .repair: return "Reparo"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .wheelsAndTyres: return "circle.circle"
+        case .wash: return "drop.fill"
+        case .repair: return "wrench.and.screwdriver.fill"
+        }
+    }
+
+    var subtypes: [VehicleServiceSubtype] {
+        switch self {
+        case .wheelsAndTyres:
+            return [.calibrate, .flatTyre, .newTyres]
+        case .wash:
+            return [.simpleWash, .completeWash]
+        case .repair:
+            return [.lamps, .wrecks, .windows]
         }
     }
 }
 
-enum VehicleServiceSubtype: String, Codable, CustomStringConvertible {
+enum VehicleServiceSubtype: String, Codable, CaseIterable, Identifiable, CustomStringConvertible {
     case calibrate
     case flatTyre
     case newTyres
+    case simpleWash
+    case completeWash
+    case lamps
+    case wrecks
+    case windows
+
+    var id: String { rawValue }
 
     var description: String {
         switch self {
         case .calibrate: return "Calibragem"
         case .flatTyre: return "Pneu Furado"
         case .newTyres: return "Novos Pneus"
+        case .simpleWash: return "Simples"
+        case .completeWash: return "Completa"
+        case .lamps: return "Lâmpadas"
+        case .wrecks: return "Amassados"
+        case .windows: return "Vidros"
         }
     }
 }

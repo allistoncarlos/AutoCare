@@ -7,14 +7,33 @@
 
 import SwiftUI
 
+@MainActor
 enum ServicesRouter {
     static func makeEditServiceView(
         navigationPath: Binding<NavigationPath>,
         vehicleId: String,
-        vehicleService: VehicleService?
+        serviceClientId: String?
     ) -> some View {
-        Text("Editar Serviço - Em desenvolvimento")
-            .navigationTitle("Editar Serviço")
+        let viewModel = ServiceEditView.ViewModel(
+            serviceClientId: serviceClientId,
+            vehicleId: vehicleId
+        )
+
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.maximumFractionDigits = 2
+
+        let integerFormatter = NumberFormatter()
+        integerFormatter.numberStyle = .none
+        integerFormatter.maximumFractionDigits = 0
+
+        return ServiceEditView(
+            viewModel: viewModel,
+            navigationPath: navigationPath,
+            currencyFormatter: currencyFormatter,
+            integerFormatter: integerFormatter
+        )
+        .id(serviceClientId ?? "new")
     }
 
     static func goBackToServices(navigationPath: Binding<NavigationPath>) {

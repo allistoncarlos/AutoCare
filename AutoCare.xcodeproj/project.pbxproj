@@ -39,6 +39,10 @@
 		A53F41662D5E107A00FE70B7 /* HomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41652D5E107A00FE70B7 /* HomeState.swift */; };
 		A53F41692D5E63CF00FE70B7 /* ServiceListState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */; };
 		A53F416B2D5E651C00FE70B7 /* ServiceListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */; };
+		A5SVED02FC400010038BEE1 /* ServiceEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED01FC400010038BEE1 /* ServiceEditView.swift */; };
+		A5SVED04FC400010038BEE1 /* ServiceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */; };
+		A5SVED06FC400010038BEE1 /* ServiceEditState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED05FC400010038BEE1 /* ServiceEditState.swift */; };
+		A5SVRT02FC400010038BEE1 /* ServiceRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */; };
 		A54EB8DD2D943234001AE2A7 /* VehicleRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54EB8DC2D943234001AE2A7 /* VehicleRepository.swift */; };
 		A54EB8DF2D948432001AE2A7 /* VehicleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54EB8DE2D948432001AE2A7 /* VehicleType.swift */; };
 		A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */; };
@@ -177,6 +181,10 @@
 		A53F41652D5E107A00FE70B7 /* HomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeState.swift; sourceTree = "<group>"; };
 		A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceListState.swift; sourceTree = "<group>"; };
 		A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceListItem.swift; sourceTree = "<group>"; };
+		A5SVED01FC400010038BEE1 /* ServiceEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditView.swift; sourceTree = "<group>"; };
+		A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditViewModel.swift; sourceTree = "<group>"; };
+		A5SVED05FC400010038BEE1 /* ServiceEditState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditState.swift; sourceTree = "<group>"; };
+		A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRoute.swift; sourceTree = "<group>"; };
 		A54EB8DC2D943234001AE2A7 /* VehicleRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleRepository.swift; sourceTree = "<group>"; };
 		A54EB8DE2D948432001AE2A7 /* VehicleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleType.swift; sourceTree = "<group>"; };
 		A54F9BEB2B8CC8EB00B002A5 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
@@ -445,6 +453,7 @@
 			children = (
 				A53F41572D5E05FC00FE70B7 /* ServiceListView.swift */,
 				A53F416A2D5E651C00FE70B7 /* ServiceListItem.swift */,
+				A5SVED01FC400010038BEE1 /* ServiceEditView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -453,6 +462,7 @@
 			isa = PBXGroup;
 			children = (
 				A53F415A2D5E065800FE70B7 /* ServiceListViewModel.swift */,
+				A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -477,6 +487,8 @@
 			isa = PBXGroup;
 			children = (
 				A53F41682D5E63CF00FE70B7 /* ServiceListState.swift */,
+				A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */,
+				A5SVED05FC400010038BEE1 /* ServiceEditState.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1318,6 +1330,10 @@
 				A562EEAA2D93393C00D68116 /* AutoCareApp+DataSourceInjection.swift in Sources */,
 				A5DF4BDC2AEEE5DB007D41B2 /* MileageListState.swift in Sources */,
 				A53F416B2D5E651C00FE70B7 /* ServiceListItem.swift in Sources */,
+				A5SVED02FC400010038BEE1 /* ServiceEditView.swift in Sources */,
+				A5SVED04FC400010038BEE1 /* ServiceEditViewModel.swift in Sources */,
+				A5SVED06FC400010038BEE1 /* ServiceEditState.swift in Sources */,
+				A5SVRT02FC400010038BEE1 /* ServiceRoute.swift in Sources */,
 				A5C3A94D2BA71D7500A0CC21 /* VehicleListViewModel.swift in Sources */,
 				A5E8F3022D98A68E003D8F30 /* VehicleMileageRequest.swift in Sources */,
 				A53F41582D5E05FC00FE70B7 /* ServiceListView.swift in Sources */,

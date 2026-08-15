@@ -13,7 +13,7 @@ import SwiftUI
 
 extension ServiceListView {
     @MainActor
-    class ViewModel: ObservableObject {
+    final class ViewModel: ObservableObject {
         @Published private(set) var state: ServiceListState = .idle
         @Published private(set) var vehicleServices: [VehicleService] = []
 
@@ -28,12 +28,12 @@ extension ServiceListView {
         func editServiceView(
             navigationPath: Binding<NavigationPath>,
             vehicleId: String,
-            vehicleService: VehicleService? = nil
+            serviceClientId: String? = nil
         ) -> some View {
             ServicesRouter.makeEditServiceView(
                 navigationPath: navigationPath,
                 vehicleId: vehicleId,
-                vehicleService: vehicleService
+                serviceClientId: serviceClientId
             )
         }
 
@@ -42,11 +42,13 @@ extension ServiceListView {
             await fetchLocalData()
         }
 
+        func deleteService(_ vehicleService: VehicleService) async {
+            await repository.delete(vehicleService: vehicleService)
+            await fetchLocalData()
+        }
+
         private func fetchLocalData() async {
-            guard let vehicleId = selectedVehicle.id else {
-                state = .error
-                return
-            }
+            let vehicleId = selectedVehicle.referenceId
 
             vehicleServices = await repository.fetchData(vehicleId: vehicleId) ?? []
             state = .successVehicleServices(vehicleServices)

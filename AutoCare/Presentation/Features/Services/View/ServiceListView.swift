@@ -28,49 +28,59 @@ struct ServiceListView: View {
                     onTitleTap: onVehiclePickerTap
                 ) {
                     Button(action: {}) {
-                        NavigationLink(value: String()) {
+                        NavigationLink(value: ServiceRoute.new) {
                             BrandToolbarIconButton(systemName: "plus")
                         }
                     }
                     .disabled(viewModel.state == .loading)
                 }
 
-                ScrollView {
-                    LazyVStack(spacing: BrandTheme.Spacing.sm) {
-                        if viewModel.vehicleServices.isEmpty {
-                            if viewModel.state != .loading {
+                List {
+                    if viewModel.vehicleServices.isEmpty {
+                        if viewModel.state != .loading {
+                            Section {
                                 BrandEmptyState(
                                     icon: "wrench.and.screwdriver.fill",
                                     title: "Nenhum serviço",
                                     message: "Toque em + para registrar uma manutenção."
                                 )
-                                .padding(.top, BrandTheme.Spacing.xl)
+                                .frame(maxWidth: .infinity)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
                             }
-                        } else {
-                            ForEach(viewModel.vehicleServices, id: \.id) { vehicleService in
-                                NavigationLink(value: vehicleService) {
+                        }
+                    } else {
+                        Section {
+                            ForEach(viewModel.vehicleServices, id: \.clientId) { vehicleService in
+                                NavigationLink(value: ServiceRoute.edit(clientId: vehicleService.clientId)) {
                                     ServiceListItem(vehicleService: vehicleService)
                                 }
-                                .buttonStyle(.plain)
-                                .padding(.horizontal, BrandTheme.Spacing.lg)
+                                .brandFormListRow()
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        Task { await viewModel.deleteService(vehicleService) }
+                                    } label: {
+                                        Label("Excluir", systemImage: "trash")
+                                    }
+                                }
                             }
                         }
                     }
-                    .padding(.bottom, BrandTheme.Spacing.lg)
                 }
+                .listStyle(.insetGrouped)
+                .listSectionMargins(.horizontal, 20)
+                .brandScreen()
             }
-            .brandScreen()
+            .brandBackground()
             .toolbar(.hidden, for: .navigationBar)
-            .navigationDestination(for: String.self) { _ in
-                if let id = viewModel.selectedVehicle.id {
-                    navigateToEditServiceView(vehicleId: id)
-                }
-            }
-            .navigationDestination(for: VehicleService.self) { vehicleService in
-                if let id = viewModel.selectedVehicle.id {
+            .navigationDestination(for: ServiceRoute.self) { route in
+                switch route {
+                case .new:
+                    navigateToEditServiceView(vehicleId: viewModel.selectedVehicle.referenceId)
+                case let .edit(clientId):
                     navigateToEditServiceView(
-                        vehicleId: id,
-                        vehicleService: vehicleService
+                        vehicleId: viewModel.selectedVehicle.referenceId,
+                        serviceClientId: clientId
                     )
                 }
             }
@@ -95,12 +105,12 @@ struct ServiceListView: View {
 
     func navigateToEditServiceView(
         vehicleId: String,
-        vehicleService: VehicleService? = nil
+        serviceClientId: String? = nil
     ) -> some View {
         viewModel.editServiceView(
             navigationPath: $presentedServices,
             vehicleId: vehicleId,
-            vehicleService: vehicleService
+            serviceClientId: serviceClientId
         )
     }
 }
