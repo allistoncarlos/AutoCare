@@ -78,19 +78,6 @@ extension HomeView {
             isVehiclePickerPresented = false
         }
 
-        @discardableResult
-        func requestAuthorizationForNotifications() async -> Bool {
-            let notificationCenter = UNUserNotificationCenter.current()
-            let authorizationOptions: UNAuthorizationOptions = [.alert, .sound]
-
-            do {
-                return try await notificationCenter.requestAuthorization(options: authorizationOptions)
-            } catch {
-                print(error)
-                return false
-            }
-        }
-
         private func reloadLocalData() async {
             do {
                 let vehicles: [Vehicle] = try await swiftDataManager.fetch(sortBy: [SortDescriptor(\.name)])
