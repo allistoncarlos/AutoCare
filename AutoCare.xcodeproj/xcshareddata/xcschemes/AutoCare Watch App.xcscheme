@@ -60,7 +60,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F3646A594E8C8B60E2B2AE51"
             BuildableName = "AutoCare Watch App.app"
-            BlueprintName = "AutoCare Watch App"
             ReferencedContainer = "container:AutoCare.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -77,7 +76,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F3646A594E8C8B60E2B2AE51"
             BuildableName = "AutoCare Watch App.app"
-            BlueprintName = "AutoCare Watch App"
             ReferencedContainer = "container:AutoCare.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

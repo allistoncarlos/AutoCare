@@ -4,6 +4,10 @@
 <dict>
 	<key>API_PATH</key>
 	<string>$(API_PATH)</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>AutoCare.SyncTask</string>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -17,19 +21,15 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<key>UIAppFonts</key>
 	<array>
-		<string>AutoCare.SyncTask</string>
+		<string>PlusJakartaSans.ttf</string>
+		<string>Inter.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
 		<string>processing</string>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>PlusJakartaSans.ttf</string>
-		<string>Inter.ttf</string>
 	</array>
 </dict>
 </plist>
