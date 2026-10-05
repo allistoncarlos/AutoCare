@@ -22,11 +22,8 @@ actor SwiftDataActor {
     }
 
     func updateFromBackend<T: Syncable & PersistentModel>(clientId: String, item: T) async throws {
-        let descriptor = FetchDescriptor<T>(
-            predicate: #Predicate { $0.clientId == clientId }
-        )
-
-        if let local = try modelContext.fetch(descriptor).first {
+        let locals = try modelContext.fetch(FetchDescriptor<T>())
+        if let local = locals.first(where: { $0.clientId == clientId }) {
             await MainActor.run {
                 item.applyRemoteChanges(to: local)
                 local.synced = true
@@ -47,18 +44,20 @@ actor SwiftDataActor {
     }
 
     func mergeData<T: Syncable>(_ data: [T]) throws where T: PersistentModel {
+        guard !data.isEmpty else { return }
+
+        var localsByClientId = Dictionary(
+            uniqueKeysWithValues: try modelContext.fetch(FetchDescriptor<T>()).map { ($0.clientId, $0) }
+        )
+
         for item in data {
             item.synced = true
 
-            let clientId = item.clientId
-            let descriptor = FetchDescriptor<T>(
-                predicate: #Predicate { $0.clientId == clientId }
-            )
-
-            if let local = try modelContext.fetch(descriptor).first {
+            if let local = localsByClientId[item.clientId] {
                 item.applyRemoteChanges(to: local)
             } else {
                 modelContext.insert(item)
+                localsByClientId[item.clientId] = item
             }
         }
 
@@ -233,26 +232,25 @@ final class SwiftDataManager {
     }
 
     func applyChanges<T: Syncable>(_ incoming: [T]) throws where T: PersistentModel {
+        guard !incoming.isEmpty else { return }
+
+        var localsByClientId = Dictionary(
+            uniqueKeysWithValues: try context.fetch(FetchDescriptor<T>()).map { ($0.clientId, $0) }
+        )
+
         for remote in incoming {
-            let clientId = remote.clientId
-
-            let descriptor = FetchDescriptor<T>(
-                predicate: #Predicate { $0.clientId == clientId }
-            )
-
-            let local = try context.fetch(descriptor).first
-
             if remote.deleted {
-                if let local {
+                if let local = localsByClientId.removeValue(forKey: remote.clientId) {
                     context.delete(local)
                 }
                 continue
             }
 
-            if let local {
+            if let local = localsByClientId[remote.clientId] {
                 remote.applyRemoteChanges(to: local)
             } else {
                 context.insert(remote)
+                localsByClientId[remote.clientId] = remote
             }
         }
 
