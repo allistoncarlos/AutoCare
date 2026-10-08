@@ -10,6 +10,7 @@
 		026C0B3739C3EDF490658BB1 /* AutoCareWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */; };
 		B1F0E1042FC400010038BEE1 /* VehicleSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */; };
 		B1F0E1062FC400010038BEE1 /* WatchFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */; };
+		B1F0E10E2FC400010038BEE1 /* WatchMaquininhaKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E10D2FC400010038BEE1 /* WatchMaquininhaKeypad.swift */; };
 		B1F0E1082FC400010038BEE1 /* FuelAmountKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */; };
 		B1F0E10A2FC400010038BEE1 /* FuelCrownStepsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */; };
 		B1F0E10C2FC400010038BEE1 /* FuelConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */; };
@@ -160,6 +161,7 @@
 		32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchMileageService.swift; sourceTree = "<group>"; };
 		B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VehicleSummaryView.swift; sourceTree = "<group>"; };
 		B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchFormatting.swift; sourceTree = "<group>"; };
+		B1F0E10D2FC400010038BEE1 /* WatchMaquininhaKeypad.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchMaquininhaKeypad.swift; sourceTree = "<group>"; };
 		B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelAmountKeypadView.swift; sourceTree = "<group>"; };
 		B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelCrownStepsView.swift; sourceTree = "<group>"; };
 		B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelConfirmView.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 			isa = PBXGroup;
 			children = (
 				B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */,
+				B1F0E10D2FC400010038BEE1 /* WatchMaquininhaKeypad.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1378,6 +1381,7 @@
 				FBE92C0A98578732A07A82DD /* WatchVehicleSelectionStore.swift in Sources */,
 				B1F0E1042FC400010038BEE1 /* VehicleSummaryView.swift in Sources */,
 				B1F0E1062FC400010038BEE1 /* WatchFormatting.swift in Sources */,
+				B1F0E10E2FC400010038BEE1 /* WatchMaquininhaKeypad.swift in Sources */,
 				B1F0E1082FC400010038BEE1 /* FuelAmountKeypadView.swift in Sources */,
 				B1F0E10A2FC400010038BEE1 /* FuelCrownStepsView.swift in Sources */,
 				B1F0E10C2FC400010038BEE1 /* FuelConfirmView.swift in Sources */,

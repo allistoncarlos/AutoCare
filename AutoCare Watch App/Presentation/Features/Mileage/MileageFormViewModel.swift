@@ -35,9 +35,6 @@ final class MileageFormViewModel: ObservableObject {
     @Published var isComplete: Bool = true
     @Published var uiState: MileageFormUIState = .editing
     @Published var step: FuelLogStep = .amount
-    @Published var priceStepCents: Int = 1
-    @Published var odometerStep: Int = 100
-    @Published var literStepMilli: Int = 100
 
     private let service = WatchMileageService()
 
@@ -113,33 +110,6 @@ final class MileageFormViewModel: ObservableObject {
         guard let lastOdometer = vehicle.lastOdometer else { return nil }
         let delta = odometer - lastOdometer
         return delta > 0 ? delta : nil
-    }
-
-    var priceStepLabel: String {
-        priceStepCents == 1 ? "± R$ 0,01" : "± R$ 0,10"
-    }
-
-    var priceRange: ClosedRange<Int> {
-        let upper = max(2_000, fuelCostCents)
-        return 0...upper
-    }
-
-    var odometerRange: ClosedRange<Int> {
-        let lower = max(vehicle.lastOdometer ?? 0, 0)
-        let upper = max(lower + 5_000, odometer + 500)
-        return lower...upper
-    }
-
-    var litersRange: ClosedRange<Int> {
-        0...200_000
-    }
-
-    func togglePriceStep() {
-        priceStepCents = priceStepCents == 1 ? 10 : 1
-    }
-
-    func toggleLiterStep() {
-        literStepMilli = literStepMilli == 100 ? 1_000 : 100
     }
 
     func recalculateLitersIfNeeded() {
