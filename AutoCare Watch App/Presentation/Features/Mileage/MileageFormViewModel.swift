@@ -4,6 +4,16 @@
 //
 
 import Foundation
+import WatchKit
+
+enum FuelLogStep: Equatable {
+    case amount
+    case price
+    case odometer
+    case confirm
+    case liters
+    case success
+}
 
 enum MileageFormUIState: Equatable {
     case editing
@@ -24,15 +34,15 @@ final class MileageFormViewModel: ObservableObject {
     @Published var odometer: Int = 0
     @Published var isComplete: Bool = true
     @Published var uiState: MileageFormUIState = .editing
+    @Published var step: FuelLogStep = .amount
+    @Published var priceStepCents: Int = 1
+    @Published var odometerStep: Int = 100
+    @Published var literStepMilli: Int = 100
 
     private let service = WatchMileageService()
 
     init(vehicle: WatchVehicle) {
         self.vehicle = vehicle
-
-        if let lastTotalCost = vehicle.lastTotalCost {
-            totalCostCents = Self.cents(from: lastTotalCost)
-        }
 
         if let lastFuelCost = vehicle.lastFuelCost {
             fuelCostCents = Self.cents(from: lastFuelCost)
@@ -41,20 +51,41 @@ final class MileageFormViewModel: ObservableObject {
         if let lastOdometer = vehicle.lastOdometer {
             odometer = lastOdometer
         }
+    }
 
-        if let lastLiters = vehicle.lastLiters {
-            litersMilli = Self.milliLiters(from: lastLiters)
+    var canContinueAmount: Bool {
+        totalCostCents > 0
+    }
+
+    var canContinuePrice: Bool {
+        fuelCostCents > 0
+    }
+
+    var canContinueOdometer: Bool {
+        if let lastOdometer = vehicle.lastOdometer {
+            return odometer > lastOdometer
         }
+        return odometer > 0
+    }
 
-        recalculateLitersIfNeeded()
+    var canContinueLiters: Bool {
+        litersMilli > 0
     }
 
     var canSave: Bool {
-        totalCostCents > 0
-            && fuelCostCents > 0
-            && litersMilli > 0
-            && odometer > 0
-            && uiState != .saving
+        let isIdle: Bool
+        switch uiState {
+        case .editing, .error:
+            isIdle = true
+        case .saving, .success:
+            isIdle = false
+        }
+
+        return canContinueAmount
+            && canContinuePrice
+            && canContinueLiters
+            && canContinueOdometer
+            && isIdle
     }
 
     var totalCostLabel: String {
@@ -65,30 +96,68 @@ final class MileageFormViewModel: ObservableObject {
         WatchNumberFormatting.currency(cents: fuelCostCents)
     }
 
+    var lastFuelCostLabel: String? {
+        guard let lastFuelCost = vehicle.lastFuelCost else { return nil }
+        return WatchNumberFormatting.currency(cents: Self.cents(from: lastFuelCost))
+    }
+
     var litersLabel: String {
         WatchNumberFormatting.liters(milliLiters: litersMilli)
     }
 
     var odometerLabel: String {
-        "\(odometer) km"
+        WatchNumberFormatting.grouped(odometer)
+    }
+
+    var distanceKm: Int? {
+        guard let lastOdometer = vehicle.lastOdometer else { return nil }
+        let delta = odometer - lastOdometer
+        return delta > 0 ? delta : nil
+    }
+
+    var priceStepLabel: String {
+        priceStepCents == 1 ? "± R$ 0,01" : "± R$ 0,10"
+    }
+
+    var priceRange: ClosedRange<Int> {
+        let upper = max(2_000, fuelCostCents)
+        return 0...upper
     }
 
     var odometerRange: ClosedRange<Int> {
-        let baseline = vehicle.lastOdometer ?? odometer
-        let lower = max(0, baseline - 200)
-        let upper = max(baseline + 2_000, odometer + 500, 1_000)
+        let lower = max(vehicle.lastOdometer ?? 0, 0)
+        let upper = max(lower + 5_000, odometer + 500)
         return lower...upper
+    }
+
+    var litersRange: ClosedRange<Int> {
+        0...200_000
+    }
+
+    func togglePriceStep() {
+        priceStepCents = priceStepCents == 1 ? 10 : 1
+    }
+
+    func toggleLiterStep() {
+        literStepMilli = literStepMilli == 100 ? 1_000 : 100
     }
 
     func recalculateLitersIfNeeded() {
         guard isComplete, fuelCostCents > 0, totalCostCents > 0 else { return }
 
-        // litros = total / preço → milli = round(totalCents * 1000 / fuelCostCents)
         let raw = (Double(totalCostCents) * 1_000.0) / Double(fuelCostCents)
         litersMilli = max(Int(raw.rounded()), 0)
     }
 
+    func setComplete(_ complete: Bool) {
+        isComplete = complete
+        if complete {
+            recalculateLitersIfNeeded()
+        }
+    }
+
     func save() async {
+        if case .success = uiState { return }
         recalculateLitersIfNeeded()
 
         guard canSave else {
@@ -110,10 +179,12 @@ final class MileageFormViewModel: ObservableObject {
 
         do {
             let result = try await service.saveMileage(request)
+            WKInterfaceDevice.current().play(.success)
             uiState = .success(
                 odometerDifference: result.odometerDifference,
                 calculatedMileage: result.calculatedMileage
             )
+            step = .success
         } catch WatchMileageServiceError.notLogged {
             uiState = .error("Faça login no iPhone")
         } catch {
@@ -121,17 +192,7 @@ final class MileageFormViewModel: ObservableObject {
         }
     }
 
-    func resetAfterSuccess() {
-        // Mantém custo total e preço/L do abastecimento recém-salvo.
-        recalculateLitersIfNeeded()
-        uiState = .editing
-    }
-
     private static func cents(from value: Double) -> Int {
         Int((value * 100.0).rounded())
-    }
-
-    private static func milliLiters(from value: Double) -> Int {
-        Int((value * 1_000.0).rounded())
     }
 }

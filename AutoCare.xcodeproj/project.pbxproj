@@ -8,7 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		026C0B3739C3EDF490658BB1 /* AutoCareWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */; };
-		1388D83EE218658F7C574B09 /* MileageFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3570DB425BFB41D67E2C87AF /* MileageFormView.swift */; };
+		B1F0E1042FC400010038BEE1 /* VehicleSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */; };
+		B1F0E1062FC400010038BEE1 /* WatchFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */; };
+		B1F0E1082FC400010038BEE1 /* FuelAmountKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */; };
+		B1F0E10A2FC400010038BEE1 /* FuelCrownStepsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */; };
+		B1F0E10C2FC400010038BEE1 /* FuelConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */; };
 		172B61DB5DD533A16BC940F4 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */; };
 		191189DA1EB32A8708271D6C /* WatchConnectivityMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */; };
 		2C3A91722B8BB295F49AE7E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C6692BD95AC258AB03DCDA /* HomeView.swift */; };
@@ -17,7 +21,6 @@
 		49BEC0FA59B3F1EC47839C7E /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */; };
 		4C893D124026513C5F924743 /* WatchPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */; };
 		64D1A81566466B0ED9ECB5D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A234FBEA4C8DA20B9E42B959 /* Foundation.framework */; };
-		7A420EFD44E172CB7AC26020 /* WatchNumberPickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */; };
 		7CF2374196132CE4E4A35E17 /* NotLoggedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */; };
 		8E0CC98775401B953959832F /* WatchMileageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */; };
 		A4F1A0D96A40FDF181D73236 /* MileageFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */; };
@@ -155,14 +158,17 @@
 /* Begin PBXFileReference section */
 		08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutoCareWatchApp.swift; sourceTree = "<group>"; };
 		32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchMileageService.swift; sourceTree = "<group>"; };
-		3570DB425BFB41D67E2C87AF /* MileageFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MileageFormView.swift; sourceTree = "<group>"; };
+		B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VehicleSummaryView.swift; sourceTree = "<group>"; };
+		B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchFormatting.swift; sourceTree = "<group>"; };
+		B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelAmountKeypadView.swift; sourceTree = "<group>"; };
+		B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelCrownStepsView.swift; sourceTree = "<group>"; };
+		B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelConfirmView.swift; sourceTree = "<group>"; };
 		4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotLoggedView.swift; sourceTree = "<group>"; };
 		56C6692BD95AC258AB03DCDA /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchVehicleSelectionStore.swift; sourceTree = "<group>"; };
 		605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MileageFormViewModel.swift; sourceTree = "<group>"; };
 		6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
-		733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchNumberPickers.swift; sourceTree = "<group>"; };
 		7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A234FBEA4C8DA20B9E42B959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS11.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
@@ -340,7 +346,7 @@
 		4AE5DB678F1F4C0109B9995A /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				733E98CC7E883DB0ADB30A73 /* WatchNumberPickers.swift */,
+				B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -391,6 +397,7 @@
 				4632CDC700ABBD5E5FACA3C9 /* NotLogged */,
 				2A29C699D9B3B5E2AA62DEF4 /* Vehicles */,
 				9EF3B4C06D4E9B593E5B9E2D /* Mileage */,
+				B1F0E1002FC400010038BEE1 /* FuelLog */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -398,7 +405,6 @@
 		9EF3B4C06D4E9B593E5B9E2D /* Mileage */ = {
 			isa = PBXGroup;
 			children = (
-				3570DB425BFB41D67E2C87AF /* MileageFormView.swift */,
 				605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */,
 			);
 			path = Mileage;
@@ -1121,11 +1127,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B1F0E1002FC400010038BEE1 /* FuelLog */ = {
+			isa = PBXGroup;
+			children = (
+				B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */,
+				B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */,
+				B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */,
+			);
+			path = FuelLog;
+			sourceTree = "<group>";
+		};
 		D2BC179F123D0A6F293A4B1A /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				56C6692BD95AC258AB03DCDA /* HomeView.swift */,
 				C6B25F310B698710133F2006 /* HomeViewModel.swift */,
+				B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1357,10 +1374,13 @@
 				DA467CA67437976F0C7AFF32 /* HomeViewModel.swift in Sources */,
 				7CF2374196132CE4E4A35E17 /* NotLoggedView.swift in Sources */,
 				F0387BCD6465427B63998CC0 /* VehicleListView.swift in Sources */,
-				1388D83EE218658F7C574B09 /* MileageFormView.swift in Sources */,
 				A4F1A0D96A40FDF181D73236 /* MileageFormViewModel.swift in Sources */,
 				FBE92C0A98578732A07A82DD /* WatchVehicleSelectionStore.swift in Sources */,
-				7A420EFD44E172CB7AC26020 /* WatchNumberPickers.swift in Sources */,
+				B1F0E1042FC400010038BEE1 /* VehicleSummaryView.swift in Sources */,
+				B1F0E1062FC400010038BEE1 /* WatchFormatting.swift in Sources */,
+				B1F0E1082FC400010038BEE1 /* FuelAmountKeypadView.swift in Sources */,
+				B1F0E10A2FC400010038BEE1 /* FuelCrownStepsView.swift in Sources */,
+				B1F0E10C2FC400010038BEE1 /* FuelConfirmView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

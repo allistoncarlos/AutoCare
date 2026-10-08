@@ -5,78 +5,163 @@
 
 import SwiftUI
 
+enum WatchHomeRoute: Hashable {
+    case vehicleList
+    case amount
+    case price
+    case odometer
+    case confirm
+    case liters
+    case success
+}
+
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @State private var navigationPath = NavigationPath()
-    @State private var didAutoOpenPreferredVehicle = false
+    @State private var path = NavigationPath()
+    @State private var selectedVehicleId = WatchVehicleSelectionStore.lastSelectedVehicleId
+    @State private var fuelForm: MileageFormViewModel?
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            Group {
-                switch viewModel.uiState {
-                case .loading:
-                    ProgressView("Carregando…")
-                case .notLogged:
-                    NotLoggedView()
-                case .empty:
-                    ContentUnavailableView(
-                        "Sem veículos",
-                        systemImage: "car.fill",
-                        description: Text("Cadastre um veículo no iPhone.")
+        NavigationStack(path: $path) {
+            root
+                .navigationDestination(for: WatchHomeRoute.self, destination: destination)
+        }
+        .tint(WatchTheme.violet)
+    }
+
+    private var root: some View {
+        Group {
+            switch viewModel.uiState {
+            case .loading:
+                ProgressView("Carregando…")
+                    .navigationTitle("AutoCare")
+            case .notLogged:
+                NotLoggedView()
+                    .navigationTitle("AutoCare")
+            case .empty:
+                ContentUnavailableView(
+                    "Sem veículos",
+                    systemImage: "car.fill",
+                    description: Text("Cadastre um veículo no iPhone.")
+                )
+                .navigationTitle("AutoCare")
+            case let .error(message):
+                ContentUnavailableView(
+                    "Erro",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(message)
+                )
+                .navigationTitle("AutoCare")
+            case .content:
+                if let vehicle = displayedVehicle {
+                    VehicleSummaryView(
+                        vehicle: vehicle,
+                        canSwitch: viewModel.vehicles.count > 1,
+                        onSwitch: { path.append(WatchHomeRoute.vehicleList) },
+                        onFuel: { startFuelLog(for: vehicle) }
                     )
-                case let .error(message):
-                    ContentUnavailableView(
-                        "Erro",
-                        systemImage: "exclamationmark.triangle",
-                        description: Text(message)
-                    )
-                case .content:
-                    VehicleListView(
-                        vehicles: viewModel.vehicles,
-                        lastSelectedVehicleId: WatchVehicleSelectionStore.lastSelectedVehicleId
-                    )
-                }
-            }
-            .navigationTitle("AutoCare")
-            .navigationDestination(for: String.self) { vehicleId in
-                if let vehicle = viewModel.vehicles.first(where: { $0.id == vehicleId }) {
-                    MileageFormView(vehicle: vehicle) {
-                        WatchVehicleSelectionStore.remember(vehicle.id)
+                } else {
+                    vehicleList { vehicle in
+                        select(vehicle)
                     }
                 }
             }
-            .task {
-                await viewModel.load()
-                openPreferredVehicleIfNeeded()
+        }
+        .task { await viewModel.load() }
+        .refreshable { await viewModel.load() }
+    }
+
+    private var displayedVehicle: WatchVehicle? {
+        let vehicles = viewModel.vehicles
+        if let selectedVehicleId,
+           let match = vehicles.first(where: { $0.id == selectedVehicleId }) {
+            return match
+        }
+        return WatchVehicleSelectionStore.preferredVehicle(from: vehicles)
+    }
+
+    @ViewBuilder
+    private func destination(_ route: WatchHomeRoute) -> some View {
+        switch route {
+        case .vehicleList:
+            vehicleList { vehicle in
+                select(vehicle)
+                if !path.isEmpty {
+                    path.removeLast()
+                }
             }
-            .refreshable {
-                await viewModel.load()
+        case .amount:
+            fuelScreen { form in
+                FuelAmountKeypadView(viewModel: form) {
+                    path.append(WatchHomeRoute.price)
+                }
             }
-            .onChange(of: viewModel.vehicles.map(\.id)) { _, _ in
-                openPreferredVehicleIfNeeded()
+        case .price:
+            fuelScreen { form in
+                FuelPriceStepView(viewModel: form) {
+                    path.append(WatchHomeRoute.odometer)
+                }
             }
-            .onChange(of: viewModel.uiState) { _, newState in
-                if newState != .content {
-                    didAutoOpenPreferredVehicle = false
-                    navigationPath = NavigationPath()
-                } else {
-                    openPreferredVehicleIfNeeded()
+        case .odometer:
+            fuelScreen { form in
+                FuelOdometerStepView(viewModel: form) {
+                    form.recalculateLitersIfNeeded()
+                    path.append(WatchHomeRoute.confirm)
+                }
+            }
+        case .confirm:
+            fuelScreen { form in
+                FuelConfirmView(viewModel: form) {
+                    path.append(WatchHomeRoute.liters)
+                } onSaved: {
+                    path.append(WatchHomeRoute.success)
+                }
+            }
+        case .liters:
+            fuelScreen { form in
+                FuelLitersStepView(viewModel: form) {
+                    if !path.isEmpty {
+                        path.removeLast()
+                    }
+                }
+            }
+        case .success:
+            fuelScreen { form in
+                FuelSuccessView(viewModel: form) {
+                    fuelForm = nil
+                    path = NavigationPath()
+                    Task { await viewModel.load() }
                 }
             }
         }
     }
 
-    private func openPreferredVehicleIfNeeded() {
-        guard viewModel.uiState == .content,
-              !didAutoOpenPreferredVehicle,
-              navigationPath.isEmpty,
-              let preferred = WatchVehicleSelectionStore.preferredVehicle(from: viewModel.vehicles) else {
-            return
-        }
+    private func vehicleList(onSelect: @escaping (WatchVehicle) -> Void) -> some View {
+        VehicleListView(
+            vehicles: viewModel.vehicles,
+            lastSelectedVehicleId: selectedVehicleId ?? WatchVehicleSelectionStore.lastSelectedVehicleId,
+            onSelect: onSelect
+        )
+    }
 
-        didAutoOpenPreferredVehicle = true
-        WatchVehicleSelectionStore.remember(preferred.id)
-        navigationPath.append(preferred.id)
+    @ViewBuilder
+    private func fuelScreen<Content: View>(@ViewBuilder content: (MileageFormViewModel) -> Content) -> some View {
+        if let fuelForm {
+            content(fuelForm)
+        } else {
+            ProgressView()
+        }
+    }
+
+    private func select(_ vehicle: WatchVehicle) {
+        selectedVehicleId = vehicle.id
+        WatchVehicleSelectionStore.remember(vehicle.id)
+    }
+
+    private func startFuelLog(for vehicle: WatchVehicle) {
+        select(vehicle)
+        fuelForm = MileageFormViewModel(vehicle: vehicle)
+        path.append(WatchHomeRoute.amount)
     }
 }
 

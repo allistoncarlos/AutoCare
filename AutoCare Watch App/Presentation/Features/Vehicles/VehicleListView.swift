@@ -8,6 +8,7 @@ import SwiftUI
 struct VehicleListView: View {
     let vehicles: [WatchVehicle]
     let lastSelectedVehicleId: String?
+    let onSelect: (WatchVehicle) -> Void
 
     private var orderedVehicles: [WatchVehicle] {
         guard let lastSelectedVehicleId,
@@ -23,7 +24,9 @@ struct VehicleListView: View {
 
     var body: some View {
         List(orderedVehicles) { vehicle in
-            NavigationLink(value: vehicle.id) {
+            Button {
+                onSelect(vehicle)
+            } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack {
                         Text(vehicle.name)
@@ -43,12 +46,13 @@ struct VehicleListView: View {
                     }
 
                     if let odometer = vehicle.lastOdometer {
-                        Text("\(odometer) km")
+                        Text(WatchNumberFormatting.kilometers(odometer))
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
                 }
             }
         }
+        .navigationTitle("Veículos")
     }
 }
