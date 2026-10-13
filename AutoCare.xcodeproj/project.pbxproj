@@ -104,6 +104,7 @@
 		A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E3338C2AEBE4900089DD81 /* Assets.xcassets */; };
 		A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E333902AEBE4900089DD81 /* Preview Assets.xcassets */; };
 		A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3339F2AEBEAA20089DD81 /* Config.swift */; };
+		A5LOCNET012D933C0000D68116 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5LOCNET022D933C0000D68116 /* APIConfig.swift */; };
 		A5E8F2FF2D98A573003D8F30 /* VehicleMileageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8F2FE2D98A573003D8F30 /* VehicleMileageDataSource.swift */; };
 		A5E8F3022D98A68E003D8F30 /* VehicleMileageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8F3012D98A68E003D8F30 /* VehicleMileageRequest.swift */; };
 		A5E8F3052D98A8C3003D8F30 /* VehicleMileageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8F3042D98A8C3003D8F30 /* VehicleMileageResponse.swift */; };
@@ -250,6 +251,7 @@
 		A5E3339D2AEBEA300089DD81 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A5E3339E2AEBEA5F0089DD81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A5E3339F2AEBEAA20089DD81 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		A5LOCNET022D933C0000D68116 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		A5E8F2FE2D98A573003D8F30 /* VehicleMileageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileageDataSource.swift; sourceTree = "<group>"; };
 		A5E8F3012D98A68E003D8F30 /* VehicleMileageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileageRequest.swift; sourceTree = "<group>"; };
 		A5E8F3042D98A8C3003D8F30 /* VehicleMileageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileageResponse.swift; sourceTree = "<group>"; };
@@ -916,6 +918,7 @@
 			isa = PBXGroup;
 			children = (
 				A5E3339D2AEBEA300089DD81 /* Config.xcconfig */,
+				A5LOCNET022D933C0000D68116 /* APIConfig.swift */,
 				A5E3339F2AEBEAA20089DD81 /* Config.swift */,
 			);
 			path = Config;
@@ -1340,6 +1343,7 @@
 				A5619DFF2E0FF4FD00D46700 /* VehicleServiceResponse.swift in Sources */,
 				A587CF482DA08F8500051244 /* AutoCareViewModel.swift in Sources */,
 				A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */,
+				A5LOCNET012D933C0000D68116 /* APIConfig.swift in Sources */,
 				A55918DE2BA9BE8300EB3ED3 /* MileageListItem.swift in Sources */,
 				A562EE962D93367600D68116 /* LoginRepository.swift in Sources */,
 				A562EEA22D93387300D68116 /* LoginResponse.swift in Sources */,

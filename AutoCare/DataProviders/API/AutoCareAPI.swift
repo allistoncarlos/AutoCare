@@ -259,7 +259,13 @@ enum AutoCareAPI {
 
 extension AutoCareAPI: URLRequestConvertible {
     func asURLRequest() throws -> URLRequest {
-        let resultUrl = "\(baseURL)/\(path)"
+        try asURLRequest(resolvingBase: Config.apiPath)
+    }
+
+    func asURLRequest(resolvingBase base: String) throws -> URLRequest {
+        var trimmed = base.trimmingCharacters(in: .whitespacesAndNewlines)
+        while trimmed.hasSuffix("/") { trimmed.removeLast() }
+        let resultUrl = "\(trimmed)/\(path)"
         let url = try resultUrl.asURL()
         var request = URLRequest(url: url)
         request.method = method

@@ -29,6 +29,7 @@ struct AutoCareApp: App {
     @ObservedObject private var authSession = Container.shared.authSessionStore()
 
     init() {
+        APIRoute.shared.start()
         #if canImport(WatchConnectivity) && os(iOS)
         WatchConnectivityManager.shared.activateSession()
         #endif

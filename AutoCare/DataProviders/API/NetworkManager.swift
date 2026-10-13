@@ -58,10 +58,12 @@ public class NetworkManager {
         responseType: T.Type,
         endpoint: AutoCareAPI,
         cache: Bool = false,
-        retryCount: Int = 0
+        retryCount: Int = 0,
+        routeRetried: Bool = false
     ) async -> T? {
         do {
-            var urlRequest = try endpoint.asURLRequest()
+            let apiBase = await APIRoute.shared.resolve().absoluteString
+            var urlRequest = try endpoint.asURLRequest(resolvingBase: apiBase)
             urlRequest.cachePolicy = cache ? .returnCacheDataElseLoad : .reloadIgnoringLocalCacheData
 
             if let accessToken = KeychainDataSource.accessToken.get() {
@@ -113,6 +115,16 @@ public class NetworkManager {
             }
 
         } catch {
+            if !routeRetried, APIConnectivity.isConnectivityError(error) {
+                APIRoute.shared.invalidate()
+                return await performRequest(
+                    responseType: responseType,
+                    endpoint: endpoint,
+                    cache: cache,
+                    retryCount: retryCount,
+                    routeRetried: true
+                )
+            }
             print(error)
             return nil
         }
