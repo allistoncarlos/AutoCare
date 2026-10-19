@@ -16,4 +16,5 @@ extension Container {
     var vehicleRepository: Factory<VehicleRepositoryProtocol> { self { VehicleRepository() } }
     var vehicleMileageRepository: Factory<VehicleMileageRepositoryProtocol> { self { VehicleMileageRepository() } }
     var vehicleServiceRepository: Factory<VehicleServiceRepositoryProtocol> { self { VehicleServiceRepository() } }
+    var odometerReminderRepository: Factory<OdometerReminderRepositoryProtocol> { self { OdometerReminderRepository() } }
 }

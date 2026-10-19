@@ -17,7 +17,7 @@ struct FuelAmountKeypadView: View {
             maxRaw: maxCents,
             display: viewModel.totalCostLabel,
             caption: "valor da bomba",
-            progressIndex: 0,
+            progressIndex: 2,
             navigationTitle: "Valor",
             canContinue: viewModel.canContinueAmount,
             onContinue: onContinue

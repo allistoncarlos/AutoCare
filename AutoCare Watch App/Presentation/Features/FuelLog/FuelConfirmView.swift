@@ -16,10 +16,10 @@ struct FuelConfirmView: View {
                 WatchProgressDots(index: 3)
 
                 VStack(spacing: 0) {
-                    row("Total", viewModel.totalCostLabel)
-                    row("Preço/L", viewModel.fuelCostLabel)
-                    row("Litros", viewModel.litersLabel)
                     row("Km", viewModel.odometerLabel)
+                    row("Preço/L", viewModel.fuelCostLabel)
+                    row("Total", viewModel.totalCostLabel)
+                    row("Litros", viewModel.litersLabel)
                     if let distanceKm = viewModel.distanceKm {
                         row("Percorridos", "+\(distanceKm) km", valueColor: WatchTheme.success)
                     }

@@ -34,6 +34,11 @@ struct SyncChangeResponse: Codable {
     var type: String?
     var subtype: String?
     var comment: String?
+    var targetOdometer: Int?
+    var notificationDelay: String?
+    var reminderStatus: String?
+    var triggeredAt: Date?
+    var triggeredByMileageClientId: String?
 }
 
 struct ChangesPayloadResponse: Codable {
@@ -41,6 +46,7 @@ struct ChangesPayloadResponse: Codable {
     var vehicles: [SyncChangeResponse]?
     var vehicleMileages: [SyncChangeResponse]?
     var vehicleServices: [SyncChangeResponse]?
+    var odometerReminders: [SyncChangeResponse]?
 }
 
 struct ChangesResponse: Codable {

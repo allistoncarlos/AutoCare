@@ -14,6 +14,7 @@ final class SyncService {
     @Injected(\.vehicleRepository) private var vehicleRepository
     @Injected(\.vehicleMileageRepository) private var vehicleMileageRepository
     @Injected(\.vehicleServiceRepository) private var vehicleServiceRepository
+    @Injected(\.odometerReminderRepository) private var odometerReminderRepository
 
     private var ongoingSync: Task<Void, Never>?
 
@@ -63,6 +64,11 @@ final class SyncService {
                     } else {
                         await vehicleServiceRepository.save(vehicleService: service)
                     }
+                    continue
+                }
+
+                if let reminder = model as? OdometerReminder {
+                    await odometerReminderRepository.save(reminder: reminder)
                 }
             }
         } catch {

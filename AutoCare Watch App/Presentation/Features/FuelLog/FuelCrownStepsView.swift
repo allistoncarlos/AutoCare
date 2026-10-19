@@ -45,7 +45,7 @@ struct FuelOdometerStepView: View {
             maxRaw: maxKm,
             display: viewModel.odometerLabel,
             caption: "quilometragem",
-            progressIndex: 2,
+            progressIndex: 0,
             navigationTitle: "Odômetro",
             canContinue: viewModel.canContinueOdometer,
             onContinue: onContinue,

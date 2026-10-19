@@ -7,9 +7,9 @@ import SwiftUI
 
 enum WatchHomeRoute: Hashable {
     case vehicleList
-    case amount
-    case price
     case odometer
+    case price
+    case amount
     case confirm
     case liters
     case success
@@ -90,21 +90,21 @@ struct HomeView: View {
                     path.removeLast()
                 }
             }
-        case .amount:
+        case .odometer:
             fuelScreen { form in
-                FuelAmountKeypadView(viewModel: form) {
+                FuelOdometerStepView(viewModel: form) {
                     path.append(WatchHomeRoute.price)
                 }
             }
         case .price:
             fuelScreen { form in
                 FuelPriceStepView(viewModel: form) {
-                    path.append(WatchHomeRoute.odometer)
+                    path.append(WatchHomeRoute.amount)
                 }
             }
-        case .odometer:
+        case .amount:
             fuelScreen { form in
-                FuelOdometerStepView(viewModel: form) {
+                FuelAmountKeypadView(viewModel: form) {
                     form.recalculateLitersIfNeeded()
                     path.append(WatchHomeRoute.confirm)
                 }
@@ -161,7 +161,7 @@ struct HomeView: View {
     private func startFuelLog(for vehicle: WatchVehicle) {
         select(vehicle)
         fuelForm = MileageFormViewModel(vehicle: vehicle)
-        path.append(WatchHomeRoute.amount)
+        path.append(WatchHomeRoute.odometer)
     }
 }
 

@@ -8,22 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		026C0B3739C3EDF490658BB1 /* AutoCareWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */; };
-		B1F0E1042FC400010038BEE1 /* VehicleSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */; };
-		B1F0E1062FC400010038BEE1 /* WatchFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */; };
-		B1F0E10E2FC400010038BEE1 /* WatchMaquininhaKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E10D2FC400010038BEE1 /* WatchMaquininhaKeypad.swift */; };
-		B1F0E1082FC400010038BEE1 /* FuelAmountKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */; };
-		B1F0E10A2FC400010038BEE1 /* FuelCrownStepsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */; };
-		B1F0E10C2FC400010038BEE1 /* FuelConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */; };
 		172B61DB5DD533A16BC940F4 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */; };
 		191189DA1EB32A8708271D6C /* WatchConnectivityMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */; };
 		2C3A91722B8BB295F49AE7E9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56C6692BD95AC258AB03DCDA /* HomeView.swift */; };
 		2F572AA89B1E82EC18CB2E3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */; };
+		3416A3624AF359212C01990E /* OdometerReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8008F32F1BE7A2F4E9E91881 /* OdometerReminder.swift */; };
 		45ABFCD5BDB7F08442C87250 /* WatchConnectivityMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */; };
 		49BEC0FA59B3F1EC47839C7E /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */; };
 		4C893D124026513C5F924743 /* WatchPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */; };
+		5109B9B4CA6B6A4C5D572884 /* OdometerReminderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B73FBA8194CD33A60C7FF0 /* OdometerReminderListView.swift */; };
+		53B29A2A9C5FC9257F7A3EDE /* OdometerReminderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC31936930CC87E77D06FD37 /* OdometerReminderRequest.swift */; };
 		64D1A81566466B0ED9ECB5D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A234FBEA4C8DA20B9E42B959 /* Foundation.framework */; };
 		7CF2374196132CE4E4A35E17 /* NotLoggedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */; };
 		8E0CC98775401B953959832F /* WatchMileageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */; };
+		9819761A962472DBA88E4D3B /* OdometerReminderNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A447FBAB86E8C7DD86806B /* OdometerReminderNotificationService.swift */; };
+		A088B5232309E53CBA07721D /* OdometerReminderRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0364ACC67735217E683C719D /* OdometerReminderRepository.swift */; };
 		A4F1A0D96A40FDF181D73236 /* MileageFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605FE5E283D5A5181623E3BB /* MileageFormViewModel.swift */; };
 		A50014B52B86626000040E3C /* MainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50014B42B86626000040E3C /* MainButtonStyle.swift */; };
 		A50014BB2B86726A00040E3C /* TTProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = A50014BA2B86726A00040E3C /* TTProgressHUD */; };
@@ -104,7 +103,6 @@
 		A5E3338D2AEBE4900089DD81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E3338C2AEBE4900089DD81 /* Assets.xcassets */; };
 		A5E333912AEBE4900089DD81 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5E333902AEBE4900089DD81 /* Preview Assets.xcassets */; };
 		A5E333A02AEBEAA20089DD81 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3339F2AEBEAA20089DD81 /* Config.swift */; };
-		A5LOCNET012D933C0000D68116 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5LOCNET022D933C0000D68116 /* APIConfig.swift */; };
 		A5E8F2FF2D98A573003D8F30 /* VehicleMileageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8F2FE2D98A573003D8F30 /* VehicleMileageDataSource.swift */; };
 		A5E8F3022D98A68E003D8F30 /* VehicleMileageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8F3012D98A68E003D8F30 /* VehicleMileageRequest.swift */; };
 		A5E8F3052D98A8C3003D8F30 /* VehicleMileageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8F3042D98A8C3003D8F30 /* VehicleMileageResponse.swift */; };
@@ -120,12 +118,21 @@
 		A5FH0162E1000010038BEE6 /* ChangesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FH0062E1000010038BEE6 /* ChangesRepository.swift */; };
 		A5FONT022FC400010038BEE1 /* PlusJakartaSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT012FC400010038BEE1 /* PlusJakartaSans.ttf */; };
 		A5FONT042FC400010038BEE1 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5FONT032FC400010038BEE1 /* Inter.ttf */; };
+		A5LOCNET012D933C0000D68116 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5LOCNET022D933C0000D68116 /* APIConfig.swift */; };
 		A5MILRT2FC400010038BEE1 /* MileageRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5MILRT1FC400010038BEE1 /* MileageRoute.swift */; };
 		A5SVED02FC400010038BEE1 /* ServiceEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED01FC400010038BEE1 /* ServiceEditView.swift */; };
 		A5SVED04FC400010038BEE1 /* ServiceEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */; };
 		A5SVED06FC400010038BEE1 /* ServiceEditState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVED05FC400010038BEE1 /* ServiceEditState.swift */; };
 		A5SVRT02FC400010038BEE1 /* ServiceRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */; };
 		A5SWIFT022E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */; };
+		B1F0E1042FC400010038BEE1 /* VehicleSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */; };
+		B1F0E1062FC400010038BEE1 /* WatchFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */; };
+		B1F0E1082FC400010038BEE1 /* FuelAmountKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */; };
+		B1F0E10A2FC400010038BEE1 /* FuelCrownStepsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */; };
+		B1F0E10C2FC400010038BEE1 /* FuelConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */; };
+		B1F0E10E2FC400010038BEE1 /* WatchMaquininhaKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F0E10D2FC400010038BEE1 /* WatchMaquininhaKeypad.swift */; };
+		B2F95466091380E5DD865DC2 /* OdometerReminderDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076BB289E59D656B8E54822E /* OdometerReminderDataSource.swift */; };
+		D88F5EA89F3F590390494ADA /* OdometerReminderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB48AC8E27C884E62CBD1C9 /* OdometerReminderResponse.swift */; };
 		DA467CA67437976F0C7AFF32 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B25F310B698710133F2006 /* HomeViewModel.swift */; };
 		E6F431D5E11E08D0BA55EC5F /* AutoCare Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EAF0AB76D2C5CB352CEA7336 /* AutoCare.icon in Resources */ = {isa = PBXBuildFile; fileRef = A57FCA7A2FC393A400DFF96C /* AutoCare.icon */; };
@@ -158,14 +165,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0364ACC67735217E683C719D /* OdometerReminderRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OdometerReminderRepository.swift; path = AutoCare/DataProviders/Repositories/OdometerReminder/OdometerReminderRepository.swift; sourceTree = "<group>"; };
+		076BB289E59D656B8E54822E /* OdometerReminderDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OdometerReminderDataSource.swift; path = AutoCare/DataProviders/DataSources/OdometerReminder/OdometerReminderDataSource.swift; sourceTree = "<group>"; };
 		08DD26ECA442B8385BB9D619 /* AutoCareWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AutoCareWatchApp.swift; sourceTree = "<group>"; };
+		2BB48AC8E27C884E62CBD1C9 /* OdometerReminderResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OdometerReminderResponse.swift; path = AutoCare/DataProviders/API/Entities/Response/OdometerReminder/OdometerReminderResponse.swift; sourceTree = "<group>"; };
 		32BB79620A6A564FA37FFDE8 /* WatchMileageService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchMileageService.swift; sourceTree = "<group>"; };
-		B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VehicleSummaryView.swift; sourceTree = "<group>"; };
-		B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchFormatting.swift; sourceTree = "<group>"; };
-		B1F0E10D2FC400010038BEE1 /* WatchMaquininhaKeypad.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchMaquininhaKeypad.swift; sourceTree = "<group>"; };
-		B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelAmountKeypadView.swift; sourceTree = "<group>"; };
-		B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelCrownStepsView.swift; sourceTree = "<group>"; };
-		B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelConfirmView.swift; sourceTree = "<group>"; };
+		35B73FBA8194CD33A60C7FF0 /* OdometerReminderListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OdometerReminderListView.swift; path = AutoCare/Presentation/Features/OdometerReminders/View/OdometerReminderListView.swift; sourceTree = "<group>"; };
 		4CB16301EBFC0ADC0C6FF9F0 /* NotLoggedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotLoggedView.swift; sourceTree = "<group>"; };
 		56C6692BD95AC258AB03DCDA /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchVehicleSelectionStore.swift; sourceTree = "<group>"; };
@@ -173,6 +178,8 @@
 		6C92B0967B970E455D34DA88 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VehicleListView.swift; sourceTree = "<group>"; };
 		7D96E7CFBFB7DB07174DE56C /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8008F32F1BE7A2F4E9E91881 /* OdometerReminder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OdometerReminder.swift; path = AutoCare/Domain/Entities/SwiftData/OdometerReminder.swift; sourceTree = "<group>"; };
+		98A447FBAB86E8C7DD86806B /* OdometerReminderNotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OdometerReminderNotificationService.swift; path = AutoCare/DataProviders/Notifications/OdometerReminderNotificationService.swift; sourceTree = "<group>"; };
 		A234FBEA4C8DA20B9E42B959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS11.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A50014B42B86626000040E3C /* MainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainButtonStyle.swift; sourceTree = "<group>"; };
 		A5088FD42D95E55300D3712A /* VehicleTypeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTypeResponse.swift; sourceTree = "<group>"; };
@@ -251,7 +258,6 @@
 		A5E3339D2AEBEA300089DD81 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A5E3339E2AEBEA5F0089DD81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A5E3339F2AEBEAA20089DD81 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		A5LOCNET022D933C0000D68116 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		A5E8F2FE2D98A573003D8F30 /* VehicleMileageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileageDataSource.swift; sourceTree = "<group>"; };
 		A5E8F3012D98A68E003D8F30 /* VehicleMileageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileageRequest.swift; sourceTree = "<group>"; };
 		A5E8F3042D98A8C3003D8F30 /* VehicleMileageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleMileageResponse.swift; sourceTree = "<group>"; };
@@ -267,13 +273,21 @@
 		A5FH0062E1000010038BEE6 /* ChangesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangesRepository.swift; sourceTree = "<group>"; };
 		A5FONT012FC400010038BEE1 /* PlusJakartaSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PlusJakartaSans.ttf; sourceTree = "<group>"; };
 		A5FONT032FC400010038BEE1 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
+		A5LOCNET022D933C0000D68116 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		A5MILRT1FC400010038BEE1 /* MileageRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageRoute.swift; sourceTree = "<group>"; };
 		A5SVED01FC400010038BEE1 /* ServiceEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditView.swift; sourceTree = "<group>"; };
 		A5SVED03FC400010038BEE1 /* ServiceEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditViewModel.swift; sourceTree = "<group>"; };
 		A5SVED05FC400010038BEE1 /* ServiceEditState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEditState.swift; sourceTree = "<group>"; };
 		A5SVRT01FC400010038BEE1 /* ServiceRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceRoute.swift; sourceTree = "<group>"; };
 		A5SWIFT012E2000010038BEE1 /* AutoCareApp+SwiftDataInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCareApp+SwiftDataInjection.swift"; sourceTree = "<group>"; };
+		B1F0E1032FC400010038BEE1 /* VehicleSummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VehicleSummaryView.swift; sourceTree = "<group>"; };
+		B1F0E1052FC400010038BEE1 /* WatchFormatting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchFormatting.swift; sourceTree = "<group>"; };
+		B1F0E1072FC400010038BEE1 /* FuelAmountKeypadView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelAmountKeypadView.swift; sourceTree = "<group>"; };
+		B1F0E1092FC400010038BEE1 /* FuelCrownStepsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelCrownStepsView.swift; sourceTree = "<group>"; };
+		B1F0E10B2FC400010038BEE1 /* FuelConfirmView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuelConfirmView.swift; sourceTree = "<group>"; };
+		B1F0E10D2FC400010038BEE1 /* WatchMaquininhaKeypad.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchMaquininhaKeypad.swift; sourceTree = "<group>"; };
 		BB7DF1FB29CFF8456A9F56C1 /* WatchPhoneCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchPhoneCoordinator.swift; sourceTree = "<group>"; };
+		BC31936930CC87E77D06FD37 /* OdometerReminderRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OdometerReminderRequest.swift; path = AutoCare/DataProviders/API/Entities/Request/OdometerReminder/OdometerReminderRequest.swift; sourceTree = "<group>"; };
 		C488ED80DC2FE5F6986146F2 /* WatchConnectivityMessages.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityMessages.swift; sourceTree = "<group>"; };
 		C6B25F310B698710133F2006 /* HomeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AutoCare Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -875,6 +889,13 @@
 				A884A2E15CB77ADE8D0CCCAD /* Frameworks */,
 				73C8FC1F833CF64ABCA6CBB4 /* AutoCare Watch App */,
 				16B83C73D3D3B01D131408B5 /* Shared */,
+				BC31936930CC87E77D06FD37 /* OdometerReminderRequest.swift */,
+				2BB48AC8E27C884E62CBD1C9 /* OdometerReminderResponse.swift */,
+				076BB289E59D656B8E54822E /* OdometerReminderDataSource.swift */,
+				98A447FBAB86E8C7DD86806B /* OdometerReminderNotificationService.swift */,
+				0364ACC67735217E683C719D /* OdometerReminderRepository.swift */,
+				8008F32F1BE7A2F4E9E91881 /* OdometerReminder.swift */,
+				35B73FBA8194CD33A60C7FF0 /* OdometerReminderListView.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1366,6 +1387,13 @@
 				45ABFCD5BDB7F08442C87250 /* WatchConnectivityMessages.swift in Sources */,
 				49BEC0FA59B3F1EC47839C7E /* WatchConnectivityManager.swift in Sources */,
 				4C893D124026513C5F924743 /* WatchPhoneCoordinator.swift in Sources */,
+				53B29A2A9C5FC9257F7A3EDE /* OdometerReminderRequest.swift in Sources */,
+				D88F5EA89F3F590390494ADA /* OdometerReminderResponse.swift in Sources */,
+				B2F95466091380E5DD865DC2 /* OdometerReminderDataSource.swift in Sources */,
+				9819761A962472DBA88E4D3B /* OdometerReminderNotificationService.swift in Sources */,
+				A088B5232309E53CBA07721D /* OdometerReminderRepository.swift in Sources */,
+				3416A3624AF359212C01990E /* OdometerReminder.swift in Sources */,
+				5109B9B4CA6B6A4C5D572884 /* OdometerReminderListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1415,8 +1443,8 @@
 				DEVELOPMENT_TEAM = DLA5J5JEZ2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_CFBundleDisplayName = AutoCare;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.alliston.AutoCare;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
@@ -1656,8 +1684,8 @@
 				DEVELOPMENT_TEAM = DLA5J5JEZ2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_CFBundleDisplayName = AutoCare;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.alliston.AutoCare;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
