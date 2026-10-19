@@ -7,9 +7,9 @@ import Foundation
 import WatchKit
 
 enum FuelLogStep: Equatable {
-    case amount
-    case price
     case odometer
+    case price
+    case amount
     case confirm
     case liters
     case success
@@ -34,7 +34,7 @@ final class MileageFormViewModel: ObservableObject {
     @Published var odometer: Int = 0
     @Published var isComplete: Bool = true
     @Published var uiState: MileageFormUIState = .editing
-    @Published var step: FuelLogStep = .amount
+    @Published var step: FuelLogStep = .odometer
 
     private let service = WatchMileageService()
 
