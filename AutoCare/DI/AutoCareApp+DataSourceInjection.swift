@@ -17,4 +17,5 @@ extension Container {
     var vehicleMileageDataSource: Factory<VehicleMileageDataSourceProtocol> { self { VehicleMileageDataSource() } }
     var vehicleServiceDataSource: Factory<VehicleServiceDataSourceProtocol> { self { VehicleServiceDataSource() } }
     var odometerReminderDataSource: Factory<OdometerReminderDataSourceProtocol> { self { OdometerReminderDataSource() } }
+    var reminderDataSource: Factory<ReminderDataSourceProtocol> { self { ReminderDataSource() } }
 }

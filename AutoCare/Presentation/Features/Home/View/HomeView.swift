@@ -13,6 +13,7 @@ private enum HomeTab: Hashable {
     case dashboard
     case services
     case reminders
+    case generalReminders
 }
 
 struct HomeView: View {
@@ -55,6 +56,10 @@ struct HomeView: View {
                     .id(selectedVehicle.clientId)
                     .tag(HomeTab.reminders)
                     .tabItem { Label("Lembretes", systemImage: "bell.badge") }
+
+                HomeRouter.makeGeneralReminderListView()
+                    .tag(HomeTab.generalReminders)
+                    .tabItem { Label("Tarefas", systemImage: "checklist") }
             }
         }
         .tint(BrandTheme.Colors.violetCore)
