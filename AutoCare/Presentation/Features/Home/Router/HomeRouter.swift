@@ -45,7 +45,4 @@ enum HomeRouter {
         )
     }
 
-    static func makeReminderListView(selectedVehicle: Vehicle) -> some View {
-        OdometerReminderListView(vehicle: selectedVehicle)
-    }
 }

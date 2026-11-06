@@ -25,7 +25,6 @@ extension MileageEditView {
 
         @Injected(\.swiftDataManager) private var swiftDataManager
         @Injected(\.vehicleMileageRepository) private var repository
-        @Injected(\.odometerReminderRepository) private var reminderRepository
 
         @Published var isFormValid = false
         @Published var manager = FormManager(validationType: .immediate)
@@ -186,7 +185,6 @@ extension MileageEditView {
                 vehicleMileage.synced = false
 
                 if await repository.save(vehicleMileage: vehicleMileage) != nil {
-                    await processReminders(for: vehicleMileage)
                     state = .successSave
                 } else {
                     state = .error
@@ -208,25 +206,12 @@ extension MileageEditView {
             )
 
             if await repository.save(vehicleMileage: mileage) != nil {
-                await processReminders(for: mileage)
                 state = .successSave
             } else {
                 state = .error
             }
         }
 
-        private func processReminders(for mileage: VehicleMileage) async {
-            let reminders = await reminderRepository.fetchData(vehicleId: vehicleId)
-            for reminder in reminders where reminder.status == .active && mileage.odometer >= reminder.targetOdometer {
-                reminder.status = .triggered
-                reminder.triggeredAt = .now
-                reminder.triggeredByMileageClientId = mileage.clientId
-                reminder.synced = false
-                _ = await reminderRepository.save(reminder: reminder)
-                await OdometerReminderNotificationService.shared.requestAuthorization()
-                OdometerReminderNotificationService.shared.schedule(reminder: reminder)
-            }
-        }
     }
 }
 

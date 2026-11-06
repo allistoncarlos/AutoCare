@@ -12,7 +12,6 @@ import TTProgressHUD
 private enum HomeTab: Hashable {
     case dashboard
     case services
-    case reminders
 }
 
 struct HomeView: View {
@@ -51,10 +50,6 @@ struct HomeView: View {
                     Label("Serviços", systemImage: "car.badge.gearshape")
                 }
 
-                HomeRouter.makeReminderListView(selectedVehicle: selectedVehicle)
-                    .id(selectedVehicle.clientId)
-                    .tag(HomeTab.reminders)
-                    .tabItem { Label("Lembretes", systemImage: "bell.badge") }
             }
         }
         .tint(BrandTheme.Colors.violetCore)
