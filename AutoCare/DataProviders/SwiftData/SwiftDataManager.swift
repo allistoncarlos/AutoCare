@@ -137,7 +137,6 @@ final class SwiftDataManager {
         VehicleMileage.self,
         VehicleService.self,
         OdometerReminder.self
-        , Reminder.self
     ])
 
     let container: ModelContainer
@@ -202,13 +201,11 @@ final class SwiftDataManager {
             FetchDescriptor<VehicleService>(predicate: #Predicate { !$0.synced })
         )
         let reminders = try context.fetch(FetchDescriptor<OdometerReminder>(predicate: #Predicate { !$0.synced }))
-        let generalReminders = try context.fetch(FetchDescriptor<Reminder>(predicate: #Predicate { !$0.synced }))
 
         unsyncedEntities.append(contentsOf: vehicles)
         unsyncedEntities.append(contentsOf: mileages)
         unsyncedEntities.append(contentsOf: services)
         unsyncedEntities.append(contentsOf: reminders)
-        unsyncedEntities.append(contentsOf: generalReminders)
 
         return unsyncedEntities
     }
@@ -269,7 +266,6 @@ final class SwiftDataManager {
         try applyChanges(changes.vehicleMileages?.compactMap { VehicleMileage(from: $0) } ?? [])
         try applyChanges(changes.vehicleServices?.compactMap { VehicleService(from: $0) } ?? [])
         try applyChanges(changes.odometerReminders?.compactMap { OdometerReminder(from: $0) } ?? [])
-        try applyChanges(changes.reminders?.compactMap { Reminder(from: $0) } ?? [])
     }
 }
 

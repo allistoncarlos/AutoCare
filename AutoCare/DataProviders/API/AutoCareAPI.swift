@@ -110,7 +110,6 @@ enum APIConstants {
     static let vehicleMileageResource = "vehicle-mileage"
     static let vehicleServiceResource = "vehicle-service"
     static let odometerReminderResource = "odometer-reminder"
-    static let reminderResource = "reminder"
 }
 
 // MARK: - AutoCareAPI
@@ -134,10 +133,6 @@ enum AutoCareAPI {
     case odometerReminder(id: String)
     case saveOdometerReminder(data: OdometerReminderRequest, serverId: String?)
     case deleteOdometerReminder(clientId: String)
-    case reminders
-    case reminder(id: String)
-    case saveReminder(data: ReminderRequest, serverId: String?)
-    case deleteReminder(clientId: String)
 
     var baseURL: String {
         Config.apiPath
@@ -186,10 +181,6 @@ enum AutoCareAPI {
         case let .odometerReminder(id): return "\(APIConstants.odometerReminderResource)/\(id)"
         case let .saveOdometerReminder(data, serverId): return serverId == nil ? APIConstants.odometerReminderResource : "\(APIConstants.odometerReminderResource)/\(data.clientId)"
         case let .deleteOdometerReminder(clientId): return "\(APIConstants.odometerReminderResource)/\(clientId)"
-        case .reminders: return APIConstants.reminderResource
-        case let .reminder(id): return "\(APIConstants.reminderResource)/\(id)"
-        case let .saveReminder(data, serverId): return serverId == nil ? APIConstants.reminderResource : "\(APIConstants.reminderResource)/\(data.clientId)"
-        case let .deleteReminder(clientId): return "\(APIConstants.reminderResource)/\(clientId)"
         }
     }
 
@@ -217,9 +208,6 @@ enum AutoCareAPI {
         case let .saveOdometerReminder(_, serverId): return serverId == nil ? .post : .put
         case .deleteOdometerReminder: return .delete
         case .odometerReminders, .odometerReminder: return .get
-        case .reminders, .reminder: return .get
-        case let .saveReminder(_, serverId): return serverId == nil ? .post : .put
-        case .deleteReminder: return .delete
         }
     }
 
@@ -253,8 +241,6 @@ enum AutoCareAPI {
             return try parameterEncoder.encode(data, into: request)
         case let .saveOdometerReminder(data, _):
             return try parameterEncoder.encode(data, into: request)
-        case let .saveReminder(data, _):
-            return try parameterEncoder.encode(data, into: request)
         case let .changes(since):
             guard let since else { return request }
             var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
@@ -281,7 +267,7 @@ enum AutoCareAPI {
             var components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
             components?.queryItems = [URLQueryItem(name: "vehicleId", value: vehicleId)]
             var updated = request; updated.url = components?.url; return updated
-        case .vehicleType, .vehicles, .vehicle, .vehicleMileage, .vehicleService, .deleteVehicleService, .odometerReminder, .deleteOdometerReminder, .reminders, .reminder, .deleteReminder:
+        case .vehicleType, .vehicles, .vehicle, .vehicleMileage, .vehicleService, .deleteVehicleService, .odometerReminder, .deleteOdometerReminder:
             return request
         }
     }

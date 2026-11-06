@@ -19,16 +19,4 @@ final class OdometerReminderNotificationService {
     }
 
     func cancel(reminder: OdometerReminder) { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.clientId]) }
-
-    func schedule(reminder: Reminder) {
-        guard let dueDate = reminder.dueDate, reminder.status == .pending, dueDate > .now else { return }
-        let content = UNMutableNotificationContent()
-        content.title = reminder.title
-        content.body = reminder.reminderDescription
-        content.sound = .default
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: dueDate)
-        UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: reminder.clientId, content: content, trigger: UNCalendarNotificationTrigger(dateMatching: components, repeats: false)))
-    }
-
-    func cancel(reminder: Reminder) { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.clientId]) }
 }
