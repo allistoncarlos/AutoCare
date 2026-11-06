@@ -30,6 +30,7 @@ struct AutoCareApp: App {
 
     init() {
         APIRoute.shared.start()
+        ReminderAlertService.shared.start()
         #if canImport(WatchConnectivity) && os(iOS)
         WatchConnectivityManager.shared.activateSession()
         #endif

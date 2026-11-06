@@ -136,6 +136,7 @@ final class SwiftDataManager {
         Vehicle.self,
         VehicleMileage.self,
         VehicleService.self,
+        OdometerReminder.self,
     ])
 
     let container: ModelContainer

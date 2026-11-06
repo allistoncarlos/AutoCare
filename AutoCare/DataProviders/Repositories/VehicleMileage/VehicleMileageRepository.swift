@@ -47,6 +47,8 @@ struct VehicleMileageRepository: VehicleMileageRepositoryProtocol {
                 item: vehicleMileage
             )
 
+            await evaluateReminders(for: result)
+
             BackgroundWorker.shared.run {
                 if let savedMileage = try await dataSource.save(vehicleMileage: vehicleMileage) {
                     let persistentEntity = VehicleMileage(from: savedMileage)
@@ -62,6 +64,14 @@ struct VehicleMileageRepository: VehicleMileageRepositoryProtocol {
             print(error.localizedDescription)
             return nil
         }
+    }
+
+    @MainActor
+    private func evaluateReminders(for mileage: VehicleMileage) async {
+        guard !mileage.deleted, mileage.reminderEvaluatedOdometer != mileage.odometer else { return }
+        await ReminderAlertService.shared.evaluate(vehicleId: mileage.vehicleId, odometer: mileage.odometer)
+        mileage.reminderEvaluatedOdometer = mileage.odometer
+        _ = try? await SwiftDataManager.shared.save(id: mileage.id, item: mileage)
     }
 
     @Injected(\.vehicleMileageDataSource) var dataSource: VehicleMileageDataSourceProtocol

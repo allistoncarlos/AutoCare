@@ -83,7 +83,16 @@ public class NetworkManager {
             switch httpResponse.statusCode {
             case 200..<300:
                 let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601
+                decoder.dateDecodingStrategy = .custom { decoder in
+                    let value = try decoder.singleValueContainer().decode(String.self)
+                    let formatter = ISO8601DateFormatter()
+                    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    if let date = formatter.date(from: value) { return date }
+                    formatter.formatOptions = [.withInternetDateTime]
+                    if let date = formatter.date(from: value) { return date }
+                    throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath,
+                        debugDescription: "Data ISO 8601 inválida: \(value)"))
+                }
                 return try decoder.decode(T.self, from: data)
 
             case 401 where retryCount < retryLimit && !endpoint.isRefreshToken:

@@ -43,6 +43,7 @@ final class SyncService {
     }
 
     func pushUnsyncedChanges() async {
+        await OdometerReminderRepository.shared.pushPending()
         do {
             let unsyncedEntities = try SwiftDataManager.shared.fetchUnsyncedEntities()
 
@@ -78,6 +79,7 @@ final class SyncService {
         }
 
         do {
+            try OdometerReminderRepository.shared.apply(response.changes.odometerReminders ?? [])
             try SwiftDataManager.shared.applyRemoteChanges(response.changes)
 
             if let serverTime = ISO8601DateFormatter.parseSyncDate(response.serverTime) {

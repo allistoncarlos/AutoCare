@@ -11,11 +11,13 @@ import TTProgressHUD
 
 private enum HomeTab: Hashable {
     case dashboard
+    case reminders
     case services
 }
 
 struct HomeView: View {
     @ObservedObject var viewModel: HomeView.ViewModel
+    @ObservedObject private var reminderAlerts = ReminderAlertService.shared
     @State private var selectedTab: HomeTab = .dashboard
     @State private var isLoading = false
     @State private var isNewVehiclePresented = false
@@ -40,6 +42,11 @@ struct HomeView: View {
                     Label("Dashboard", systemImage: "gauge.with.dots.needle.67percent")
                 }
 
+                OdometerReminderListView(vehicle: selectedVehicle, onVehiclePickerTap: viewModel.openVehiclePicker)
+                    .id(selectedVehicle.clientId)
+                    .tag(HomeTab.reminders)
+                    .tabItem { Label("Lembretes", systemImage: "checklist") }
+
                 HomeRouter.makeServiceListView(
                     selectedVehicle: selectedVehicle,
                     onVehiclePickerTap: viewModel.openVehiclePicker
@@ -53,6 +60,11 @@ struct HomeView: View {
             }
         }
         .tint(BrandTheme.Colors.violetCore)
+        .alert("Avisos dos lembretes", isPresented: Binding(
+            get: { reminderAlerts.errorMessage != nil },
+            set: { if !$0 { reminderAlerts.errorMessage = nil } }
+        )) { Button("OK") { reminderAlerts.errorMessage = nil } }
+        message: { Text(reminderAlerts.errorMessage ?? "") }
         .onAppear {
             configureTabBarAppearance()
         }

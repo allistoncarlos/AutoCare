@@ -37,6 +37,7 @@ struct SyncChangeResponse: Codable {
 }
 
 struct ChangesPayloadResponse: Codable {
+    var odometerReminders: [OdometerReminderPayload]?
     var vehicleTypes: [SyncChangeResponse]?
     var vehicles: [SyncChangeResponse]?
     var vehicleMileages: [SyncChangeResponse]?

@@ -21,6 +21,7 @@ final class AuthSessionStore: ObservableObject {
     }
 
     func logout(clearLocalData: Bool = true) {
+        ReminderAlertService.shared.cancelAll()
         KeychainDataSource.clear()
         SyncState.reset()
         isAuthenticated = false

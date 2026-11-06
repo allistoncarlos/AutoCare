@@ -131,6 +131,10 @@
 		EAF0AB76D2C5CB352CEA7336 /* AutoCare.icon in Resources */ = {isa = PBXBuildFile; fileRef = A57FCA7A2FC393A400DFF96C /* AutoCare.icon */; };
 		F0387BCD6465427B63998CC0 /* VehicleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701DFAB40E55C82B8D7D2980 /* VehicleListView.swift */; };
 		FBE92C0A98578732A07A82DD /* WatchVehicleSelectionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B4D0D523CFDDB2052FD77C /* WatchVehicleSelectionStore.swift */; };
+		26A44AE51C914AE09E592E7B /* OdometerReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52E3B3488B34673887E89BE; };
+		8700010867604309AA5C770B /* OdometerReminderRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C68205CFB2F465EAB1AB865; };
+		83E147E496A54BD1BA91779E /* ReminderAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FDF6BAB98B478AB81099C0; };
+		14427E34EA03412AB81760B2 /* OdometerReminderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDEE54EB318458D840FEF51; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -279,6 +283,10 @@
 		DAFAFE4AAD4891DDF124B440 /* AutoCare Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AutoCare Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5AB9D746C02D3D89CC117B0 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
 		F15545E0204DCAA5BF050985 /* AutoCare Watch App.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "AutoCare Watch App.entitlements"; sourceTree = "<group>"; };
+		F52E3B3488B34673887E89BE /* OdometerReminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCare/Domain/Entities/SwiftData/OdometerReminder.swift"; sourceTree = SOURCE_ROOT; };
+		8C68205CFB2F465EAB1AB865 /* OdometerReminderRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCare/DataProviders/Reminders/OdometerReminderRepository.swift"; sourceTree = SOURCE_ROOT; };
+		10FDF6BAB98B478AB81099C0 /* ReminderAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCare/DataProviders/Reminders/ReminderAlertService.swift"; sourceTree = SOURCE_ROOT; };
+		DBDEE54EB318458D840FEF51 /* OdometerReminderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoCare/Presentation/Features/Reminders/OdometerReminderListView.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -899,6 +907,10 @@
 				A5E3339C2AEBEA220089DD81 /* Config */,
 				A5E3338C2AEBE4900089DD81 /* Assets.xcassets */,
 				A5E333882AEBE48F0089DD81 /* AutoCareApp.swift */,
+				DBDEE54EB318458D840FEF51 /* OdometerReminderListView.swift */,
+				10FDF6BAB98B478AB81099C0 /* ReminderAlertService.swift */,
+				8C68205CFB2F465EAB1AB865 /* OdometerReminderRepository.swift */,
+				F52E3B3488B34673887E89BE /* OdometerReminder.swift */,
 				A5E3338E2AEBE4900089DD81 /* AutoCare.entitlements */,
 				A5E3338F2AEBE4900089DD81 /* Preview Content */,
 				A587CF472DA08F8500051244 /* AutoCareViewModel.swift */,
@@ -1308,6 +1320,10 @@
 				A54F9BEC2B8CC8EB00B002A5 /* LoginRouter.swift in Sources */,
 				A562EEAC2D93397F00D68116 /* NetworkManager.swift in Sources */,
 				A5E333892AEBE48F0089DD81 /* AutoCareApp.swift in Sources */,
+				14427E34EA03412AB81760B2 /* OdometerReminderListView.swift in Sources */,
+				83E147E496A54BD1BA91779E /* ReminderAlertService.swift in Sources */,
+				8700010867604309AA5C770B /* OdometerReminderRepository.swift in Sources */,
+				26A44AE51C914AE09E592E7B /* OdometerReminder.swift in Sources */,
 				A5B470E82CDFF60300ECE77E /* HomeView.swift in Sources */,
 				A55953A82D96D53D004DAD6A /* VehicleTypeRepository.swift in Sources */,
 				A562EE982D93372900D68116 /* Login.swift in Sources */,

@@ -10,6 +10,8 @@ import SwiftData
 
 @Model
 final class VehicleMileage: Syncable {
+    // Local marker prevents sync retries and edits of other fields from repeating an alert.
+    var reminderEvaluatedOdometer: Int?
     var id: String? = nil
     var date: Date = Date()
     var totalCost: Decimal = 0

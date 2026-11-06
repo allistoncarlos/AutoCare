@@ -114,6 +114,8 @@ enum APIConstants {
 // MARK: - AutoCareAPI
 
 enum AutoCareAPI {
+    case saveOdometerReminder(data: OdometerReminderRequest, serverId: String?)
+    case deleteOdometerReminder(clientId: String)
     case login(data: LoginRequest)
     case refreshToken(data: RefreshTokenRequest)
     case changes(since: String?)
@@ -135,6 +137,10 @@ enum AutoCareAPI {
 
     var path: String {
         switch self {
+        case let .saveOdometerReminder(data, serverId):
+            return serverId == nil ? "odometer-reminder" : "odometer-reminder/\(data.clientId)"
+        case let .deleteOdometerReminder(clientId):
+            return "odometer-reminder/\(clientId)"
         case .login:
             return "\(APIConstants.authResource)/login"
         case .refreshToken:
@@ -186,6 +192,10 @@ enum AutoCareAPI {
              .vehicleService,
              .changes:
             return .get
+        case let .saveOdometerReminder(_, serverId):
+            return serverId == nil ? .post : .put
+        case .deleteOdometerReminder:
+            return .delete
         case .login, .refreshToken:
             return .post
         case let .saveVehicle(_, serverId):
@@ -217,6 +227,10 @@ enum AutoCareAPI {
 
     func encodeParameters(into request: URLRequest) throws -> URLRequest {
         switch self {
+        case let .saveOdometerReminder(data, _):
+            return try parameterEncoder.encode(data, into: request)
+        case .deleteOdometerReminder:
+            return request
         case let .login(parameters):
             return try parameterEncoder.encode(parameters, into: request)
         case let .refreshToken(parameters):
